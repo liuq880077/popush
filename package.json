@@ -1,0 +1,16 @@
+{
+  "name": "popush",
+  "version": "1.0.3",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "socket.io": "*",
+    "mongojs": "*",
+    "buffers": "*"
+  },
+  "port": 4444,
+  "db": "mongodb://localhost/popush",
+  "debug": false
+}

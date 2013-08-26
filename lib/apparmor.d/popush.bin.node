@@ -1,0 +1,9 @@
+#include <tunables/global>
+
+/popush/bin/node {
+  #include <abstractions/base>
+  /proc/** r,
+  /usr/lib/nodejs/** r,
+  /usr/local/lib/node_modules/** r,
+  /popush/tmp/** r,
+}
