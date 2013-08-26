@@ -1,3 +1,4 @@
+// Here is a hint.
 var VERSION = require('./package.json').version;
 var crypto = require('crypto');
 var fs = require('fs');
