@@ -3,7 +3,7 @@ Popush 部署文档
 
 *stjh10@gmail.com*
 
-*2 Jun 2013*
+*15 Sep 2013*
 
 ## 安装依赖
 
@@ -25,13 +25,11 @@ JDK           | 7.0   |
 
 ## 获取源码
 
-	svn co https://166.111.80.105:8443/svn/sssta
+	git clone https://github.com/qiankanglai/popush.git
 
 ## 创建主目录
 
-	cd sssta                     # sssta 是上一步获取的源码的根目录
-
-	sudo cp -r popush /popush
+	sudo cp -r popush /popush    # popush 是上一步获取的源码的根目录
 	
 ## 设置主目录权限
 	
