@@ -5,6 +5,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NODE_PATH=/usr/local/lib/node_modules
 NODE=/usr/local/bin/node
 PID_PATH=/var/run
+
+export NODE_PATH=$NODE_PATH
  
 test -x $NODE || exit 0
  
