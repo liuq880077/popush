@@ -1,4 +1,4 @@
-var strings = {
+var strings_cn = {
 	'hide-title'                    :'收起',
 	'show-title'                    :'展开',
 	'pleaseinput'                   :'请输入用户名',
