@@ -1,4 +1,4 @@
-var strings = {
+var strings_en = {
 	'hide-title'                    :'hide',
 	'show-title'                    :'show more',
 	'pleaseinput'                   :'please enter the username',
