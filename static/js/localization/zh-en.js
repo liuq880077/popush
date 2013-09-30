@@ -6,7 +6,7 @@ var strings_en = {
 	'doesntmatch'                   :'password does not match the confirmation',
 	'namelength'                    :'the length of username must be between 6 and 20',
 	'passlength'                    :'the length of password cannot be greater than 32',
-	'registerok'                    :'registration success! please enter < a href = "javascript:;" The onclick = "loginview ()" > login < / a > page',
+	'registerok'                    :'registration success! please enter <a href="javascript:;" onclick="loginview()">login</a> page',
 	'name exists'                   :'the username is already taken',
 	'inner error'                   :'server error',
 	'name invalid'                  :'the username may only contain letters or numbers',
