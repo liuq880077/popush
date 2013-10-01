@@ -75,7 +75,7 @@ function fileList(table) {
 		elements: elements,
 
 		clear: function() {
-			obj.html(header + '<tr class="no-file"><td></td><td>' + strings['nofile'] + '</td><td></td><td></td><td></td></tr>');
+			obj.html(header + '<tr class="no-file"><td></td><td localization>' + strings['nofile'] + '</td><td></td><td></td><td></td></tr>');
 			elements = [];
 			this.elements = elements;
 		},
@@ -88,12 +88,12 @@ function fileList(table) {
 			mode = newmode;
 			if(mode & 2)
 				header = '<tr class="head"><th class="col1">&nbsp;</th>' +
-		'<th class="col2">' + strings['filename'] + '</th><th class="col3">' + strings['state'] + '</th>' +
-		'<th class="col4">' + strings['timestamp'] + '</th><th class="col5">&nbsp;</th></tr>';
+		'<th class="col2" localization>' + strings['filename'] + '</th><th class="col3" localization>' + strings['state'] + '</th>' +
+		'<th class="col4" localization>' + strings['timestamp'] + '</th><th class="col5">&nbsp;</th></tr>';
 			else
 				header = '<tr class="head"><th class="col1">&nbsp;</th>' +
-		'<th class="col2">' + strings['filename'] + '</th><th class="col3 owner">' + strings['owner'] + '</th>' +
-		'<th class="col4">' + strings['timestamp'] + '</th><th class="col5">&nbsp;</th></tr>';
+		'<th class="col2" localization>' + strings['filename'] + '</th><th class="col3 owner" localization>' + strings['owner'] + '</th>' +
+		'<th class="col4" localization>' + strings['timestamp'] + '</th><th class="col5">&nbsp;</th></tr>';
 		},
 	
 		add: function(o) {
@@ -111,18 +111,18 @@ function fileList(table) {
 				'<td class="col1"><img src="' + getpic(o.type, o.shared, ext) + '" height="32" width="32" /></td>' +
 				'<td class="col2"><a href="javascript:;" onclick="allFileLists['+n+'].onname(allFileLists['+n+'].elements['+i+'])">' + 
 				htmlescape(o.showname) + '</a></td>' +
-				(mode & 2?('<td class="col3">' + (o.shared?strings['shared']:'') + '</td>'):
+				(mode & 2?('<td class="col3" localization>' + (o.shared?strings['shared']:'') + '</td>'):
 				'<td class="col3 owner"><img class="user-' + o.owner.name + '" src="' + o.owner.avatar + '" width="32" height="32"/>' + o.owner.name + '</td>') +
 				'<td class="col4">' + o.time + '</td>' +
 				'<td class="col5"><div class="dropdown">' +
 				'<a href="javascript:;" class="dropdown-toggle' + (mode?'':' disabled') + ' opreation" data-toggle="dropdown">&nbsp;</a>' +
 				'<ul class="dropdown-menu">' +
 				(mode & 1?
-				'<li><a href="javascript:;" onclick="allFileLists['+n+'].onshare(allFileLists['+n+'].elements['+i+'])">' + strings['sharemanage'] + '</a></li>':'') +
+				'<li><a href="javascript:;" onclick="allFileLists['+n+'].onshare(allFileLists['+n+'].elements['+i+'])" localization>' + strings['sharemanage'] + '</a></li>':'') +
 				(mode & 2?(
-				'<li><a href="javascript:;" onclick="allFileLists['+n+'].ondelete(allFileLists['+n+'].elements['+i+'])">' + strings['delete'] + '</a></li>' +
-				'<li><a href="javascript:;" onclick="allFileLists['+n+'].onrename(allFileLists['+n+'].elements['+i+'])">' + strings['rename'] + '</a></li>'/* +
-				'<li><a href="javascript:;" onclick="allFileLists['+n+'].ondownload(allFileLists['+n+'].elements['+i+'])">' + strings['export'] + '</a></li>'*/):'') +
+				'<li><a href="javascript:;" onclick="allFileLists['+n+'].ondelete(allFileLists['+n+'].elements['+i+'])" localization>' + strings['delete'] + '</a></li>' +
+				'<li><a href="javascript:;" onclick="allFileLists['+n+'].onrename(allFileLists['+n+'].elements['+i+'])" localization>' + strings['rename'] + '</a></li>'/* +
+				'<li><a href="javascript:;" onclick="allFileLists['+n+'].ondownload(allFileLists['+n+'].elements['+i+'])" localization>' + strings['export'] + '</a></li>'*/):'') +
 				'</ul>' +
 				'</div>' +
 				'</td>' +

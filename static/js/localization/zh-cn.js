@@ -109,7 +109,8 @@ var strings_cn = {
 	'finish-title'                  :'跳出过程',
 	'voice'                         :'语音',
 	'removeexpression'              :'删除监视',
+	'novoice'                       :'该浏览器不支持语音，请使用<br />Chrome 18+或Opera 12+',
 	'only-platform'			:'只是另外一个协作编程平台',
 	'only-contain'			:'只能包含字母和数字',
-	'novoice'                       :'该浏览器不支持语音，请使用<br />Chrome 18+或Opera 12+'
+	'changeLanguage'		:'English Version'
 };

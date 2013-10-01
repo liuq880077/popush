@@ -958,6 +958,7 @@ function backto(n) {
 		currentDirString = getdirstring();
 	});
 }
+
 /////////////////////// addon ///////////////////////////
 function getCookie(c_name) {
 	if (document.cookie.length>0) {
@@ -999,7 +1000,30 @@ function checkCookie() {
 	    setCookie('language',language,365);
 	    window.location.href = "index.html";
 	  }
+	  /*setCookie('language','cn',365);
+	  strings = strings_cn;*/
 	}
+}
+
+function changeLanguage() {
+	var language=getCookie('language')
+	if (language == 'cn') {
+	  setCookie('language','en',365);
+	  strings_old = strings;
+	  strings = strings_en;
+	}
+	else {
+	  setCookie('language','cn',365);
+	  strings_old = strings;
+	  strings = strings_cn;
+	}
+	$('[localization]').html(function(index, old) {
+		for(var name in strings_old) {
+		  if(strings_old[name] == old)
+		    return strings[name];
+		}
+		return old;
+	});	
 }
 
 /////////////////////// initialize ///////////////////////////
