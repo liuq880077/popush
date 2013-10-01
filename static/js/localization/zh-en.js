@@ -109,5 +109,7 @@ var strings_en = {
 	'finish-title'                  :'jump out of the process',
 	'voice'                         :'voice',
 	'removeexpression'              :'remove supervision expression',
+	'only-platform'			:'Only Another Platform for Code Cooperation',
+	'only-contain'			:'Only contain characters and numbers',
 	'novoice'                       :'the browser does not support voice function, please use<br />Chrome18+ or Opera12+'
 };
