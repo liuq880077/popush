@@ -140,7 +140,7 @@ io.sockets.on('connection', function(socket){
 			}
 			userDAO.register(data.name, data.password, url, 'user', function(err){
 				if(err){
-					fs.unlink(path);
+				//	fs.unlink(path);
 				}
 				socket.emit('register', {err:err});
 			});
