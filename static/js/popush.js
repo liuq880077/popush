@@ -1,4 +1,3 @@
-
 ////////////////////////// vars ///////////////////////////////
 var currentUser;
 var currentDir;
@@ -995,13 +994,13 @@ function checkCookie() {
 	  strings = strings_en;
 	}
 	else {
-	  language=prompt('Please enter your language("cn" or "en"):',"");
+	  /*language=prompt('Please enter your language("cn" or "en"):',"");
 	  if (language!=null && language!="") {
 	    setCookie('language',language,365);
 	    window.location.href = "index.html";
-	  }
-	  /*setCookie('language','cn',365);
-	  strings = strings_cn;*/
+	  }*/
+	  setCookie('language','cn',365);
+	  strings = strings_cn;
 	}
 }
 
