@@ -294,6 +294,7 @@ function backtologin() {
 	$('#filecontrol').hide();
 	$('#editor').hide();
 	$('#login').fadeIn('fast');
+	$("#footer").show();
 	$('.modal').modal('hide');
 }
 

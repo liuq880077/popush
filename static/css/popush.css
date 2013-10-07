@@ -116,12 +116,12 @@ textarea {resize:none;}
 .breakpoints {width:16px;}
 .running {background:#ffb;}
 
-#console {float:left;border:1px solid #ccc;border-right:none;-webkit-border-radius:4px 0 0 4px;-moz-border-radius:4px 0 0 4px;border-radius:4px 0 0 4px;height:200px;margin:10px 0 0 0;}
+#console {float:left;border:1px solid #ccc;border-right:none;-webkit-border-radius:4px 0 0 4px;-moz-border-radius:4px 0 0 4px;border-radius:4px 0 0 4px;height:200px;margin:10px 0 0 0;background-color: white}
 #console .stdin {color:blue;}
 #console .stderr {color:red;}
 #console .message {color:#0a0;}
 #console-inner {overflow:auto;padding:5px 10px;}
-#varlist {position:relative;float:left;border:1px solid #ccc;-webkit-border-radius:0 4px 4px 0;-moz-border-radius:0 4px 4px 0;border-radius:0 4px 4px 0;height:200px;margin:10px 0 0 0;}
+#varlist {position:relative;float:left;border:1px solid #ccc;-webkit-border-radius:0 4px 4px 0;-moz-border-radius:0 4px 4px 0;border-radius:0 4px 4px 0;height:200px;margin:10px 0 0 0;background-color: white}
 #under-editor {height:212px;}
 #varlistreal {overflow:auto;}
 #varlist-table {margin:0;border-bottom:1px solid #ddd;font-size:14px;}
