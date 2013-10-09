@@ -1019,10 +1019,8 @@ function changeLanguage() {
 	}
 	
 	$('[title]').attr('title', function(index, old) {
-		for(var name in strings_old) {
-		  if(strings_old[name] == old)
-		    return strings[name];
-		}
+		if(strings[old])
+			return strings[old];
 		return old;
 	});
 	
