@@ -29,6 +29,7 @@ var exttoicon = {
 	'xml':		'xml'
 }
 
+/* 建立文件列表的视图，与操作绑定，在$(document).ready()中被调用：filelist = fileList('#file-list-table'); */
 function fileList(table) {
 
 	var obj = $(table);

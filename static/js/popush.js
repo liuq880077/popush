@@ -541,6 +541,7 @@ socket.on('avatar', function(data){
 
 ////////////////////// click event //////////////////////////////
 
+/* 由注册视图切换到登陆视图 */
 function loginview() {
 	if(viewswitchLock)
 		return;
@@ -562,6 +563,7 @@ function loginview() {
 	});
 }
 
+/* 由登陆视图切换到注册视图 */
 function registerview() {
 	if(viewswitchLock)
 		return;
@@ -584,6 +586,7 @@ function registerview() {
 	});
 }
 
+/* 点击"登陆"按钮触发的js函数，socket.emit('login') */
 function login() {
 	var name = $('#login-inputName').val();
 	var pass = $('#login-inputPassword').val();
@@ -601,6 +604,7 @@ function login() {
 	});
 }
 
+/* 点击"登出"按钮触发的js函数，socket.emit('logout') */
 function logout() {
 	socket.emit('logout', {
 	});
@@ -608,6 +612,7 @@ function logout() {
 	backtologin();
 }
 
+/* 点击"注册"按钮触发的js函数，socket.emit('register') */
 function register() {
 	var name = $('#register-inputName').val();
 	var pass = $('#register-inputPassword').val();
@@ -639,6 +644,7 @@ function register() {
 	});
 }
 
+/* 点击"新建文件"触发的js函数，弹出新建文件pop-up框 */
 function newfileopen() {
 	$('#newfile-inputName').val('');
 	$('#newfile .control-group').removeClass('error');
@@ -647,6 +653,7 @@ function newfileopen() {
 	newfiletype = 'doc';
 }
 
+/* 点击"新建文件夹"触发的js函数，弹出新建文件夹pop-up框 */
 function newfolderopen() {
 	$('#newfile-inputName').val('');
 	$('#newfile .control-group').removeClass('error');
@@ -655,6 +662,7 @@ function newfolderopen() {
 	newfiletype = 'dir';
 }
 
+/* 在"新建文件/新建文件夹"pop-up框中点击确定按钮触发的js函数，socket.emit('new') */
 function newfile() {
 	var name = $('#newfile-inputName').val();
 	name = $.trim(name);
@@ -680,6 +688,7 @@ function newfile() {
 	});
 }
 
+/* 点击"修改密码"触发的js函数，弹出修改密码pop-up框 */
 function changepasswordopen() {
 	$('#changepassword-old').val('');
 	$('#changepassword-new').val('');
@@ -688,11 +697,13 @@ function changepasswordopen() {
 	$('#changepassword .help-inline').text('');
 }
 
+/* 点击"修改头像"触发的js函数，弹出修改头像pop-up框 */
 function changeavataropen() {
 	$('#changeavatar-message').hide();
 	$('#changeavatar-img').attr('src', currentUser.avatar);
 }
 
+/* 在"修改密码"pop-up框中点击确定按钮触发的js函数，socket.emit('password') */
 function changepassword() {
 	var old = $('#changepassword-old').val();
 	var pass = $('#changepassword-new').val();
@@ -713,6 +724,7 @@ function changepassword() {
 	});
 }
 
+/* 点击"共享的文件"触发的js函数，显示共享的文件视图 */
 function sharedfilelist() {
 	if(dirMode == 'shared')
 		return;
@@ -731,6 +743,7 @@ function sharedfilelist() {
 	$('#sharedfile').addClass('active');
 }
 
+/* 点击"拥有的文件"触发的js函数，显示拥有的文件视图 */
 function ownedfilelist() {
 	if(operationLock)
 		return;
@@ -751,6 +764,7 @@ var editor;
 
 var chatstate = false;
 var oldwidth;
+/* 点击"聊天室收起/展开"按钮触发的js函数，聊天室收起/展开之间切换 */
 function togglechat(o) {
 	if(viewswitchLock)
 		return;
@@ -774,6 +788,7 @@ function togglechat(o) {
 	chatstate = !chatstate;
 }
 
+/* 更新文件列表，socket.emit('doc') */
 function refreshfilelist(error, callback) {
 	operationLock = true;
 	filelist.loading();
@@ -789,6 +804,7 @@ var deleteconfirm = function(){;};
 
 var rename = function(){;};
 
+/* 在"共享管理"pop-up框中点击增加按钮触发的js函数，socket.emit('share') */
 function share(){
 	var name = $('#share-inputName').val();
 	if(name == '') {
@@ -805,6 +821,7 @@ function share(){
 	});
 }
 
+/* 在"共享管理"pop-up框中点击删除按钮触发的js函数，socket.emit('unshare') */
 function unshare() {
 	var selected = userlist.getselection();
 	if(!selected) {
@@ -821,6 +838,7 @@ function unshare() {
 	});
 }
 
+/* 在"共享管理"pop-up框中点击返回按钮触发的js函数，关闭pop-up框 */
 function closeshare() {
 	if(operationLock)
 		return;
@@ -828,6 +846,7 @@ function closeshare() {
 	$('#share').modal('hide');
 }
 
+/* 点击"共享管理"触发的js函数，弹出共享管理pop-up框，在initfilelistevent()中与onclick = onshare绑定 */
 function shareopen(o) {		
 	$('#share-name').text(o.name);
 	$('#share-inputName').val('');
@@ -837,6 +856,7 @@ function shareopen(o) {
 	currentsharedoc = o;
 }
 
+/* 在"修改头像"pop-up框中修改头像触发的js函数，socket.emit('avatar') */ 
 function changeavatar(o) {
 	if(o.files.length < 0) {
 		showmessage('changeavatar-message', 'selectuser', 'error');
@@ -869,6 +889,7 @@ function changeavatar(o) {
 	reader.readAsDataURL(file);
 }
 
+/* 初始化文件列表事件，在$(document).ready()中调用 */
 function initfilelistevent(fl) {
 
 	fl.onname = function(o) {
@@ -942,6 +963,7 @@ function initfilelistevent(fl) {
 
 }
 
+/* 返回到上(n+1)级父目录，eg:backto(0)表示返回到上一级目录 */
 function backto(n) {
 	if(operationLock)
 		return;
@@ -960,34 +982,38 @@ function backto(n) {
 }
 
 /////////////////////// addon ///////////////////////////
+/* 获得cookie */
 function getCookie(c_name) {
-	if (document.cookie.length>0) {
-	  c_start=document.cookie.indexOf(c_name + "=");
-	  if (c_start!=-1) {
-	    c_start=c_start + c_name.length+1;
-	    c_end=document.cookie.indexOf(";",c_start);
-	    if (c_end==-1) 
-		c_end=document.cookie.length;
-	    return unescape(document.cookie.substring(c_start,c_end));
-	  } 
+	if (document.cookie.length > 0) {
+		c_start = document.cookie.indexOf(c_name + "=");
+		if (c_start != -1) {
+	    	c_start = c_start + c_name.length + 1;
+	    	c_end = document.cookie.indexOf(";", c_start);
+	    	if (c_end == -1) 
+				c_end = document.cookie.length;
+	    	return unescape(document.cookie.substring(c_start, c_end));
+	    } 
 	}
 	return "";
 }
 
+/* 动态加载js文件 */
 function loadjsfile(filename){
 	var fileref = document.createElement('script');
 	fileref.setAttribute("type","text/javascript");
 	fileref.setAttribute("src",filename); 
 }
 
-function setCookie(c_name,value,expiredays) {
-	var exdate=new Date();
-	exdate.setDate(exdate.getDate()+expiredays);
-	document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+/* 设置cookie */
+function setCookie(c_name, value, expiredays) {
+	var exdate = new Date();
+	exdate.setDate(exdate.getDate() + expiredays);
+	document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
 }
 
+/* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
 function checkCookie() {
-	var language=getCookie('language')
+	var language = getCookie('language')
 	if (language == 'cn') {
 	  strings = strings_cn;
 	}
@@ -1005,6 +1031,7 @@ function checkCookie() {
 	}
 }
 
+/* 点击"中英切换"按钮触发的js函数，中文版本/英文版本之间切换 */
 function changeLanguage() {
 	var language=getCookie('language')
 	if (language == 'cn') {
@@ -1037,6 +1064,7 @@ function changeLanguage() {
 
 /////////////////////// initialize ///////////////////////////
 
+/* 初始化，$(document).ready() */
 $(document).ready(function() {
 	setTimeout('loadfailed()', 10000);
 	checkCookie();

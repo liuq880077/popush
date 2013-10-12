@@ -3,11 +3,13 @@ var debugLock = false;
 var waiting = false;
 
 var runable = true;
+//可运行的文件后缀名
 var runableext = [
 	'c', 'cpp', 'js', 'py', 'pl', 'rb', 'lua', 'java'
 ];
 
 var debugable = true;
+//可调式的文件后缀
 var debugableext = [
 	'c', 'cpp'
 ];
@@ -21,6 +23,7 @@ var doc;
 var q = [];
 var timer = null;
 
+//后缀
 var ext;
 
 var bq = [];
@@ -47,14 +50,19 @@ q.shift = function() {
 	return r;
 }
 
+/* 返回当前文件是否能运行 */
 function runenabled(){
 	return (runable && !debugLock && (!issaving || runLock));
 }
 
+/* 返回当前文件是否能调试 */
 function debugenabled(){
 	return (debugable && !runLock && (!issaving || debugLock));
 }
 
+/* 设置运行和调试状态
+ * 若可运行则显示运行框，否则隐藏
+ * 若可调式则显示调试框，否则隐藏 */
 function setrunanddebugstate(){
 	$('#editor-run').removeClass('disabled');
 	$('#editor-debug').removeClass('disabled');
@@ -68,6 +76,7 @@ var savetimestamp;
 var issaving = false;
 var savetimeout = 500;
 
+/* 保存文件 */
 function setsaving(){
 	$('#current-doc-state').addClass('red');
 	$('#current-doc-state').text(strings['saving...']);
@@ -84,8 +93,10 @@ function setsaving(){
 	setrunanddebugstate();
 }
 
+/* 保存后操作 */
 function setsaved(){
 	savetimestamp = new Date().getTime();
+	//5ms后调用setsavedthen
 	setTimeout('setsavedthen(' + savetimestamp + ')', savetimeout);
 	savetimeout = 500;
 }
@@ -101,6 +112,7 @@ function setsavedthen(timestamp){
 	}
 }
 
+/* 给定后缀，判断是否为可运行文件类型 */
 function isrunable(ext) {
 	for(var i=0; i<runableext.length; i++) {
 		if(runableext[i] == ext)
@@ -109,6 +121,7 @@ function isrunable(ext) {
 	return false;
 }
 
+/* 给定后缀，判断是否为可调试文件类型 */
 function isdebugable(ext) {
 	for(var i=0; i<debugableext.length; i++) {
 		if(debugableext[i] == ext)
@@ -145,6 +158,7 @@ function sendbreak(from, to, text){
 	bq.push(req);
 }
 
+/* 向cm的第n行添加断点 */
 function addbreakpointat(cm, n){
 	var addlen = n - bps.length;
 	if (addlen > 0){
@@ -165,6 +179,7 @@ function addbreakpointat(cm, n){
 	cm.setGutterMarker(n, 'breakpoints', element);
 }
 
+/* 删除cm第n行的断点 */
 function removebreakpointat(cm, n){
 	var info = cm.lineInfo(n);
 	if (info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
@@ -176,6 +191,7 @@ function removebreakpointat(cm, n){
 	return false;
 }
 
+/* 判断cm的第n行是否有断点 */
 function havebreakat (cm, n) {
 	var info = cm.lineInfo(n);
 	if (info && info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
@@ -184,6 +200,8 @@ function havebreakat (cm, n) {
 	return "0";
 }
 
+/* 输入：文件名后缀
+ * 检查该文件是否能运行，是否能调试，并复制给runable 和debugable */
 function checkrunanddebug(ext) {
 	if(ENABLE_RUN) {
 		runable = isrunable(ext);
@@ -219,6 +237,7 @@ function runtoline(n) {
 	runningline = n;
 }
 
+/* 删除所有断点 */
 function removeallbreakpoints() {
 	for (var i = 0; i < bps.length; i++){
 		if (bps[i] == "1"){
@@ -231,6 +250,7 @@ function removeallbreakpoints() {
 	bps.replace("1", "0");
 }
 
+/* 初始化断点 */
 function initbreakpoints(bpsstr) {
 	bps = bpsstr;
 	for (var i = bpsstr.length; i < editor.lineCount(); i++){
@@ -307,6 +327,7 @@ function saveevent(cm) {
 	savetimestamp = 0;
 }
 
+/* 向聊天框添加内容 */
 function appendtochatbox(name, type, content, time) {
 	$('#chat-show-inner').append(
 		'<p class="chat-element"><span class="chat-name ' + type +
@@ -316,6 +337,9 @@ function appendtochatbox(name, type, content, time) {
 	o.scrollTop = o.scrollHeight;
 }
 
+/* 向控制台添加内容
+ * content: 添加内容
+ * type: class类型 */
 function appendtoconsole(content, type) {
 	if(type) {
 		type = ' class="' + type + '"';
@@ -398,6 +422,8 @@ socket.on('rm-expr', function(data) {
 	expressionlist.removeElementByExpression(data.expr);
 });
 
+/* 收到"chat"命令
+ * 在chatroom中添加新内容 */
 socket.on('chat', function(data) {
 	var text = htmlescape(data.text);
 
@@ -459,6 +485,7 @@ socket.on('moved', function(data) {
 	$('#current-doc').html(htmlescape(thename));
 });
 
+/* 离开语音聊天室 */
 function leaveVoiceRoom(){
 	while(window.userArray.length > 0){
 		$(window.audioArray[window.userArray.shift()]).remove();
@@ -597,6 +624,7 @@ function voice() {
 	}
 }
 
+/* 运行文件 */
 function run() {
 	if(!runenabled())
 		return;
@@ -613,6 +641,7 @@ function run() {
 	}
 }
 
+/* 设置运行时的界面 */
 function setrun() {
 	runLock = true;
 	$('#editor-run').html('<i class="icon-stop"></i>');
@@ -624,6 +653,7 @@ function setrun() {
 	openconsole();
 }
 
+/* 调试 */
 function debug() {
 	if(!debugenabled())
 		return;
@@ -640,6 +670,7 @@ function debug() {
 	}
 }
 
+/* 设置调试的界面 */
 function setdebug() {
 	debugLock = true;
 	$('#editor-debug').html('<i class="icon-eye-close"></i>');
@@ -651,6 +682,7 @@ function setdebug() {
 	openconsole();
 }
 
+/////////////////////// debug //////////////////////////////////
 function debugstep() {
 	if(debugLock && waiting) {
 		socket.emit('step', {
@@ -679,6 +711,7 @@ function debugcontinue() {
 	}
 }
 
+////////////////////// console /////////////////////////////////
 function toggleconsole() {
 	if(consoleopen) {
 		closeconsole();
@@ -706,6 +739,7 @@ function openconsole() {
 	$('#console-input').focus();
 }
 
+/////////////////////// other //////////////////////////////////
 function resize() {
 	var w;
 	var h = $(window).height();
@@ -750,6 +784,7 @@ function resize() {
 	editor.refresh();
 }
 
+///////////////////// websocket & callback //////////////////////
 socket.on('run', function(data){
 	appendtochatbox(strings['systemmessage'], 'system', data.name + '&nbsp;&nbsp;' + strings['runsaprogram'], new Date(data.time));
 	setrun();
@@ -857,6 +892,7 @@ socket.on('exit', function(data){
 	$('#console-title').text(strings['console'] + strings['finished']);
 });
 
+/* 新用户加入协同编程 */
 socket.on('join', function(data){
 	if(data.err) {
 		showmessageindialog('openeditor', data.err);
@@ -873,6 +909,7 @@ socket.on('join', function(data){
 	}
 });
 
+/* 某用户离开 */
 socket.on('leave', function(data){
 	memberlistdoc.setonline(data.name, false);
 	memberlistdoc.sort();
@@ -1329,6 +1366,12 @@ var bufferfrom = -1;
 var bufferto = -1;
 var buffertimeout = SAVE_TIME_OUT;
 
+/* 发送前端修改内容到后台
+ * bufferfrom:修改内容的起始位置
+ * bufferto:修改内容的终止位置
+ * buffertext:修改内容
+ * buffertimeout:发送buffer等待时间，超过这个时间没有输入则发送buffer */
+
 function sendbuffer(){
 	if (bufferfrom != -1) {
 		if (bufferto == -1){
@@ -1353,6 +1396,7 @@ function sendbuffer(){
 	}
 }
 
+/* 保存修改内容 */
 function save(){
 	setsaving();
 	if (timer != null){
