@@ -12,6 +12,8 @@ app.loginLock = false;
 app.registerLock = false;
 app.operationLock = false;
 app.views = {};
+app.collections = {};
+
 app.setCookie = function(c_name, value, expiredays) {
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + expiredays);
@@ -168,9 +170,6 @@ $(function () {
 		app.socket.emit('version', {
 		});
 	});
-		
-	app.views['login'] = new app.LoginView;
-	app.views['register'] = new app.RegisterView;
 });
 
 $(document).ready(function() {
@@ -196,5 +195,8 @@ $(document).ready(function() {
 	
 	app.resize();
 	$(window).resize(app.resize);
+	app.views['login'] = new app.LoginView;
+	app.views['register'] = new app.RegisterView;
+	app.views['members'] = new app.MemberlistView;
 });
 

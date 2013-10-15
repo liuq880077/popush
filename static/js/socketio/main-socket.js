@@ -25,7 +25,9 @@ function onLogin(data) {
 		$('#nav-avatar').attr('src', data.user.avatar);
 		app.currentUser = data.user;
 		$.cookie('sid', data.sid, {expires:7});
-
+		var users = new Array();
+		users[0] = data.user;
+		app.collections['members'].update(users);
 //					app.dirMode = 'owned';
 //					docshowfilter = allselffilter;
 
@@ -60,6 +62,6 @@ function main_socket() {
 		onLogin(data);
 	});
 	app.socket.on('register', function(data){
-		view.onRegister(data);
+		onRegister(data);
 	});
 }
