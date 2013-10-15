@@ -170,6 +170,7 @@ $(function () {
 	});
 		
 	app.views['login'] = new app.LoginView;
+	app.views['register'] = new app.RegisterView;
 });
 
 $(document).ready(function() {

@@ -64,7 +64,7 @@ var app = app || {};
 			});			
 		},
 
-		loginOnEnter: function(e) {
+		registerOnEnter: function(e) {
 			if(e.which == 13 && app.loadDone)
 				this.register();
 		},
