@@ -18,11 +18,16 @@
 	<script type="text/javascript" src="js/localization/zh-cn.js"></script>
 	<script type="text/javascript" src="js/localization/zh-en.js"></script>
 	<script type="text/javascript" src="js/ie.js"></script>
-	<script type="text/javascript" src="js/filelist.js"></script>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript" src="js/backbone.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/views/login-view.js"></script>
+	<script type="text/javascript" src="js/views/register-view.js"></script>
+<!--	<script type="text/javascript" src="js/filelist.js"></script>
 	<script type="text/javascript" src="js/userlist.js"></script>
 	<script type="text/javascript" src="js/expressionlist.js"></script>
 	<script type="text/javascript" src="js/popush.js"></script>
-	<script type="text/javascript" src="js/room.js"></script>
+	<script type="text/javascript" src="js/room.js"></script> -->
 </head>
 <body style="display:none;">
 	<div class="hero-unit" id="big-one">
@@ -70,13 +75,13 @@
 						<div class="control-group">
 							<label class="control-label" for="login-inputName" localization>username</label>
 							<div class="controls">
-								<input type="text" id="login-inputName" onkeydown="pressenter(arguments[0],login)" />
+								<input type="text" id="login-inputName"/>
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="login-inputPassword" localization>password</label>
 							<div class="controls">
-								<input type="password" id="login-inputPassword" onkeydown="pressenter(arguments[0],login)" />
+								<input type="password" id="login-inputPassword"/>
 							</div>
 						</div>
 						<div class="control-group hide" id="login-padding">
@@ -84,9 +89,9 @@
 						</div>
 						<div class="control-group">
 							<p align="center" id="loading-init" style="margin:1px 0 2px 0"><img src="images/init.gif"/></p>
-							<div class="controls hide" id="login-control" style="display:none;">
-								<button type="submit" class="btn" onclick="login();" localization>login</button>
-								<a class="switch-rel" href="javascript:;" onclick="registerview()" localization>register</a>
+							<div class="controls" id="login-control">
+								<button id="login-submit" type="submit" class="btn" localization>login</button>
+								<a id="register-view" class="switch-rel" href="javascript:;" localization>register</a>
 							</div>
 						</div>
 					</div>
@@ -105,25 +110,27 @@
 						<div class="control-group">
 							<label class="control-label" for="register-inputName" localization>username</label>
 							<div class="controls">
-								<a id="tooltip" href="#" data-toggle="tooltip" title="only-contain" localization><input type="text" id="register-inputName" onkeydown="pressenter(arguments[0],register)" /></a>
+							  <a id="tooltip" href="#" data-toggle="tooltip" title="only-contain" localization>
+								<input type="text" id="register-inputName"/>
+							  </a>
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="register-inputPassword" localization>password</label>
 							<div class="controls">
-								<input type="password" id="register-inputPassword" onkeydown="pressenter(arguments[0],register)" />
+								<input type="password" id="register-inputPassword"/>
 							</div>
 						</div>
 						<div class="control-group hide" id="register-padding">
 							<label class="control-label" for="register-inputPassword" localization>confirm</label>
 							<div class="controls">
-								<input type="password" id="register-confirmPassword" onkeydown="pressenter(arguments[0],register)" />
+								<input type="password" id="register-confirmPassword"/>
 							</div>
 						</div>
 						<div class="control-group">
 							<div class="controls" id="register-control">
-								<button type="submit" class="btn" onclick="register();" localization>register</button>
-								<a class="switch-rel" href="javascript:;" onclick="loginview()" localization>login</a>
+								<button id="register-submit" type="submit" class="btn" localization>register</button>
+								<a id="login-view" class="switch-rel" href="javascript:;" localization>login</a>
 							</div>
 						</div>
 					</div>
@@ -245,7 +252,7 @@
 		</div>
 		<div id="footer" class="row-fluid">
 			<div class="span11">			
-				<button style="text-align:left" class="btn btn-link" type="button" onclick="changeLanguage()"><span  localization>changeLanguage</span></button>
+				<button style="text-align:left" class="btn btn-link" type="button" onclick="app.changeLanguage()"><span  localization>changeLanguage</span></button>
 			</div>
 
 			<div class="span11">
