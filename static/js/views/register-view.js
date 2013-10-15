@@ -27,10 +27,6 @@ var app = app || {};
 		// collection, when items are added or changed. Kick things off by
 		// loading any preexisting todos that might be saved in *localStorage*.
 		initialize: function () {
-			var view = this;
-			app.socket.on('register', function(data){
-				view.onRegister(data);
-			});
 		},
 		
 		register: function () {
@@ -89,19 +85,6 @@ var app = app || {};
 				app.resize();
 			});	
 		},
-		
-		onRegister: function(data) {
-			if(data.err){
-				app.showmessage('register-message', data.err, 'error');
-			}else{
-				app.showmessage('register-message', 'registerok');
-				$('#register-inputName').val('');
-				$('#register-inputPassword').val('');
-				$('#register-confirmPassword').val('');
-			}
-			app.removeloading('register-control');
-			app.registerLock = false;	
-		},
-		
+				
 	});
 })(jQuery);

@@ -26,10 +26,6 @@ var app = app || {};
 		// collection, when items are added or changed. Kick things off by
 		// loading any preexisting todos that might be saved in *localStorage*.
 		initialize: function () {
-			var view = this;
-			app.socket.on('login', function(data){
-				view.onLogin(data);
-			});
 		},
 
 		/* 由登陆视图切换到注册视图 */

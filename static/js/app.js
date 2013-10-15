@@ -189,6 +189,8 @@ $(document).ready(function() {
 		return old;
 	});
 	
+	main_socket();
+	
 	$('body').show();
 	$('#login-inputName').focus();
 	
