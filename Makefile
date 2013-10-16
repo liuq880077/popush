@@ -31,7 +31,7 @@ npm:
 
 static:
 	@echo ">  make static"
-	@cd $(STATIC_DIR) && make static 1>/dev/null 
+	#@cd $(STATIC_DIR) && make static 1>/dev/null 
 
 conf:
 	@echo ">  configure"

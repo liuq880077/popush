@@ -7,6 +7,10 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 	background: -webkit-linear-gradient(to bottom, #1F1F21 0%, #6A6B6F 99%) repeat-x scroll 0 0 #6A6B6F !important;
 	background: x;}
 
+a {
+  cursor: pointer;
+}
+  
 #login{background-color: #FFF}
 #register{background-color: #FFF}
 #footer{color:#FFF;font-size:16px;}
