@@ -1,0 +1,8 @@
+*~
+bin/
+node_modules/
+tmp/*
+db/
+static/faces/*
+static/index.js
+static/index.css
