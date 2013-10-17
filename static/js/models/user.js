@@ -16,9 +16,8 @@ var app = app || {};
 			owner: false,
 		},
 
-		update: function(data, opt) {
-			this.save(data, opt);
-		}
+		update: Backbone.Model.prototype.save,
+    
 	});
   
 })();

@@ -30,6 +30,7 @@ var app = app || {};
       opt || (opt = {});
       if(opt.noinit) { return this; }
       this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'remove', this.remove);
       this.listenTo(this.model, 'destroy', this.remove);
     },
     

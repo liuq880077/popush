@@ -146,7 +146,7 @@
 									<li><a href="javascript:;" localization>import</a></li>-->
 								</ul>
 							</li>
-							<li id="ownedfileex" class="hide"><a href="javascript:;" onclick="ownedfilelist()" localization>owningfiles</a></li>
+							<li id="ownedfileex" class="hide"><a href="#" localization>owningfiles</a></li>
 							<li id="sharedfile"><a href="#" localization>sharedfiles</a></li>
 						</ul>
 					</div>
@@ -440,8 +440,7 @@
 		<span><div style="clear:both;"></div>
 	</script>
 	<script type="text/template" id="member-template">
-		<img id="member-avatar-<%= name %>" src="<%= avatar %>" width="40" height="40"
-		 class="pull-left online shared-character user-<%= name %>" />
+		<img src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
 	</script>
   <script type="text/template" id="file-template">
 <td class="col1"><img src='<%=model.pic%>' height="32" width="32" /></td>

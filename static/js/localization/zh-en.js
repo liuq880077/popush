@@ -112,5 +112,6 @@ var strings_en = {
 	'novoice'                       :'The browser does not support voice function, please use<br />Chrome18+ or Opera12+',
 	'only-platform'			:'Another Platform for Code Cooperation',
 	'only-contain'			:'Only contain characters and numbers',
-	'changeLanguage'		:'中文版',
+	'changeLanguage'		:'转到：中文版',
+  'wrong path'      :'The path has an error.',
 };

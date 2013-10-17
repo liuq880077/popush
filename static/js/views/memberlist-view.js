@@ -37,19 +37,25 @@ var app = app || {};
 		// appending its element to the `<ul>`.
 		addOne: function (user) {
 			var view = new app.MemberView({ model: user });
-			var text = view.render().el;
-			$('#member-list').append(view.render().el);
-			$('#member-avatar-' + user.get('name')).popover({
+			var text = view.render().$el;
+			this.$el.append(text);
+			text.find('.member-avatar').popover({
 				html: true,
 				content: this.poptemplate(user.toJSON()),
 				placement: 'bottom',
-				trigger: 'hover'
+				trigger: 'hover',
 			});
 		},
 
 		// Add all items in the **Todos** collection at once.
-		addAll: function () {
-			this.$('#member-list').html('');
+		addAll: function (collection, opts) {
+      /*
+        Both ways are OK, but the second can stop those event-listeners,
+        although it's a little slower.
+        */
+			/* this.$el.html(''); */
+      _.each(opts.previousModels, function(m) { m.trigger('remove'); });
+      
 			app.collections['members'].each(this.addOne, this);
 		},
 

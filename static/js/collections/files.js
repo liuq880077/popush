@@ -8,8 +8,7 @@ var app = app || {};
 		// Reference to this collection's model.
 		model: app.File,
 		
-		update: function() {
-    },
+		update: Backbone.Collection.prototype.set,
     
 	});
 

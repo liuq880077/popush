@@ -18,6 +18,7 @@ var app = app || {};
 		initialize: function () {
 			this.listenTo(this.model, 'change', this.render);
 			this.listenTo(this.model, 'remove', this.remove);
+			this.listenTo(this.model, 'destroy', this.remove);
 		},
 
 		// Re-render the titles of the todo item.
@@ -26,12 +27,9 @@ var app = app || {};
 			return this;
 		},
 		
-		remove: function () {
-		},
-
 		// Remove the item, destroy the model from *localStorage* and delete its view.
-		clear: function () {
+		//clear: function () {
 //			this.model.destroy();
-		}
+		//}
 	});
 })(jQuery);
