@@ -137,8 +137,8 @@
 				<div class="row-fluid">
 					<div class="span12">
 						<ul class="nav nav-tabs">
-							<li class="active dropdown" id="ownedfile">
-								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><span localization>owningfiles</span><b class="caret"></b></a>
+							<li class="dropdown" id="ownedfile">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span localization>owningfiles</span><b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="#newfile" data-toggle="modal" onclick="newfileopen()" localization>newfile</a></li>
 									<li><a href="#newfile" data-toggle="modal" onclick="newfolderopen()" localization>newfolder</a></li>
@@ -147,15 +147,23 @@
 								</ul>
 							</li>
 							<li id="ownedfileex" class="hide"><a href="javascript:;" onclick="ownedfilelist()" localization>owningfiles</a></li>
-							<li id="sharedfile"><a href="javascript:;" onclick="sharedfilelist()" localization>sharedfiles</a></li>
+							<li id="sharedfile"><a href="#" localization>sharedfiles</a></li>
 						</ul>
 					</div>
 				</div>
 				
 				<div class="row-fluid" id="file-list">
 					<div class="span10">
-						<p><span localization>currentdir:</span><span id="current-dir"></span></p>
+						<p><span localization>currentdir:</span>&nbsp;<span id="current-dir"></span></p>
 						<table class="table table-hover" id="file-list-table">
+              <tr class="head">
+                <th class="col1">&nbsp;</th>
+                <th class="col2" localization>filename</th>
+                <th class="col3"localization>state</th>
+                <th class="col4"localization>timestamp</th>
+                <th class="col5">&nbsp;</th>
+              </tr>
+              <tr id="no-file"><td></td><td localization>nofile</td> <td></td> <td></td> <td></td></tr>
 						</table>
 					</div>
 					<div class="span2">
@@ -347,7 +355,7 @@
 				<h3 id="deleteLabel" localization>deleteconfirm</h3>
 			</div>
 			<div class="modal-body">
-				<p><span localization>suretodelete</span>&nbsp;<span class="folder" localization></span> <span id="delete-name"></span></p>
+				<p><span localization>suretodelete</span>&nbsp;<span class="folder" localization>file</span> <span id="delete-name"></span></p>
 			</div>
 			<div class="modal-footer">
 				<div id="delete-buttons">
@@ -437,11 +445,11 @@
 	</script>
   <script type="text/template" id="file-template">
 <td class="col1"><img src='<%=model.pic%>' height="32" width="32" /></td>
-<a href='#<%=model.name%>' class="file-go-enter"><td class="col2"><%=model.showname%></td></a>
+<td class="col2"><a href='#<%=encodeURI(app.currentDirString + "/" + model.shownName)%>' class="file-go-enter"><%=_.escape(model.shownName)%></a></td>
 <% if (model.belongSelf) { %>
-<td class="col3" localization><%=model.shared?strings["shared"]:"")%></td>
+<td class="col3" localization><%=model.shared?strings["shared"]:""%></td>
 <% } else { var o = model.owner; %>
-<td class="col3 owner"><img class='user-<%=o.name%>' src='<%=o.avatar%>' width="32" height="32"/><%=o.name%></td>
+<td class="col3 owner"><img class='user-other' src='<%=o.avatar%>' width="32" height="32"/><%=_.escape(o.name)%></td>
 <% } %>
 <td class="col4"><%=model.time%></td>
 <td class="col5">
@@ -455,21 +463,13 @@
   </div>
 </td>
   </script>
-  <script type="text/template" id="file-list-template">
-<tr class="head">
-  <th class="col1">&nbsp;</th>
-  <th class="col2"><%=strings["filename"]%></th>
-  <th class="col3"><%=strings["state"]%></th>
-  <th class="col4"><%=strings["timestamp"]%></th>
-  <th class="col5">&nbsp;</th>
-</tr>
-<tr id="no-file"><td></td><td localization><%=strings["nofile"]%></td> <td></td> <td></td> <td></td> </tr>
-  </script>
 	<script type="text/javascript" src="js/underscore.js"></script>
 	<script type="text/javascript" src="js/backbone.js"></script>
 	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/models/file.js"></script>
 	<script type="text/javascript" src="js/models/user.js"></script>
+	<script type="text/javascript" src="js/collections/files.js"></script>
 	<script type="text/javascript" src="js/collections/members.js"></script>
 	<script type="text/javascript" src="js/socketio/main-socket.js"></script>
 	<script type="text/javascript" src="js/views/login-view.js"></script>

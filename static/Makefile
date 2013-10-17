@@ -4,7 +4,7 @@ all:split
 
 static:split
 	@echo ">  make index.html"
-	@mv split.html index-split.html
+	@mv split.html index_split.html
 
 inline:inline.html
 	@rm -rf indexx.html index.css index.js split.html

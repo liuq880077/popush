@@ -2,85 +2,43 @@
 var app = app || {};
 
 (function () {
-  var $ = Backbone.$;
-  
-  var ext2icon = {
-    'c':		'c',
-    'clj':		'clj',
-    'coffee':	'coffee',
-    'cpp':		'cpp',
-    'cs':		'cs',
-    'css':		'css',
-    'go':		'go',
-    'h':		'h',
-    'htm':		'htm',
-    'html':		'html',
-    'hpp':		'hpp',
-    'java':		'java',
-    'js':		'js',
-    'json':		'json',
-    'lisp':		'lisp',
-    'lua':		'lua',
-    'md':		'md', //
-    'pas':		'pas', //
-    'php':		'php',
-    'pl':		'pl',
-    'py':		'py',
-    'rb':		'rb',
-    'sql':		'sql',
-    'tex':		'tex',
-    'vbs':		'vbs',
-    'xml':		'xml'
-  };
-  
-	/**
+	'use strict';
+    
+  /**
     File Item View
     */
     
-	/* The DOM element for a file item... */
-	app.FileView = Backbone.View.extend({
-		/* ... is a container tag. */
-		tagName:  'tr',
+  /* The DOM element for a file item... */
+  app.FileView = Backbone.View.extend({
+    /* ... is a container tag. */
+    tagName:  'tr',
+    
+    className: 'file-item',
 
-		/* Cache the template function for a single item. */
-		template: _.template($('#file-template').html(), null, {variable: 'model'}),
+    /* Cache the template function for a single item. */
+    template: _.template($('#file-template').html(), null, {variable: 'model'}),
 
-		/* The DOM events specific to an item. */
-		events: {
-			'click a.file-go-enter': function() { window.location.href = '#' + this.model.get('path'); },
-			'click a.file-go-share': 'share',
-			'click a.file-go-delete': 'del',
-			'click a.file-go-rename': 'rename',
-		},
+    /* The DOM events specific to an item. */
+    events: {
+      'click a.file-go-enter': function() { window.location.href = '#' + this.model.get('path'); },
+      'click a.file-go-share': 'share',
+      'click a.file-go-delete': 'del',
+      'click a.file-go-rename': 'rename',
+    },
 
-		initialize: function (opt) {
+    initialize: function (opt) {
       opt || (opt = {});
       if(opt.noinit) { return this; }
-			this.listenTo(this.model, 'change', this.render);
-			this.listenTo(this.model, 'destroy', this.remove);
-		},
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'destroy', this.remove);
+    },
     
-    getpic: function(model) {
-      var s = 'images/ext/';
-      if (model.type == 'dir') {
-        s += 'dict';
-      } else {
-        s += (ext2icon[model.name.substring(model.name.lastIndexOf('.')+1)] || 'file');
-      }
-      s += '.png';
-      return s;
-    };
-    
-		/* Re-render the item. */
-		render: function () {
-      var model = this.model.toJSON();
-      model.pic = this.getpic(model);
-      model.inRoot = (model.path.split('/').length <= 3);
-      model.owner = model.owner.toJSON();
-      model.belongSelf = (app.currentUser.get("name") == model.owner.name);
-      this.$el.html(this.template(model));
+    /* Re-render the item. */
+    render: function () {
+      /* TODO: make model */
+      this.$el.html(this.template(this.model.json));
       return this;
-		},
+    },
 
     share: function () {
       /* var modal = $('#share'), model = this.model.toJSON();
@@ -88,7 +46,7 @@ var app = app || {};
       /* // TODO: enter 'share' page through router. */
       /* var sharemv = app.views.shareManage || (app.views.shareManage = new app.ShareManageView);
       sharemv.show(this.model); */
-    }
+    },
 
     del: function () {
       var modal = $('#delete'), model = this.model.toJSON();
@@ -103,10 +61,10 @@ var app = app || {};
         app.operationLock = true;
         loading('delete-buttons');
         socket.emit('delete', {
-          path: model.path;
+          path: model.path,
         });
       });
-    }
+    },
 
     rename: function () {
       var modal = $('#rename'), model = this.model.toJSON();
@@ -135,13 +93,14 @@ var app = app || {};
           return;
         app.operationLock = true;
         loading('rename-buttons');
-        /* TODO: */ movehandler = renamedone;
+        /* TODO: */
+        movehandler = renamedone;
         socket.emit('move', {
           path: model.path,
-          newPath: model.path.replace(/(.*\/)?(.*)/,  '$1' + name,
+          newPath: model.path.replace(/(.*\/)?(.*)/, '$1' + name),
         });
       });
-    }
+    },
     
   });
   

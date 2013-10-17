@@ -7,8 +7,9 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 	background: -webkit-linear-gradient(to bottom, #1F1F21 0%, #6A6B6F 99%) repeat-x scroll 0 0 #6A6B6F !important;
 	background: x;}
 
-a {
-  cursor: pointer;
+#current-dir>a{
+  margin-left: 5px;
+  margin-right: 5px;
 }
   
 #login{background-color: #FFF}

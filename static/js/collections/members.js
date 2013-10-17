@@ -43,6 +43,4 @@ var app = app || {};
 		},
 	});
 
-	// Create our global collection of **Todos**.
-	app.collections['members'] = new app.Members();
 })();

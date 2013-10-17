@@ -1,6 +1,8 @@
 var app = app || {};
 
-function onLogin(data) {
+(function() {
+
+var onLogin = function(data) {
 	if(data.err){
 		if(data.err == 'expired') {
 			$.removeCookie('sid');
@@ -12,22 +14,33 @@ function onLogin(data) {
 		$('#login-inputName').val('');
 		$('#login-inputPassword').val('');
 		$('#login-message').hide();
-		$('#ownedfile').show();
-		$('#ownedfileex').hide();
-		$('#sharedfile').removeClass('active');
-		$('#share-manage-link').hide();
 		$('#big-one').animate({height:'40px', padding:'0', 'margin-bottom':'20px'}, 'fast');
 		$('#nav-head').fadeIn('fast');
 		$('#login').hide();
 		$('#editor').hide();
-		$('#filecontrol').fadeIn('fast');
+    
 		$('#nav-user-name').text(data.user.name);
 		$('#nav-avatar').attr('src', data.user.avatar);
 		app.currentUser = data.user;
 		$.cookie('sid', data.sid, {expires:7});
-		var users = new Array();
-		users[0] = data.user;
+
+		$('#filecontrol').fadeIn('fast');
+    
+		var users = [];
+		users.push(data.user);
 		app.collections['members'].update(users);
+    
+    app.currentDirString = '/' + data.user.name;
+    app.collections['files'].reset(data.user.docs);
+    delete data.user.docs; /* avoid bad memory. */
+    app.views['files'].show();
+
+    $('#ownedfile>a').attr('href', '#/' + data.user.name);
+    $('#sharedfile>a').attr('href', '#/shared@' + data.user.name).bind();
+    
+    window.location.href = '#/' + data.user.name;
+    
+    
 //					app.dirMode = 'owned';
 //					docshowfilter = allselffilter;
 
@@ -42,9 +55,9 @@ function onLogin(data) {
 	}
 	app.cleanloading();
 	app.loginLock = false;
-}
+};
 	
-function onRegister(data) {
+var onRegister = function(data) {
 	if(data.err){
 		app.showmessage('register-message', data.err, 'error');
 	}else{
@@ -55,13 +68,12 @@ function onRegister(data) {
 	}
 	app.removeloading('register-control');
 	app.registerLock = false;	
+};
+
+app.main_socket = function() {
+	app.socket.on('login', onLogin);
+	app.socket.on('register', onRegister);
+  //app.socket.on('login');
 }
 
-function main_socket() {
-	app.socket.on('login', function(data){
-		onLogin(data);
-	});
-	app.socket.on('register', function(data){
-		onRegister(data);
-	});
-}
+})();

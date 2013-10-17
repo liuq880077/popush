@@ -1,38 +1,33 @@
-/*global $ */
-/*jshint unused:false */
 var app = app || {};
 
-app.socket = io.connect(SOCKET_IO)
-app.loadDone = false;
-app.failed = false;
-app.loadings = {};
-app.firstconnect = true;
-app.viewswitchLock = false;
-app.loginLock = false;
-app.registerLock = false;
-app.operationLock = false;
-app.views = {};
-app.collections = {};
+(function() {
+
+/* global variables */
+_.extend(app, {
+  socket: io.connect(SOCKET_IO),
+  loadDone: false,
+  failed: false,
+  loadings: {},
+  firstconnect: true,
+  viewswitchLock: false,
+  loginLock: false,
+  registerLock: false,
+  operationLock: false,
+  views: {},
+  collections: {},
+  currentUser: '',
+  currentDir: [],
+  currentDirString: '',
+});
+
 
 app.setCookie = function(c_name, value, expiredays) {
-	var exdate = new Date();
-	exdate.setDate(exdate.getDate() + expiredays);
-	document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
-}
+  $.cookie(c_name, value, {expires: expiredays});
+};
 
 app.getCookie = function(c_name) {
-	if (document.cookie.length > 0) {
-		c_start = document.cookie.indexOf(c_name + "=");
-		if (c_start != -1) {
-	    	c_start = c_start + c_name.length + 1;
-	    	c_end = document.cookie.indexOf(";", c_start);
-	    	if (c_end == -1) 
-				c_end = document.cookie.length;
-	    	return unescape(document.cookie.substring(c_start, c_end));
-	    } 
-	}
-	return "";
-}
+  return(window.unescape($.cookie(c_name) || ''));
+};
 
 app.loadfailed = function(){
 	if(app.loadDone)
@@ -40,7 +35,7 @@ app.loadfailed = function(){
 	app.failed = true;
 	$('#loading-init').remove();
 	app.showmessage('login-message', 'loadfailed');
-}
+};
 
 app.loading = function(id){
 	if(app.loadings[id])
@@ -49,7 +44,7 @@ app.loading = function(id){
 	o.after('<p id="' + id + '-loading" align="center" style="margin:1px 0 2px 0"><img src="images/loading.gif"/></p>');
 	o.hide();
 	app.loadings[id] = {self: o, loading: $('#' + id + '-loading')};
-}
+};
 
 app.removeloading = function(id){
 	if(!app.loadings[id])
@@ -57,13 +52,13 @@ app.removeloading = function(id){
 	app.loadings[id].self.show();
 	app.loadings[id].loading.remove();
 	delete app.loadings[id];
-}
+};
 
 app.cleanloading = function(){
 	for(var k in app.loadings) {
 		app.removeloading(k);
 	}
-}
+};
 
 app.showmessage = function(id, stringid, type){
 	var o = $('#' + id);
@@ -77,7 +72,7 @@ app.showmessage = function(id, stringid, type){
 	else
 		$('#' + id + ' span').html(stringid);
 	o.slideDown();
-}
+};
 
 /* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
 app.checkCookie = function(){
@@ -97,7 +92,7 @@ app.checkCookie = function(){
 	  app.setCookie('language','cn',365);
 	  strings = strings_cn;
 	}
-}
+};
 
 /* 点击"中英切换"按钮触发的js函数，中文版本/英文版本之间切换 */
 app.changeLanguage = function() {
@@ -128,7 +123,7 @@ app.changeLanguage = function() {
 		}
 		return old;
 	});	
-}
+};
 
 app.resize = function() {
 	var w;
@@ -139,11 +134,24 @@ app.resize = function() {
 	$('#login-box').css('left', ((w-420)/2-30) + 'px');
 	w = $('#register-box').parent('*').width();
 	$('#register-box').css('left', ((w-420)/2-30) + 'px');
-}
+};
 
-$(function () {
-	'use strict';
+app.getDirString = function() {
+	if(dirMode == 'owned')
+		return '/' + currentDir.join('/');
+	else {
+		var name = currentDir.shift();
+		var r = '/' + currentDir.join('/');
+		if(currentDir.length == 0) {
+			r = '/' + name;
+		}
+		currentDir.unshift(name);
+		return r;
+	}
+};
 
+(function () {
+	
 	app.socket.on('version', function(data){
 		if(data.version != VERSION) {
 			location.reload('Refresh');
@@ -170,33 +178,44 @@ $(function () {
 		app.socket.emit('version', {
 		});
 	});
-});
+})();
 
 $(document).ready(function() {
-	setTimeout('app.loadfailed()', 10000);
-	app.checkCookie();
+	window.setTimeout(app.loadfailed, 10000);
 
-	$('[localization]').html(function(index, old) {
-		if(strings[old])
-			return strings[old];
-		return old;
-	});
-	
-	$('[title]').attr('title', function(index, old) {
-		if(strings[old])
-			return strings[old];
-		return old;
-	});
-	
-	main_socket();
+	app.checkCookie();
+  var getLanguageString = function(index, old) {
+    return strings[old] || old;
+  };
+	$('[localization]').html(getLanguageString);
+	$('[title]').attr('title', getLanguageString);
 	
 	$('body').show();
 	$('#login-inputName').focus();
-	
 	app.resize();
 	$(window).resize(app.resize);
+  
 	app.views['login'] = new app.LoginView;
 	app.views['register'] = new app.RegisterView;
-	app.views['members'] = new app.MemberlistView;
+	
+  var temp;
+  temp = app.collections['files'] = new app.Files();
+	app.views['files'] = new app.FilesView({
+    collection: temp,
+    mode: app.FilesView.Mode.BelongSelf,
+    el: $('#file-list > .span10'),
+  });
+  
+  temp = app.collections['members'] = new app.Members();
+	app.views['members'] = new app.MemberlistView({collection: temp});
+  
+	app.main_socket();
+  
+  
+  app.socket.emit('login', {
+    name: 'gdh1995',
+    password: 'gdh1995',
+  });
 });
 
+})();
