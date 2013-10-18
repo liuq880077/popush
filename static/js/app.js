@@ -7,7 +7,6 @@ _.extend(app, {
   socket: io.connect(SOCKET_IO),
   loadDone: false,
   failed: false,
-  loadings: {},
   firstconnect: true,
   viewswitchLock: false,
   loginLock: false,
@@ -15,13 +14,24 @@ _.extend(app, {
   operationLock: false,
   views: {},
   collections: {},
-  currentUser: '',
-  currentDir: [],
-  currentDirString: '',
+  currentUser: null,
+  currentDir: '',
   docLock: false,
   docWaitingLock: false,
+  fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
+  router: null,
 });
 
+/* check if the user has logged in. */
+/* if not, it will go to '#login'. */
+app.userVerify = function() {
+  if(app.loginLock == false && app.currentUser) {
+    return true;
+  } else {
+    window.location.href = '#login';
+    return false;
+  }
+};
 
 app.setCookie = function(c_name, value, expiredays) {
   $.cookie(c_name, value, {expires: expiredays});
@@ -39,27 +49,40 @@ app.loadfailed = function(){
   app.showmessage('login-message', 'loadfailed');
 };
 
-app.loading = function(id){
-  if(app.loadings[id])
-    return;
-  var o = $('#' + id);
-  o.after('<p id="' + id + '-loading" align="center" style="margin:1px 0 2px 0"><img src="images/loading.gif"/></p>');
-  o.hide();
-  app.loadings[id] = {self: o, loading: $('#' + id + '-loading')};
-};
+(function() {
+  var loadings = {};
+  
+  app.loading = function(id){
+    if(loadings[id])
+      return;
+    var o = $(id),
+      p = $('<p class="app-loading"><img src="images/loading.gif"/></p>');
+    o.after(p);
+    o.hide();
+    loadings[id] = {self: o, loading: p};
+  };
 
-app.removeloading = function(id){
-  if(!app.loadings[id])
-    return;
-  app.loadings[id].self.show();
-  app.loadings[id].loading.remove();
-  delete app.loadings[id];
-};
+  app.removeloading = function(id){
+    if(!loadings[id])
+      return;
+    loadings[id].self.show();
+    loadings[id].loading.remove();
+    delete loadings[id];
+  };
 
-app.cleanloading = function(){
-  for(var k in app.loadings) {
-    app.removeloading(k);
-  }
+  app.cleanloading = function(){
+    for(var k in loadings) {
+      app.removeloading(k);
+    }
+  };
+})();
+
+app.showInputModal = function(modal, def) {
+  modal.find('.control-group').removeClass('error');
+  modal.find('.help-inline').text('');
+  var i = modal.find('.modal-input').val(def || '');
+  modal.modal('show');
+  i.focus();
 };
 
 app.showmessage = function(id, stringid, type){
@@ -77,17 +100,22 @@ app.showmessage = function(id, stringid, type){
 };
 
 (function() {
-  var dialog = $('#messagedialog'), t;
-  app.showmessagebox = function(title, content, timeout) {
-    dialog.find('#messagedialogLabel').html(strings[title] || title);
-    dialog.find('#messagedialogContent').html(strings[content] || content);
-    dialog.modal('show');
-    t = setTimeout(function() {
-      dialog.modal('hide');
-    }, timeout*1000);
-  };
+  var dlg = $('#messagedialog'), t;
   
+  app.showMessageBox = function(title, content, timeout) {
+    dlg.find('#messagedialogLabel').html(strings[title] || title);
+    dlg.find('#messagedialogContent').html(strings[content] || content);
+    dlg.modal('show');
+    t = setTimeout(function() { dlg.modal('hide'); }, timeout*1000);
+  };
 })();
+
+app.showMessageInDialog = function (selector, stringid, index) {
+  var dlg = $(selector),
+    eq = (index === undefined) ? '' : (':eq(' + index + ')');
+  dlg.find('.control-group' + eq).addClass('error');
+  dlg.find('.help-inline' + eq).text(strings[stringid] || stringid);
+}
 
 /* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
 app.checkCookie = function(){
@@ -151,20 +179,6 @@ app.resize = function() {
   $('#register-box').css('left', ((w-420)/2-30) + 'px');
 };
 
-app.getDirString = function() {
-  if(dirMode == 'owned')
-    return '/' + currentDir.join('/');
-  else {
-    var name = currentDir.shift();
-    var r = '/' + currentDir.join('/');
-    if(currentDir.length == 0) {
-      r = '/' + name;
-    }
-    currentDir.unshift(name);
-    return r;
-  }
-};
-
 (function () {
   
   app.socket.on('version', function(data){
@@ -181,7 +195,7 @@ app.getDirString = function() {
     app.cleanloading();
     if($.cookie('sid')){
       app.socket.emit('relogin', {sid:$.cookie('sid')});
-      app.loading('login-control');
+      app.loading('#login-control');
       app.loginLock = true;
     } else {
       $('#login-control').fadeIn('fast');
@@ -225,8 +239,8 @@ $(document).ready(function() {
   
   app.main_socket();
   
-  /* 
-  app.socket.emit('login', {
+  
+/*   app.socket.emit('login', {
     name: 'gdh1995',
     password: 'gdh1995',
   }); */

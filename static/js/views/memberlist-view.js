@@ -26,11 +26,6 @@ var app = app || {};
 		initialize: function () {
 			this.listenTo(app.collections['members'], 'add', this.addOne);
 			this.listenTo(app.collections['members'], 'reset', this.addAll);
-
-			// Suppresses 'add' events with {reset: true} and prevents the app view 
-			// from being re-rendered for every model. Only renders when the 'reset'
-			// event is triggered at the end of the fetch.
-			app.collections['members'].fetch({reset: true});
 		},
 
 		// Add a single todo item to the list by creating a view for it, and

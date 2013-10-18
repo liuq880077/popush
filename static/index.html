@@ -140,8 +140,8 @@
 							<li class="dropdown" id="ownedfile">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span localization>owningfiles</span><b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="#newfile" data-toggle="modal" onclick="newfileopen()" localization>newfile</a></li>
-									<li><a href="#newfile" data-toggle="modal" onclick="newfolderopen()" localization>newfolder</a></li>
+									<li><a href="#" data-toggle="modal" new-type="doc" localization>newfile</a></li>
+									<li><a href="#" data-toggle="modal" new-type="dir" localization>newfolder</a></li>
 									<!--<li class="divider"></li>
 									<li><a href="javascript:;" localization>import</a></li>-->
 								</ul>
@@ -159,8 +159,8 @@
               <tr class="head">
                 <th class="col1">&nbsp;</th>
                 <th class="col2" localization>filename</th>
-                <th class="col3"localization>state</th>
-                <th class="col4"localization>timestamp</th>
+                <th class="col3" localization>state</th>
+                <th class="col4" localization>timestamp</th>
                 <th class="col5">&nbsp;</th>
               </tr>
               <tr id="no-file"><td></td><td localization>nofile</td> <td></td> <td></td> <td></td></tr>
@@ -265,27 +265,28 @@
 		</div>
 		
 		<!-- popover -->
-		<div id="newfile" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newfileLabel" aria-hidden="true" data-backdrop="static">
+		<div id="newfile" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newfile-label" aria-hidden="true" data-backdrop="static">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="newfileLabel" localization>newfile</h3>
+				<h3 id="newfile-label" localization>newfile</h3>
 			</div>
 			<div class="modal-body form-horizontal">
 				<div class="control-group">
-					<label class="control-label" for="newfile-inputName" localization>name</label>
+					<label class="control-label" for="newfile-input" localization>name</label>
 					<div class="controls">
-						<input type="text" id="newfile-inputName" onkeydown="pressenter(arguments[0],newfile)" />
+						<input class="modal-input" type="text" id="newfile-input" />
 						<span class="help-inline"></span>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<div id="newfile-buttons">
-					<button class="btn" onclick="newfile()" localization>ok</button>
+				<div class="modal-buttons">
+					<button class="btn modal-confirm" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
 		</div>
+
 		
 		<!-- popover -->
 		<div id="changeavatar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="changeavatarLabel" aria-hidden="true" data-backdrop="static">
@@ -348,41 +349,41 @@
 			</div>
 		</div>
 
-		<!-- popover -->
-		<div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" data-backdrop="static">
+    <!-- popover -->
+		<div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="delete-label" aria-hidden="true" data-backdrop="static">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="deleteLabel" localization>deleteconfirm</h3>
+				<h3 id="delete-label" localization>deleteconfirm</h3>
 			</div>
 			<div class="modal-body">
 				<p><span localization>suretodelete</span>&nbsp;<span class="folder" localization>file</span> <span id="delete-name"></span></p>
 			</div>
 			<div class="modal-footer">
-				<div id="delete-buttons">
-					<button class="btn" id="confirmDeleteBtn" localization>ok</button>
+				<div class="modal-buttons">
+					<button class="btn modal-confirm" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
 		</div>
 
 		<!-- popover -->
-		<div id="rename" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="renameLabel" aria-hidden="true" data-backdrop="static">
+		<div id="rename" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="rename-label" aria-hidden="true" data-backdrop="static">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="renameLabel" localization>rename</h3>
+				<h3 id="rename-label" localization>rename</h3>
 			</div>
 			<div class="modal-body form-horizontal">
 				<div class="control-group">
-					<label class="control-label" for="rename-inputName" localization>newname</label>
+					<label class="control-label" for="rename-input" localization>newname</label>
 					<div class="controls">
-						<input type="text" id="rename-inputName" onkeydown="pressenter(arguments[0],rename)" />
+						<input class="modal-input" type="text" id="rename-input" />
 						<span class="help-inline"></span>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<div id="rename-buttons">
-					<button class="btn" id="confirmRenameBtn" localization>ok</button>
+				<div class="modal-buttons">
+					<button class="btn modal-confirm" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
@@ -444,7 +445,7 @@
 	</script>
   <script type="text/template" id="file-template">
 <td class="col1"><img src='<%=model.pic%>' height="32" width="32" /></td>
-<td class="col2"><a href='#<%=encodeURI(app.currentDirString + "/" + model.shownName)%>' class="file-go-enter"><%=_.escape(model.shownName)%></a></td>
+<td class="col2"><a href='#<%=encodeURI(model.shownPath)%>' class="file-go-enter"><%=_.escape(model.shownName)%></a></td>
 <% if (model.belongSelf) { %>
 <td class="col3" localization><%=model.shared?strings["shared"]:""%></td>
 <% } else { var o = model.owner; %>
@@ -453,11 +454,11 @@
 <td class="col4"><%=model.time%></td>
 <td class="col5">
   <div class='dropdown<%=model.belongSelf ? "" : " disabled"%>'>
-    <a class="dropdown-toggle opreation" data-toggle="dropdown">&nbsp;</a>
+    <a href="#" class="dropdown-toggle opreation" data-toggle="dropdown">&nbsp;</a>
   <ul class="dropdown-menu">
     <% if(model.inRoot) { %><li><a class="file-go-share" localization><%=strings["sharemanage"]%></a></li> <% } %>
-    <li><a class="file-go-delete" localization><%=strings["delete"]%></a></li>
-    <li><a class="file-go-rename" localization><%=strings["rename"]%></a></li>
+    <li><a href="#" class="file-go-delete" localization><%=strings["delete"]%></a></li>
+    <li><a href="#" class="file-go-rename" localization><%=strings["rename"]%></a></li>
   </ul>
   </div>
 </td>
@@ -477,5 +478,6 @@
 	<script type="text/javascript" src="js/views/memberlist-view.js"></script>
 	<script type="text/javascript" src="js/views/file-view.js"></script>
 	<script type="text/javascript" src="js/views/files-view.js"></script>
+	<script type="text/javascript" src="js/routers/router.js"></script>
 </body>
 </html>

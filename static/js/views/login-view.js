@@ -61,7 +61,7 @@ var app = app || {};
 			if(app.loginLock)
 				return;
 			app.loginLock = true;
-			app.loading('login-control');
+			app.loading('#login-control');
 			app.socket.emit('login', {
 				name: name,
 				password: pass,

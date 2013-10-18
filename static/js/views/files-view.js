@@ -13,6 +13,10 @@ var app = app || {};
   
     el: '#file-list > .span10',
     
+    refetch: function() {
+      this.go(app.currentDir);
+    },
+    
     go: function(dir) {
       if(dir == null || dir.charAt(0) != '/') { return false; }
       
@@ -43,7 +47,7 @@ var app = app || {};
       }
       
       if(app.docLock) { return false; }
-			app.docLock = true;
+      app.docLock = true;
       
       s = dir.split('/');
       if(s[1] == app.currentUser.name && !rootShared) {
@@ -60,11 +64,11 @@ var app = app || {};
           s = '/shared@' + s[1];
         }
       }
-      if(app.currentDirString == s) {
+      if(app.currentDir == s) {
         app.docLock = Backbone.Collection.prototype.set;
       } else {
         app.docLock = Backbone.Collection.prototype.reset;
-        app.currentDirString = s;
+        app.currentDir = s;
         this.collection.reset();
       }
       
@@ -72,31 +76,26 @@ var app = app || {};
       
       var that = this;
       setTimeout(function(){
-        if(app.docLock) {
-          app.docWaitingLock = that.$noFile.attr('id');
+        if(app.docLock && !app.docWaitingLock) {
+          app.docWaitingLock = that.$noFile;
           app.loading(app.docWaitingLock);
         }
       }, 1000);
     },
-    
-   /* refresh: function(str) {
-      var arr = str.split('/').slice(1);
-      app.currentDir = arr.slice(1);
-      app.currentDirString = str;
-      if(str.substring(0, 8) == '/shared@') {
-        str = '/' + app.currentUser.name + str;
-      }
-      socket.emit('doc', str);
-    }, */
-    
+        
     initialize: function (opt) {
       this.$tableHeadCol3 = this.$('table .head .col3');
       this.$noFile = this.$('#no-file');
       this.$table = this.$('#file-list-table');
       this.$dir = this.$('#current-dir');
-      this.$tabOwned = Backbone.$('#ownedfile');
       this.$tabOwnedEx = Backbone.$('#ownedfileex');
       this.$tabShared = Backbone.$('#sharedfile');
+      this.$newfile = Backbone.$('#newfile');
+      
+      var p = this.$tabOwned = Backbone.$('#ownedfile');
+      p.find('.dropdown-menu a').bind('click', {
+        context: this,
+      }, this.newFile);
       
       opt || (opt = {});
       if(opt.noinit) { return this; }
@@ -156,7 +155,7 @@ var app = app || {};
       if(this.collection.length <= 0) { this.$noFile.show(); }
       else { this.$noFile.hide(); }
       
-      var s0 = app.currentDirString, s1 = '', s2 = '', arr = s0.split('/');
+      var s0 = app.currentDir, s1 = '', s2 = '', arr = s0.split('/');
       for(var i = 0, l = arr.length, v; i < l; i++) {
         if(v = arr.shift()) {
           s2 += '/' + v;
@@ -168,6 +167,45 @@ var app = app || {};
       return this;
     },
     
+    newFile: function(event) {
+      var that = event.data.context, type = $(this).attr('new-type');
+      if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
+      
+      var modal = that.$newfile;
+      modal.find('#newfile-label').text(
+        strings[type == 'dir' ? 'newfolder' : 'newfile']
+      );
+      app.showInputModal(modal, '');
+      
+      var confirm = modal.find('.modal-confirm');
+      confirm.unbind();
+      confirm.bind('click', function() {
+        var name = Backbone.$.trim(modal.find('#newfile-input').val()),
+          err = false;
+        if(!name) {
+          err = 'inputfilename';
+        }
+        if(app.fileNameReg.test(name)) {
+          err = 'filenameinvalid';
+        }
+        if(name.length > 32) {
+          err = 'filenamelength';
+        }
+        if(err) {
+          app.showMessageInDialog('#newfile', 'inputfilename');
+          return;
+        }
+        if(app.operationLock)
+          return;
+        app.operationLock = modal.find('.modal-buttons');
+        app.operationLock.newType = type;
+        app.loading(app.operationLock);
+        app.socket.emit('new', {
+          type: type,
+          path: app.currentDir + '/' + name,
+        });
+      });
+    },
     
   }, {
     Mode: {

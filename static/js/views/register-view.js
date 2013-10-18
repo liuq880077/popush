@@ -52,7 +52,7 @@ var app = app || {};
 			if(app.registerLock)
 				return;
 			app.registerLock = true;
-			app.loading('register-control');
+			app.loading('#register-control');
 			app.socket.emit('register', {
 				name:name,
 				password:pass,

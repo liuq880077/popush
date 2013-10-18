@@ -2,7 +2,7 @@
 var app = app || {};
 
 (function () {
-	'use strict';
+  'use strict';
     
   /**
     File Item View
@@ -20,7 +20,9 @@ var app = app || {};
 
     /* The DOM events specific to an item. */
     events: {
-      'click a.file-go-enter': function() { window.location.href = '#' + this.model.get('path'); },
+      /* 'click a.file-go-enter': function() {
+        app.views['files'].go(this.model.json.shownPath);
+      }, */
       'click a.file-go-share': 'share',
       'click a.file-go-delete': 'del',
       'click a.file-go-rename': 'rename',
@@ -42,63 +44,58 @@ var app = app || {};
     },
 
     share: function () {
-      /* var modal = $('#share'), model = this.model.toJSON();
-      modal.modal('show'); */
-      /* // TODO: enter 'share' page through router. */
-      /* var sharemv = app.views.shareManage || (app.views.shareManage = new app.ShareManageView);
-      sharemv.show(this.model); */
+      $('#share').modal('show');
+      app.views['shareManage'].show(this.modal);
     },
 
     del: function () {
-      var modal = $('#delete'), model = this.model.toJSON();
-      modal.find('.folder').text(strings[(model.type=='dir') ? 'folder' : 'file']);
-      modal.find('#delete-name').text(model.name);
+      if(!(this.model.json.belongSelf)) { return; }
+      var modal = $('#delete'), model = this.model;
+      modal.find('.folder').text(strings[(model.get('type')=='dir') ? 'folder' : 'file']);
+      modal.find('#delete-name').text(model.json.name);
       modal.modal('show');
-      var confirm = modal.find('#confirmDeleteBtn');
+      var confirm = modal.find('.modal-confirm');
       confirm.unbind();
       confirm.bind('click', function(){
         if(app.operationLock)
           return;
-        app.operationLock = true;
-        loading('delete-buttons');
-        socket.emit('delete', {
-          path: model.path,
+        app.operationLock = modal.find('.modal-buttons');
+        app.loading(app.operationLock);
+        app.socket.emit('delete', {
+          path: model.get('path'),
         });
       });
     },
 
     rename: function () {
-      var modal = $('#rename'), model = this.model.toJSON();
-      modal.find('#rename-inputName').val(model.name);
-      modal.find('.control-group').removeClass('error');
-      modal.find('.help-inline').text('');
-      modal.modal('show');
-      var confirm = modal.find('#confirmRenameBtn');
+      if(!(this.model.json.belongSelf)) { return; }
+      var modal = $('#rename'), model = this.model;
+      app.showInputModal(modal, model.json.name);
+      
+      var confirm = modal.find('.modal-confirm');
       confirm.unbind();
       confirm.bind('click', function(){
-        var name = $.trim(modal.find('#rename-inputName').val());
-        if(name == '') {
-          showmessageindialog('rename', 'inputfilename');
+        var name = Backbone.$.trim(modal.find('.modal-input').val());
+        if(!name) {
+          app.showMessageInDialog('#rename', 'inputfilename');
           return;
         }
-        if(/[\*\\\|:\"\/\<\>\?\@]/.test(name)) {
-          showmessageindialog('rename', 'filenameinvalid');
+        if(app.fileNameReg.test(name)) {
+          app.showMessageInDialog('#rename', 'filenameinvalid');
           return;
         }
-        if(name == model.name) {
+        if(name == model.json.name) {
           modal.modal('hide');
           return;
         }
         
         if(app.operationLock)
           return;
-        app.operationLock = true;
-        loading('rename-buttons');
-        /* TODO: */
-        movehandler = renamedone;
-        socket.emit('move', {
-          path: model.path,
-          newPath: model.path.replace(/(.*\/)?(.*)/, '$1' + name),
+        app.operationLock = modal.find('.modal-buttons');
+        app.loading(app.operationLock);
+        app.socket.emit('move', {
+          path: model.get('path'),
+          newPath: model.get('path').replace(/(.*\/)?(.*)/, '$1' + name),
         });
       });
     },

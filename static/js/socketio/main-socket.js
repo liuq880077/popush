@@ -30,7 +30,7 @@ var onLogin = function(data) {
     $('#filecontrol').fadeIn('fast');
     
     
-    app.currentDirString = '/' + data.user.name;
+    app.currentDir = '/' + data.user.name;
     app.collections['files'].reset(data.user.docs);
     delete data.user.docs; /* avoid bad memory. */
 
@@ -52,48 +52,95 @@ var onRegister = function(data) {
     $('#register-inputPassword').val('');
     $('#register-confirmPassword').val('');
   }
-  app.removeloading('register-control');
+  app.removeloading('#register-control');
   app.registerLock = false; 
 };
 
 var onDoc = function(data) {
-  if(app.docWaitingLock) {
+  if(app.docWaitingLock && app.docWaitingLock.length) {
     app.removeloading(app.docWaitingLock);
-    app.docWaitingLock = false;
   }
   if(data.err){
     /* filelisterror(); */
-    app.showmessagebox('error', 'wrong path', 1);
-  } else {
-    if(data.doc) {
-      if(typeof app.docLock == 'function') {
-        app.docLock.call(app.collections['files'], data.doc.docs || data.doc);
-      } else {
-        app.collections['files'].reset(data.doc.docs || data.doc);
+    app.showMessageBox('error', 'wrong path', 1);
+  } else if(data.doc) {
+    if(data.doc.members) {
+      var a = data.doc.members;
+      for(var b = data.doc.docs, i = b.length; --i >= 0; ) {
+        b[i].members = a;
       }
-      if(data.doc.members) {
-        var a = data.doc.members;
-        /* var l = a.length, n = app.currentUser.name, i = 0; */
-        /* for(; i < l; i++) {
-          if(a[i] && a[i].name == n) {
-            a[i].online = a[i].owner = true;
-            break;
-          }
-        } */
-        a.unshift(data.doc.owner);
-        app.collections['members'].reset(a);
-      } else if(app.views['files'].mode == app.FilesView.Mode.BelongSelf) {
-        app.collections['members'].reset(app.currentUser);
-      }
+      a.unshift(data.doc.owner);
+    } else {
+      var a = app.currentUser;
     }
+    if(typeof app.docLock != 'function') {
+      app.docLock = Backbone.Collection.prototype.reset;
+    }
+    app.docLock.call(app.collections['files'], data.doc.docs || data.doc);
+    app.collections['members'].reset(a);
   }
   app.docLock = false;
+  app.docWaitingLock = false;
+};
+
+var onDelete = function(data) {
+  if(app.operationLock && app.operationLock.length) {
+    app.removeloading(app.operationLock);
+  }
+  $('#delete').modal('hide');
+  if(data.err){
+    app.showMessageBox('delete', data.err, 1);
+    app.operationLock = false;
+  } else {
+    app.operationLock = false;
+    /* TODO: use router. */
+    app.views['files'].refetch();
+  }
 }
+
+var onMove = function(data) {
+  if(app.operationLock && app.operationLock.length) {
+    app.removeloading(app.operationLock);
+  }
+  if(data.err){
+    app.showMessageInDialog('#rename', data.err, 0);
+    app.operationLock = false;
+  } else {
+    $('#rename').modal('hide');
+    app.operationLock = false;
+    /* Another way: use router. */
+    app.views['files'].refetch();
+  }
+};
+
+var onNewFile = function(data) {
+  if(app.operationLock && app.operationLock.length) {
+    app.removeloading(app.operationLock);
+  }
+  if(data.err){
+    app.showMessageInDialog('#newfile', data.err);
+    app.operationLock = false;
+  } else {
+    $('#newfile').modal('hide');
+    if(app.operationLock.newType == 'dir') {
+      app.showMessageBox('newfolder', 'createfoldersuccess', 1);
+    } else {
+      app.showMessageBox('newfile', 'createfilesuccess', 1);
+    }
+    delete app.operationLock.newType;
+    app.operationLock = false;
+    /* Another way: use router. */
+    app.views['files'].refetch();
+  }
+};
 
 app.main_socket = function() {
   app.socket.on('login', onLogin);
   app.socket.on('register', onRegister);
   app.socket.on('doc', onDoc);
-}
+  app.socket.on('delete', onDelete);
+  app.socket.on('move', onMove);
+  app.socket.on('new', onNewFile);
+};
 
 })();
