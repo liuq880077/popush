@@ -6,7 +6,7 @@ var strings_cn = {
 	'doesntmatch'                   :'两次输入的密码不一致',
 	'namelength'                    :'用户名的长度必须在6-20之间',
 	'passlength'                    :'密码的长度不能大于32',
-	'registerok'                    :'注册成功，请进入<a href="javascript:;" onclick="loginview()">登录</a>页面',
+	'registerok'                    :'注册成功，请进入<a href="javascript:;" id="login-view-2">登录</a>页面',
 	'name exists'                   :'用户名已存在',
 	'inner error'                   :'服务器出错',
 	'name invalid'                  :'用户名只能由字母或数字组成',

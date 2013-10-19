@@ -20,7 +20,8 @@ var app = app || {};
 			'keypress #register-inputPassword': 'registerOnEnter',
 			'keypress #register-confirmPassword': 'registerOnEnter',
 			'click #register-submit': 'register',
-			'click #login-view': 'loginview'
+			'click #login-view': 'loginview',
+			'click #login-view-2': 'loginview'
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
