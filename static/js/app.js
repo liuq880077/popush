@@ -16,8 +16,8 @@ _.extend(app, {
   collections: {},
   currentUser: null,
   currentDir: '',
+  currentShownDir: '',
   docLock: false,
-  docWaitingLock: false,
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
   router: null,
 });
@@ -53,36 +53,41 @@ app.loadfailed = function(){
   var loadings = {};
   
   app.loading = function(id){
-    if(loadings[id])
+    if(!id || loadings[id])
       return;
-    var o = $(id),
+    var o = $(id), display = o.css('display'),
       p = $('<p class="app-loading"><img src="images/loading.gif"/></p>');
-    o.after(p);
-    o.hide();
-    loadings[id] = {self: o, loading: p};
+    o.hide().after(p);
+    loadings[id] = {self: o, loading: p, display: display};
   };
 
-  app.removeloading = function(id){
-    if(!loadings[id])
+  app.removeLoading = function(id){
+    if(!id || !loadings[id])
       return;
-    loadings[id].self.show();
+    loadings[id].self.css('display', loadings[id].display);
     loadings[id].loading.remove();
     delete loadings[id];
   };
 
-  app.cleanloading = function(){
+  app.cleanLoading = function(){
     for(var k in loadings) {
-      app.removeloading(k);
+      app.removeLoading(k);
     }
   };
 })();
 
-app.showInputModal = function(modal, def) {
+app.showInputModal = function(modal, val) {
   modal.find('.control-group').removeClass('error');
   modal.find('.help-inline').text('');
-  var i = modal.find('.modal-input').val(def || '');
-  modal.modal('show');
-  i.focus();
+  var i = modal.find('.modal-input').val(val || '');
+  modal.modal('show').on('shown', function(){
+    modal.off('shown');
+    var ok = modal.find('.modal-confirm');
+    i.focus().bind('keypress', function(e){
+			if(e.which == 13)
+				ok.click();
+    });
+  });
 };
 
 app.showmessage = function(id, stringid, type){
@@ -139,8 +144,7 @@ app.checkCookie = function(){
 
 /* 点击"中英切换"按钮触发的js函数，中文版本/英文版本之间切换 */
 app.changeLanguage = function() {
-  var language=app.getCookie('language')
-  if (language == 'cn') {
+  if (strings === strings_cn) {
     app.setCookie('language','en',365);
     strings_old = strings;
     strings = strings_en;
@@ -192,7 +196,7 @@ app.resize = function() {
     }
     app.firstconnect = false;
     $('#loading-init').remove();
-    app.cleanloading();
+    app.cleanLoading();
     if($.cookie('sid')){
       app.socket.emit('relogin', {sid:$.cookie('sid')});
       app.loading('#login-control');
@@ -239,8 +243,15 @@ $(document).ready(function() {
   
   app.main_socket();
   
+  /* TODO: remove this, and use a router. */
+  $('.container-fluid').on('click', 'a.file-go', function(e) {
+    var h = $(e.target).attr('href');
+    if(h.substring(0, 7) == '#index/') {
+      app.views['files'].go(h.substring(6));
+    }
+  });
   
-/*   app.socket.emit('login', {
+  /* app.socket.emit('login', {
     name: 'gdh1995',
     password: 'gdh1995',
   }); */

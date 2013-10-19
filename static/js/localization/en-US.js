@@ -74,7 +74,7 @@ var strings_en = {
 	'confirm'                       :'Confirm the password',
 	'owningfiles'                   :'All files',
 	'sharedfiles'                   :'Shared files',
-	'currentdir:'                   :'CurrentDir:',
+	'currentdir:'                   :'Current Dir:',
 	'shareduser'                    :'Shared Users',
 	'maximum-title'                 :'Maximize',
 	'back'                          :'Back',
@@ -113,5 +113,5 @@ var strings_en = {
 	'only-platform'			:'Another Platform for Code Cooperation',
 	'only-contain'			:'Only contain characters and numbers',
 	'changeLanguage'		:'转到：中文版',
-  'wrong path'      :'The path has an error.',
+  'wrong path'      :'The path has an error',
 };

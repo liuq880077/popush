@@ -113,5 +113,5 @@ var strings_cn = {
 	'only-platform'			:'只是另外一个协作编程平台',
 	'only-contain'			:'只能包含字母和数字',
 	'changeLanguage'		:'Go to: English Version',
-  'wrong path'      :'路径错误。',
+  'wrong path'      :'路径错误',
 };

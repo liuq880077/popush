@@ -10,13 +10,13 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="js/socket.io.min.js"></script>
-	<script type="text/javascript" src='js/firebase.js'></script>
+	<script type="text/javascript" src="js/firebase.js"></script>
 	<script type="text/javascript" src="js/newMultiConnection.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/codemirror.js"></script>
 	<script type="text/javascript" src="js/loadmode.js"></script>
-	<script type="text/javascript" src="js/localization/zh-cn.js"></script>
-	<script type="text/javascript" src="js/localization/zh-en.js"></script>
+	<script type="text/javascript" src="js/localization/zh-CN.js"></script>
+	<script type="text/javascript" src="js/localization/en-US.js"></script>
 	<script type="text/javascript" src="js/ie.js"></script>
 <!--	<script type="text/javascript" src="js/filelist.js"></script>
 	<script type="text/javascript" src="js/userlist.js"></script>
@@ -146,8 +146,8 @@
 									<li><a href="javascript:;" localization>import</a></li>-->
 								</ul>
 							</li>
-							<li id="ownedfileex" class="hide"><a href="#" localization>owningfiles</a></li>
-							<li id="sharedfile"><a href="#" localization>sharedfiles</a></li>
+							<li id="ownedfileex" class="hide"><a href="#" class="file-go" localization>owningfiles</a></li>
+							<li id="sharedfile"><a href="#" class="file-go" localization>sharedfiles</a></li>
 						</ul>
 					</div>
 				</div>
@@ -281,7 +281,7 @@
 			</div>
 			<div class="modal-footer">
 				<div class="modal-buttons">
-					<button class="btn modal-confirm" localization>ok</button>
+					<button class="btn btn-primary modal-confirm" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
@@ -343,7 +343,7 @@
 			</div>
 			<div class="modal-footer">
 				<div id="changepassword-buttons">
-					<button class="btn" onclick="changepassword()" localization>ok</button>
+					<button class="btn btn-primary modal-confirm" onclick="changepassword()" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
@@ -360,8 +360,8 @@
 			</div>
 			<div class="modal-footer">
 				<div class="modal-buttons">
-					<button class="btn modal-confirm" localization>ok</button>
-					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
+					<button class="btn btn-danger modal-confirm" localization>ok</button>
+					<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
 		</div>
@@ -383,7 +383,7 @@
 			</div>
 			<div class="modal-footer">
 				<div class="modal-buttons">
-					<button class="btn modal-confirm" localization>ok</button>
+					<button class="btn btn-primary modal-confirm" localization>ok</button>
 					<button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
 				</div>
 			</div>
@@ -444,17 +444,17 @@
 		<img src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
 	</script>
   <script type="text/template" id="file-template">
-<td class="col1"><img src='<%=model.pic%>' height="32" width="32" /></td>
-<td class="col2"><a href='#<%=encodeURI(model.shownPath)%>' class="file-go-enter"><%=_.escape(model.shownName)%></a></td>
+<td class="col1"><img src="<%=model.pic%>" height="32" width="32" /></td>
+<td class="col2"><a href="#index<%=encodeURI(model.shownPath)%>" class="file-go"><%=_.escape(model.shownName)%></a></td>
 <% if (model.belongSelf) { %>
 <td class="col3" localization><%=model.shared?strings["shared"]:""%></td>
 <% } else { var o = model.owner; %>
-<td class="col3 owner"><img class='user-other' src='<%=o.avatar%>' width="32" height="32"/><%=_.escape(o.name)%></td>
+<td class="col3 owner"><img class="user-other" src="<%=o.avatar%>" width="32" height="32"/><%=_.escape(o.name)%></td>
 <% } %>
 <td class="col4"><%=model.time%></td>
 <td class="col5">
-  <div class='dropdown<%=model.belongSelf ? "" : " disabled"%>'>
-    <a href="#" class="dropdown-toggle opreation" data-toggle="dropdown">&nbsp;</a>
+  <div class="dropdown">
+    <a href="#" class="dropdown-toggle<%=model.belongSelf ? "" : " disabled"%> opreation" data-toggle="dropdown">&nbsp;</a>
   <ul class="dropdown-menu">
     <% if(model.inRoot) { %><li><a class="file-go-share" localization><%=strings["sharemanage"]%></a></li> <% } %>
     <li><a href="#" class="file-go-delete" localization><%=strings["delete"]%></a></li>

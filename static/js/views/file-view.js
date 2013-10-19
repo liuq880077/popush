@@ -20,9 +20,9 @@ var app = app || {};
 
     /* The DOM events specific to an item. */
     events: {
-      /* 'click a.file-go-enter': function() {
-        app.views['files'].go(this.model.json.shownPath);
-      }, */
+      'click a.file-go': function() {
+        /* app.views['files'].go(this.model.get('path')); */
+      },
       'click a.file-go-share': 'share',
       'click a.file-go-delete': 'del',
       'click a.file-go-rename': 'rename',

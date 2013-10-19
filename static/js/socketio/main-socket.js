@@ -30,16 +30,16 @@ var onLogin = function(data) {
     $('#filecontrol').fadeIn('fast');
     
     
-    app.currentDir = '/' + data.user.name;
+    app.currentShownDir = app.currentDir = '/' + data.user.name;
+    $('#ownedfileex>a').attr('href', '#index/' + data.user.name);
+    $('#sharedfile>a').attr('href', '#index/shared@' + data.user.name);
     app.collections['files'].reset(data.user.docs);
     delete data.user.docs; /* avoid bad memory. */
 
-    $('#ownedfileex>a').attr('href', '#/' + data.user.name);
-    $('#sharedfile>a').attr('href', '#/shared@' + data.user.name).bind();
     
     /* window.location.href = '#/' + data.user.name; */
   }
-  app.cleanloading();
+  app.cleanLoading();
   app.loginLock = false;
 };
   
@@ -52,41 +52,55 @@ var onRegister = function(data) {
     $('#register-inputPassword').val('');
     $('#register-confirmPassword').val('');
   }
-  app.removeloading('#register-control');
+  app.removeLoading('#register-control');
   app.registerLock = false; 
 };
 
 var onDoc = function(data) {
-  if(app.docWaitingLock && app.docWaitingLock.length) {
-    app.removeloading(app.docWaitingLock);
-  }
+  if(!app.docLock) { return; }
+  app.docLock.receive = true;
+  app.removeLoading(app.docLock.waiting);
   if(data.err){
-    /* filelisterror(); */
     app.showMessageBox('error', 'wrong path', 1);
   } else if(data.doc) {
-    if(data.doc.members) {
-      var a = data.doc.members;
-      for(var b = data.doc.docs, i = b.length; --i >= 0; ) {
-        b[i].members = a;
+    var a = data.doc.members;
+    if(a) {
+      var b = data.doc.docs, i;
+      if(b && b.length) {
+        for(i = b.length; --i >= 0; ) {
+          b[i].members = a;
+        }
       }
-      a.unshift(data.doc.owner);
+      if(data.doc.owner) {
+        a = _.clone(a);
+        a.unshift(data.doc.owner);
+      }
     } else {
-      var a = app.currentUser;
+      a = app.currentUser;
     }
-    if(typeof app.docLock != 'function') {
-      app.docLock = Backbone.Collection.prototype.reset;
+    if(typeof app.docLock == 'function') {
+      app.docLock.call(app.collections['files'], data.doc.docs || data.doc);
+      app.docLock.call(app.collections['members'], a);
+    } else {
+      app.showMessageBox('error', 'error', 1);
     }
-    app.docLock.call(app.collections['files'], data.doc.docs || data.doc);
-    app.collections['members'].reset(a);
   }
+  var back = app.docLock;
   app.docLock = false;
-  app.docWaitingLock = false;
+  /*
+    fix an error caused by bad web access or 'F12:Debug':
+    'app.loading' may be called after this function's first 'app.removeLoading',
+      and before 'app.docLock' is set to 'false'.
+    */
+  if(back) {
+    app.removeLoading(back.waiting);
+    delete back.waiting;
+    delete back.receive;
+  }
 };
 
 var onDelete = function(data) {
-  if(app.operationLock && app.operationLock.length) {
-    app.removeloading(app.operationLock);
-  }
+  app.removeLoading(app.operationLock);
   $('#delete').modal('hide');
   if(data.err){
     app.showMessageBox('delete', data.err, 1);
@@ -99,9 +113,7 @@ var onDelete = function(data) {
 }
 
 var onMove = function(data) {
-  if(app.operationLock && app.operationLock.length) {
-    app.removeloading(app.operationLock);
-  }
+  app.removeLoading(app.operationLock);
   if(data.err){
     app.showMessageInDialog('#rename', data.err, 0);
     app.operationLock = false;
@@ -114,9 +126,7 @@ var onMove = function(data) {
 };
 
 var onNewFile = function(data) {
-  if(app.operationLock && app.operationLock.length) {
-    app.removeloading(app.operationLock);
-  }
+  app.removeLoading(app.operationLock);
   if(data.err){
     app.showMessageInDialog('#newfile', data.err);
     app.operationLock = false;
