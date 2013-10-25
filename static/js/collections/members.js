@@ -24,7 +24,7 @@ var app = app || {};
 			if (!member.online)
 				value[1] = '1';
 			return value + member.get('name');
-		}
+		},
 		
 		isset: function(a) {
 			return typeof(a) != "undefined" && a !== null;

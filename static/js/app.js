@@ -316,6 +316,9 @@ $(document).ready(function() {
   temp = app.collections['cooperators'] = new app.Members();
   app.views['cooperators'] = new app.MemberlistView({collection: temp});
 
+  temp = app.collections['expressions'] = new app.Expressions();
+  app.views['expressions'] = new app.ExpressionlistView({collection: temp});
+
   app.main_socket();
  
   /* TODO: remove this, and use a router. */

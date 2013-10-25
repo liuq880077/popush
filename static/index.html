@@ -444,6 +444,16 @@
 	<script type="text/template" id="member-template">
 		<img src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
 	</script>
+	<script type="text/template" id="expression-template">
+           <tr id="express-elem" onmouseover="$(this).find(\'a\').show()" onmouseout="$(this).find(\'a\').hide()">
+ 	        <td class="col1"></td>
+                <td class="col2">
+			<span class="title"></span>
+	                <input id="te" type="text"/>
+		</td>
+		<td class="col3"></td>
+	   </tr>
+	</script>
   <script type="text/template" id="file-template">
 <td class="col1"><img src="<%=model.pic%>" height="32" width="32" /></td>
 <td class="col2"><a href="#index<%=encodeURI(model.shownPath)%>" class="file-go"><%=_.escape(model.shownName)%></a></td>
@@ -468,8 +478,10 @@
 	<script type="text/javascript" src="js/backbone.js"></script>
 	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/models/expression.js"></script>
 	<script type="text/javascript" src="js/models/file.js"></script>
 	<script type="text/javascript" src="js/models/user.js"></script>
+	<script type="text/javascript" src="js/collections/expressions.js"></script>
 	<script type="text/javascript" src="js/collections/files.js"></script>
 	<script type="text/javascript" src="js/collections/members.js"></script>
 	<script type="text/javascript" src="js/socketio/main-socket.js"></script>
@@ -479,6 +491,8 @@
 	<script type="text/javascript" src="js/views/memberlist-view.js"></script>
 	<script type="text/javascript" src="js/views/file-view.js"></script>
 	<script type="text/javascript" src="js/views/files-view.js"></script>
+	<script type="text/javascript" src="js/views/expression-view.js"></script>
+	<script type="text/javascript" src="js/views/expressionlist-view.js"></script>
 	<script type="text/javascript" src="js/routers/router.js"></script>
 	<script type="text/javascript" src="js/expressionlist.js"></script>
 	<script type="text/javascript" src="js/room.js"></script>

@@ -24,8 +24,8 @@ var app = app || {};
 		poptemplate: _.template($('#member-popover-template').html()),
 		
 		initialize: function () {
-			this.listenTo(app.collections['members'], 'add', this.addOne);
-			this.listenTo(app.collections['members'], 'reset', this.addAll);
+			this.listenTo(this.collection, 'add', this.addOne);
+			this.listenTo(this.collection, 'reset', this.addAll);
 		},
 
 		// Add a single todo item to the list by creating a view for it, and
@@ -49,7 +49,7 @@ var app = app || {};
 						model.destroy();
 					}
 				});
-		}
+		},
 
 		setonline: function (name, isonline) {
 				if(isonline)
@@ -57,9 +57,9 @@ var app = app || {};
 				else
 					$('#avatar-' + name).removeClass('online');
 				this.collection.each(function(model){
-					model.set({online: isonline);
+					model.set({online: isonline});
 				});
-		}
+		},
 
 		// Add all items in the **Todos** collection at once.
 		addAll: function (collection, opts) {
