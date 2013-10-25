@@ -1,22 +1,20 @@
 var app = app || {};
 
 (function () {
-	/* 'use strict'; */
+	'use strict';
 
 	/**
 	  User Model
-	  ----------
 	  */
-
-	app.user = Backbone.Model.extend({
+	app.User = Backbone.Model.extend({
+    idAttribute: 'name',
+    
 		defaults: {
 			name: '',
 			avatar: 'images/character.png',
 			online: false,
 			owner: false,
 		},
-
-		update: Backbone.Model.prototype.save,
     
 	});
   

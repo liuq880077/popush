@@ -1,8 +1,7 @@
 (function() {
-var d=document;
 
 if(typeof document.getElementsByClassName !='function') {
-  d.getElementsByClassName = function(classname) {
+  document.getElementsByClassName = function(classname) {
     var e=this.getElementsByTagName('*'), c=new RegExp('\\b'+classname+'\\b'), r=[];
     for(var i = 0, l = e.length; i < l; i++){
       if(c.test(e[i].className)){

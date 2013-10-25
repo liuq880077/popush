@@ -20,20 +20,13 @@ var app = app || {};
 
     /* The DOM events specific to an item. */
     events: {
-      'click a.file-go': function(e) {
-      	if(this.model.get('type') == 'doc'){
-      		e.stopPropagation();
-      		app.docobj = this.model.json;
-      		app.socket.emit('join', {path: this.model.get('path')});
-      		return;
-      	}
-      },
+      'click a.file-go': 'go',
       'click a.file-go-share': 'share',
       'click a.file-go-delete': 'del',
       'click a.file-go-rename': 'rename',
     },
 
-    initialize: function (opt) {
+    initialize: function(opt) {
       opt || (opt = {});
       if(opt.noinit) { return this; }
       this.listenTo(this.model, 'change', this.render);
@@ -42,33 +35,46 @@ var app = app || {};
     },
     
     /* Re-render the item. */
-    render: function () {
-      /* TODO: make model */
+    render: function() {
       this.$el.html(this.template(this.model.json));
       return this;
     },
 
-    share: function () {
+    go: function(e) {
+      if(this.model.get('type') == 'dir') {
+        this.model.collection.fetch({
+          path: this.model.get('path'),
+          loading: this.$('.col1 > *'),
+          mode: (this.model.json.belongSelf
+            ? app.FilesView.Mode.BelongSelf : app.FilesView.Mode.Shared),
+        });
+      }
+      else { app.room.tryEnter(this.model, this.$('.col1 > *')); }
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    
+    share: function() {
       $('#share').modal('show');
       app.views['shareManage'].show(this.modal);
     },
 
-    del: function () {
+    del: function() {
       if(!(this.model.json.belongSelf)) { return; }
       var modal = $('#delete'), model = this.model;
-      modal.find('.folder').text(strings[(model.get('type')=='dir') ? 'folder' : 'file']);
+      modal.find('.folder').text(
+        strings[(model.get('type')=='dir') ? 'folder' : 'file']
+      );
       modal.find('#delete-name').text(model.json.name);
-      modal.modal('show');
-      var confirm = modal.find('.modal-confirm');
-      confirm.unbind();
-      confirm.bind('click', function(){
-        if(app.operationLock)
-          return;
-        app.operationLock = modal.find('.modal-buttons');
-        app.loading(app.operationLock);
-        app.socket.emit('delete', {
-          path: model.get('path'),
-        });
+      modal.modal('show').on('shown', function() {
+        modal.off('shown');
+        var cnfm = modal.find('.modal-confirm');
+        modal.on('hide', function() { cnfm.off(); modal.off('hide'); });
+        cnfm.on('click', function(){ model.destroy({
+          loading: modal.find('.modal-buttons'),
+          success: function() { modal.modal('hide'); },
+          error: function(m, data) { app.showMessageBox('delete', data.err); },
+        }); });
       });
     },
 
@@ -76,35 +82,41 @@ var app = app || {};
       if(!(this.model.json.belongSelf)) { return; }
       var modal = $('#rename'), model = this.model;
       app.showInputModal(modal, model.json.name);
-      
-      var confirm = modal.find('.modal-confirm');
-      confirm.unbind();
-      confirm.bind('click', function(){
-        var name = Backbone.$.trim(modal.find('.modal-input').val());
-        if(!name) {
-          app.showMessageInDialog('#rename', 'inputfilename');
-          return;
-        }
-        if(app.fileNameReg.test(name)) {
-          app.showMessageInDialog('#rename', 'filenameinvalid');
-          return;
-        }
-        if(name == model.json.name) {
-          modal.modal('hide');
-          return;
-        }
-        
-        if(app.operationLock)
-          return;
-        app.operationLock = modal.find('.modal-buttons');
-        app.loading(app.operationLock);
-        app.socket.emit('move', {
-          path: model.get('path'),
-          newPath: model.get('path').replace(/(.*\/)?(.*)/, '$1' + name),
+      modal.on('shown', function() {
+        modal.off('shown');
+        var input = modal.find('.modal-input'), cnfm = modal.find('.modal-confirm');
+        modal.on('hide', function() { input.off(); cnfm.off(); modal.off('hide'); });
+        input.on('input', function() {
+          var name = Backbone.$.trim(input.val()), err = false;
+          if(!name) { err = 'inputfilename'; }
+          if(app.fileNameReg.test(name)) { err = 'filenameinvalid'; }
+          if(name.length > 32) { err = 'filenamelength'; }
+          if(err) {
+            if(name) { app.showMessageInDialog(modal, err); }
+            cnfm.attr('disabled', 'disabled');
+          } else {
+            modal.find('.help-inline').text('');
+            modal.find('.control-group').removeClass('error');
+            cnfm.removeAttr('disabled');
+          }
+        });
+        cnfm.on('click', function() {
+          if(cnfm.attr('disabled') !== undefined) { return; }
+          var name = Backbone.$.trim(input.val()), err = false;
+          if(name == model.json.name) { modal.modal('hide'); return; }
+          
+          model.save({
+            path: model.get('path').replace(/(.*\/)?(.*)/, '$1' + name),
+          }, {
+            oldPath: model.get('path'),
+            error: function(m, data) {app.showMessageInDialog(modal, data.err); },
+            success: function() { modal.modal('hide'); },
+            loading: modal.find('.modal-buttons'),
+          });
         });
       });
     },
     
   });
-  
+    
 })();

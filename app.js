@@ -38,7 +38,7 @@ function log(){
 	for(var i in sig){
 		process.on(sig[i], function(){
 			log('server stop');
-			process.kill(0, 'SIGKILL');
+			process.kill(process.pid, 'SIGKILL');
 		});
 	}
 	process.on('uncaughtException', function(err){
@@ -262,8 +262,12 @@ io.sockets.on('connection', function(socket){
 			return socket.emit('unauthorized');
 		}
 		var user = socket.session.user;
-		docDAO.createDoc(user._id, data.path, data.type, function(err){
-			socket.emit('new', {err:err});
+		docDAO.createDoc(user._id, data.path, data.type, function(err, ctime){
+      if(!err && ctime) {
+        socket.emit('new', {createTime: ctime, modifyTime: ctime});
+      } else {
+        socket.emit('new', {err:err});
+      }
 		});
 	});
 

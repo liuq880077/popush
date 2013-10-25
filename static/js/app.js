@@ -3,23 +3,24 @@ app.editor = {};
 (function() {
 
 /* global variables */
-_.extend(app, {
-  socket: io.connect(SOCKET_IO),
+_.defaults(app, {
+  socket: io.connect(app.Package.SOCKET_IO),
   loadDone: false,
   failed: false,
   firstconnect: true,
   viewswitchLock: false,
   loginLock: false,
   registerLock: false,
-  operationLock: false,
   views: {},
   collections: {},
   currentUser: null,
-  currentDir: '',
-  currentShownDir: '',
   docLock: false,
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
+  fileExtReg: /(.*[\/\.])?\s*(\S+$)/,
   router: null,
+  /* for Room */
+  noVoice: false,
+  inRoom: false;
 });
 
 /* check if the user has logged in. */
@@ -33,6 +34,53 @@ app.userVerify = function() {
   }
 };
 
+app.showmessage = function(id, stringid, type){
+  var o = $('#' + id);
+  o.removeClass('alert-error alert-success alert-info');
+  if(type && type != 'warning')
+    o.addClass('alert-' + type);
+  (stringid == null) && (stringid = 'inner error');
+  $('#' + id + ' span').html(strings[stringid] || stringid);
+  o.slideDown();
+};
+
+app.showInputModal = function(modal, val) {
+  modal.find('.control-group').removeClass('error').find('input').val('');
+  modal.find('.help-inline').text('');
+  var i = modal.find('.modal-input').val(val || '');
+  modal.modal('show').on('shown', function() {
+    var ok = modal.find('.modal-confirm');
+    i.focus().on('keydown', function(e){
+      var k = e.keyCode || e.which;
+      if(k == 13) { ok && ok.click(); }
+      else if(k == 27) { modal.modal('hide'); }
+    });
+  });
+};
+
+(function() {
+  var modal = $('#messagedialog'), $title = modal.find('#messagedialogLabel'),
+    $content = modal.find('#messagedialogContent');
+  
+  app.showMessageBox = function(title, content, timeout) {
+    (title == null) && (title = 'error');
+    (content == null) && (content = 'inner error');
+    $title.html(strings[title] || title);
+    $content.html(strings[content] || content);
+    timeout || (timeout = 1000);
+    modal.modal('show');
+    window.setTimeout(function() { modal.modal('hide'); }, timeout);
+  };
+})();
+
+app.showMessageInDialog = function (selector, stringid, index) {
+  var modal = $(selector),
+    eq = (index === undefined) ? '' : (':eq(' + index + ')');
+  modal.find('.control-group' + eq).addClass('error');
+  (stringid == null) && (stringid = 'inner error');
+  modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
+}
+
 app.setCookie = function(c_name, value, expiredays) {
   $.cookie(c_name, value, {expires: expiredays});
 };
@@ -41,111 +89,16 @@ app.getCookie = function(c_name) {
   return(window.unescape($.cookie(c_name) || ''));
 };
 
-app.loadfailed = function(){
-  if(app.loadDone)
-    return;
-  app.failed = true;
-  $('#loading-init').remove();
-  app.showmessage('login-message', 'loadfailed');
-};
-
-(function() {
-  var loadings = {};
-  
-  app.loading = function(id){
-    if(!id || loadings[id])
-      return;
-    var o = $(id), display = o.css('display'),
-      p = $('<p class="app-loading"><img src="images/loading.gif"/></p>');
-    o.hide().after(p);
-    loadings[id] = {self: o, loading: p, display: display};
-  };
-
-  app.removeLoading = function(id){
-    if(!id || !loadings[id])
-      return;
-    loadings[id].self.css('display', loadings[id].display);
-    loadings[id].loading.remove();
-    delete loadings[id];
-  };
-
-  app.cleanLoading = function(){
-    for(var k in loadings) {
-      app.removeLoading(k);
-    }
-  };
-})();
-
-app.showInputModal = function(modal, val) {
-  modal.find('.control-group').removeClass('error');
-  modal.find('.help-inline').text('');
-  var i = modal.find('.modal-input').val(val || '');
-  modal.modal('show').on('shown', function(){
-    modal.off('shown');
-    var ok = modal.find('.modal-confirm');
-    i.focus().bind('keypress', function(e){
-			if(e.which == 13)
-				ok.click();
-    });
-  });
-};
-
-app.showmessage = function(id, stringid, type){
-  var o = $('#' + id);
-  o.removeClass('alert-error');
-  o.removeClass('alert-success');
-  o.removeClass('alert-info');
-  if(type && type != '' && type != 'warning')
-    o.addClass('alert-' + type);
-  if(strings[stringid])
-    $('#' + id + ' span').html(strings[stringid]);
-  else
-    $('#' + id + ' span').html(stringid);
-  o.slideDown();
-};
-
-(function() {
-  var dlg = $('#messagedialog'), t;
-  
-  app.showMessageBox = function(title, content, timeout) {
-    dlg.find('#messagedialogLabel').html(strings[title] || title);
-    dlg.find('#messagedialogContent').html(strings[content] || content);
-    dlg.modal('show');
-    t = setTimeout(function() { dlg.modal('hide'); }, timeout*1000);
-  };
-})();
-
-app.showMessageInDialog = function (selector, stringid, index) {
-  var dlg = $(selector),
-    eq = (index === undefined) ? '' : (':eq(' + index + ')');
-  dlg.find('.control-group' + eq).addClass('error');
-  dlg.find('.help-inline' + eq).text(strings[stringid] || stringid);
-}
-
-app.htmlescape = function(text) {
-	return text.
-		replace(/&/gm, '&amp;').
-		replace(/</gm, '&lt;').
-		replace(/>/gm, '&gt;').
-		replace(/ /gm, '&nbsp;').
-		replace(/\n/gm, '<br />');
-}
-
 /* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
 app.checkCookie = function(){
-  var language = app.getCookie('language')
-  if (language == 'cn') {
+  var language = app.getCookie('language');
+  if(language == 'cn') {
     strings = strings_cn;
   }
-  else if (language == 'en') {
+  else if(language == 'en') {
     strings = strings_en;
   }
   else {
-    /*language=prompt('Please enter your language("cn" or "en"):',"");
-    if (language!=null && language!="") {
-      setCookie('language',language,365);
-      window.location.href = "index.html";
-    }*/
     app.setCookie('language','cn',365);
     strings = strings_cn;
   }
@@ -164,21 +117,16 @@ app.changeLanguage = function() {
     strings = strings_cn;
   }
   
-  $('[title]').attr('title', function(index, old) {
-    for(var name in strings_old) {
-      if(strings_old[name] == old)
-        return strings[name];
-    }
-    return old;
-  });
-  
-  $('[localization]').html(function(index, old) {
-    for(var name in strings_old) {
-      if(strings_old[name] == old)
-        return strings[name];
-    }
-    return old;
-  }); 
+  var map = {}, i;
+  for(i in strings_old) {
+    map[strings_old[i]] = strings[i];
+  }
+  var fromMap = function(index, old) {
+    return map[old] || old;
+  }
+  $('[title]').attr('title', fromMap);
+  $('[localization]').html(fromMap);
+  delete map;
 };
 
 app.isFullScreen = function(cm) {
@@ -255,40 +203,84 @@ app.resize = function() {
 	app.editor.refresh();
 };
 
-app.docobj = {};
-
-(function () {
-  
-  app.socket.on('version', function(data){
-    if(data.version != VERSION) {
-      location.reload('Refresh');
-    }
-    if(app.failed)
-      return;
-    if(!app.firstconnect) {
-      //back to login
-    }
-    app.firstconnect = false;
-    $('#loading-init').remove();
-    app.cleanLoading();
-    if($.cookie('sid')){
-      app.socket.emit('relogin', {sid:$.cookie('sid')});
-      app.loading('#login-control');
-      app.loginLock = true;
+app.Path = {
+  encode: function(path, shared) {
+    if(!path || path.charAt(0) != '/') return '';
+    if(path.length == 1) { return '/' + app.currentUser.name; }
+    var s = path.split('/');
+    if(s[1] == app.currentUser.name) {
+      return (s.length != 2 || shared !== true) ? path : ('/shared@' + s[1]);
     } else {
-      $('#login-control').fadeIn('fast');
+      var p = '/shared@' + app.currentUser.name;
+      if(s.length <= 2) { return p; }
+      p += '/' + s[2] + '@' + s[1];
+      return (s.length <= 3) ? p : (p + '/' + s.slice(3).join('/'));
     }
-    app.loadDone = true;
-  });
+  },
+  
+  decode: function(shownPath) {
+    if(typeof shownPath == null) { return ''; }
+    var p = window.decodeURI(shownPath).replace(/\\/g, '/'), s;
+    if(p.charAt(0) != '/') { return ''; }
+    
+    if(p.substring(0, 8) == '/shared@') {
+      s = p.substring(8);
+      var i = s.indexOf('/');
+      if(i <= -1 || i == s.length - 1) {
+        p = '/' + app.currentUser.name;
+      } else {
+        s = s.substring(i + 1).split('/');
+        i = s[0].split('@');
+        if(!i[0] || !i[1]) { return ''; }
+        s[0] = '/' + i[1] + '/' + i[0];
+        p = s.join('/');
+      }
+    }
+    if(p.length <= 1) { p = '/' + app.currentUser.name; }
+    else if(p.charAt(s = p.length - 1) == '/') { p = p.substring(0, s); }
+    return p;
+  },
+};
 
-  app.socket.on('connect', function(){
-    app.socket.emit('version', {
-    });
+app.socket.on('version', function(data){
+  if(data.version != app.Package.VERSION) {
+    window.location.reload('Refresh');
+  }
+  if(app.failed)
+    return;
+  if(!app.firstconnect) {
+    //back to login
+  }
+  app.firstconnect = false;
+  $('#loading-init').remove();
+  app.cleanLoading();
+  if($.cookie('sid')){
+    app.socket.emit('relogin', {sid:$.cookie('sid')});
+    app.loading('#login-control');
+    app.loginLock = true;
+  } else {
+    $('#login-control').fadeIn('fast');
+  }
+  app.loadDone = true;
+});
+
+app.socket.on('connect', function(){
+  app.socket.emit('version', {
   });
-})();
+});
+
+
+app.loadfailed = function(){
+  if(app.loadDone)
+    return;
+  app.failed = true;
+  $('#loading-init').remove();
+  app.showmessage('login-message', 'loadfailed');
+};
 
 $(document).ready(function() {
-  window.setTimeout(app.loadfailed, 10000);
+  
+  window.setTimeout(app.loadfailed, 5000);
 
   app.checkCookie();
   var getLanguageString = function(index, old) {
@@ -297,30 +289,31 @@ $(document).ready(function() {
   $('[localization]').html(getLanguageString);
   $('[title]').attr('title', getLanguageString);
   
+  if((!Browser.chrome || window.parseInt(Browser.chrome) < 18) &&
+		(!Browser.opera || window.parseInt(Browser.opera) < 12)) {
+		app.noVoice = true;
+		$('#voice-on').addClass('disabled').removeAttr('title').popover({
+			html: true,
+			content: strings['novoice'] || 'no voice',
+			placement: 'left',
+			trigger: 'hover',
+			container: 'body'
+		});
+	}
+  
   $('body').show();
+  app.resize();
+  $(window).resize(app.resize);
   $('#login-inputName').focus();
+      
+  var funcs = app.init;
+  for(var i in funcs) {
+    if(funcs.hasOwnProperty(i) && typeof funcs[i] == 'function') {
+      funcs[i].call(app);
+    }
+  }
+  delete app.init; /* not necessary */
   
-  app.views['login'] = new app.LoginView;
-  app.views['register'] = new app.RegisterView;
-  
-  var temp;
-  temp = app.collections['files'] = new app.Files();
-  app.views['files'] = new app.FilesView({
-    collection: temp,
-    mode: app.FilesView.Mode.BelongSelf,
-  });
-  
-  temp = app.collections['members'] = new app.Members();
-  app.views['members'] = new app.MemberlistView({collection: temp});
-  
-  temp = app.collections['cooperators'] = new app.Members();
-  app.views['cooperators'] = new app.MemberlistView({collection: temp});
-
-  temp = app.collections['expressions'] = new app.Expressions();
-  app.views['expressions'] = new app.ExpressionlistView({collection: temp});
-
-  app.main_socket();
- 
   /* TODO: remove this, and use a router. */
   $('.container-fluid').on('click', 'a.file-go', function(e) {
     var h = $(e.target).attr('href');

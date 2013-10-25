@@ -1,5 +1,5 @@
 (function() {
-  if (!CodeMirror.modeURL) CodeMirror.modeURL = "js/mode/%N.js";
+  if (!CodeMirror.modeURL) CodeMirror.modeURL = "js/lib/codemirror/%N.js";
 
   var loading = {};
   function splitCallback(cont, n) {

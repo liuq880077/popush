@@ -30,7 +30,7 @@ var app = app || {};
   app.router = new Router();
 
   Backbone.history.start({
-    root: PAGE_ROOT,
+    root: app.Package.PAGE_ROOT,
   });
 
 })();

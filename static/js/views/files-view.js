@@ -2,7 +2,7 @@
 var app = app || {};
 
 (function () {
-  /* 'use strict'; */
+  'use strict';
   
   /**
     Files Collection View
@@ -11,108 +11,42 @@ var app = app || {};
   /* The DOM element. */
   app.FilesView = Backbone.View.extend({
   
-    el: '#file-list > .span10',
-    
-    refetch: function() {
-      this.go(app.currentDir);
-    },
-    
+    el: '#filecontrol',
+        
     /**
       [dir] accept: real/shown dirs, and dirs shown on other accounts' page.
       */
     go: function(dir) {
-      if(dir == null || dir.charAt(0) != '/') { return false; }
+      var name = app.currentUser.name,
+        mode = (dir.substring(1, 8 + name.length) == 'shared@' + name)
+          ? app.FilesView.Mode.Shared : app.FilesView.Mode.BelongSelf;
+      dir = app.Path.decode(dir);
+      if(!dir) { return; }
       
-      var s, shared = false, name = app.currentUser.name;
-      dir = window.decodeURI(dir).replace(/\\/g, '/');
-      if(dir.substring(0, 8) == '/shared@') {
-        s = dir.substring(8);
-        var i = s.indexOf('/');
-        if(i <= -1 || i == s.length - 1) {
-          dir = '/' + name;
-          shared = true;
-        } else {
-          s = s.substring(i + 1).split('/');
-          var s0 = s[0].split('@');
-          if(!s0[0] || !s0[1]) { return false; }
-          s[0] = '/' + s0[1] + '/' + s0[0];
-          dir = s.join('/');
-        }
-      }
-      if(dir.substring(s = dir.length - 1) == '/') {
-        dir = dir.substring(0, s);
-      }
-      
-      if(app.docLock) { return false; }
-      app.docLock = true;
-      
-      s = dir.split('/');
-      if(s[1] == app.currentUser.name && !shared) {
-        shared = app.FilesView.Mode.BelongSelf;
-        s = dir;
-      } else {
-        shared = app.FilesView.Mode.Shared;
-        var s0 = s;
-        s = '/shared@' + name;
-        if(s0.length >= 3) {
-          s += '/' + s0[2] + '@' + s0[1]
-            + (s0.length == 3 ? '' :'/' + s0.slice(3).join('/'));
-        }
-      }
-      app.currentShownDir = s;
-      if(app.currentDir == dir) {
-        app.docLock = Backbone.Collection.prototype.set;
-      } else {
-        app.docLock = Backbone.Collection.prototype.reset;
-        app.currentDir = dir;
-      }
-      if(this.mode != shared) {
-        this.mode = shared;
-        /* fix a bug that occurs when 'mode' is the only one to be changed. */
-        this.renewList();
-      }
-      
-      app.socket.emit('doc', {path: dir});
-      
-      /* if "on('doc')" takes more than 1s, show the loading icon. */
       var that = this;
-      window.setTimeout(function(){
-        if(app.docLock) {
-          app.docLock.waiting = that.$noFile;
-          app.loading(app.docLock.waiting);
-          /*
-            fix an error caused by bad web access or 'F12:Debug':
-            'app.loading' may be called after this function's first
-              'app.removeLoading', and before 'app.docLock' is set to 'false'.
-            */
-          window.setTimeout(function(){
-            if(app.docLock && app.docLock.waiting && !app.docLock.receive) {
-              var back = app.docLock;
-              app.docLock = false;
-              if(back) {
-                app.removeLoading(back.waiting);
-                delete back.waiting;
-                delete back.receive;
-              }
-            }
-          }, 2500);
-        }
-      }, 500);
+      this.collection.fetch({
+        path: dir,
+        loading: this.$noFile,
+        mode: mode,
+        success: function() {
+          if(mode != that.mode) {
+            that.renewList(null, {mode: mode});
+          }
+        },
+      });
     },
         
     initialize: function (opt) {
-      this.$tableHeadCol3 = this.$('table .head .col3');
-      this.$noFile = this.$('#no-file');
-      this.$table = this.$('#file-list-table');
-      this.$dir = this.$('#current-dir');
-      this.$tabOwnedEx = Backbone.$('#ownedfileex');
-      this.$tabShared = Backbone.$('#sharedfile');
-      this.$newfile = Backbone.$('#newfile');
+      var el = this.$el;
+      this.$tableHeadCol3 = el.find('table .head .col3');
+      this.$noFile = el.find('#no-file');
+      this.$table = el.find('#file-list-table');
+      this.$dir = el.find('#current-dir');
+      this.$tabOwnedEx = el.find('#ownedfileex');
+      this.$tabShared = el.find('#sharedfile');
       
-      var p = this.$tabOwned = Backbone.$('#ownedfile');
-      p.find('.dropdown-menu a').bind('click', {
-        context: this,
-      }, this.newFile);
+      (this.$tabOwned = el.find('#ownedfile')).find('.dropdown-menu a')
+        .bind('click', { context: this }, newFile);
       
       opt || (opt = {});
       if(opt.noinit) { return this; }
@@ -123,13 +57,24 @@ var app = app || {};
       this.listenTo(this.collection, 'add', this.addOne);
       this.listenTo(this.collection, 'remove', this.remove);
       this.listenTo(this.collection, 'reset', this.renewList);
+      this.listenTo(this.collection, 'sync', this.afterSync);
+      /**
+        refuse to listenTo sort, because it may be called when creating a model,
+        and the view is undefined. Besides, 'sort' will cause the table dom
+        renew every time 'set' is called
+      */
+      /* this.listenTo(this.collection, 'sort', this.sort); */
+    },
+    
+    afterSync: function(m, d, opts) {
+      opts && opts.mode && (this.mode = opts.mode);
+      this.shownUrl = app.Path.encode(this.collection.path
+        , this.mode == app.FilesView.Mode.Shared);
+      this.render();
     },
     
     addOne: function(model) {
-      if(model.json.belongSelf != this.mode) { return this; }
-      if(this.collection.length >= 1) {
-        this.$noFile.hide();
-      }
+      if(this.collection.length == 1) { this.$noFile.hide(); }
       var v = model.view;
       if(v) {
         /* in theory, this branch will not be executed. just in case. */
@@ -146,23 +91,23 @@ var app = app || {};
     },
     
     remove: function() {
-      if(this.collection.length <= 0) {
-        this.$noFile.show();
-      }
+      if(this.collection.length <= 0) { this.$noFile.show(); }
       return this;
     },
     
-    renewList: function (collection, opt) {
+    renewList: function (c, opts) {
       /*
         Both ways are OK, but the second can stop those event-listeners,
         although it's a little slower.
         */
       /* this.$('.file-item').remove(); */
-      opt || (opt = {});
-      _.each(opt.previousModels, function(m) { m.trigger('remove'); });
-      
-      this.render();
-      var els = [], isMine = (this.mode == app.FilesView.Mode.BelongSelf);
+      opts || (opts = {});
+      if(opts.previousModels) {
+        _.each(opts.previousModels, function(m) { m.trigger('remove'); });
+      }
+      /* this.render(opts); */
+      var els = [], mode = (opts.mode || this.mode),
+        isMine = (mode == app.FilesView.Mode.BelongSelf);
       _.each(this.collection.models, function(model){
         if(isMine == model.json.belongSelf) {
           if(model.view) {
@@ -178,9 +123,10 @@ var app = app || {};
       this.$table.append(els);
       return this;
     },
-    
-    render: function() {
-      if(this.mode == app.FilesView.Mode.BelongSelf) {
+        
+    render: function(opts) {
+      var mode = (opts && opts.mode) || this.mode;
+      if(mode == app.FilesView.Mode.BelongSelf) {
         this.$tableHeadCol3.removeClass('owner').html(strings['state']);
         this.$tabShared.removeClass('active');
         this.$tabOwned.addClass('active').show();
@@ -197,7 +143,7 @@ var app = app || {};
       if(this.collection.length <= 0) { this.$noFile.show(); }
       else { this.$noFile.hide(); }
       
-      var s0 = app.currentShownDir, s1 = '', s2 = '', arr = s0.split('/');
+      var s0 = this.shownUrl, s1 = '', s2 = '', arr = s0.split('/');
       for(var i = 0, l = arr.length, v; i < l; i++) {
         if(v = arr.shift()) {
           s2 += '/' + v;
@@ -209,46 +155,6 @@ var app = app || {};
       return this;
     },
     
-    newFile: function(event) {
-      var that = event.data.context, type = $(event.target).attr('new-type');
-      if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
-      
-      var modal = that.$newfile;
-      modal.find('#newfile-label').text(
-        strings[type == 'dir' ? 'newfolder' : 'newfile']
-      );
-      app.showInputModal(modal, '');
-      
-      var confirm = modal.find('.modal-confirm');
-      confirm.unbind();
-      confirm.bind('click', function() {
-        var name = Backbone.$.trim(modal.find('#newfile-input').val()),
-          err = false;
-        if(!name) {
-          err = 'inputfilename';
-        }
-        if(app.fileNameReg.test(name)) {
-          err = 'filenameinvalid';
-        }
-        if(name.length > 32) {
-          err = 'filenamelength';
-        }
-        if(err) {
-          app.showMessageInDialog('#newfile', 'inputfilename');
-          return;
-        }
-        if(app.operationLock)
-          return;
-        app.operationLock = modal.find('.modal-buttons');
-        app.operationLock.newType = type;
-        app.loading(app.operationLock);
-        app.socket.emit('new', {
-          type: type,
-          path: app.currentDir + '/' + name,
-        });
-      });
-    },
-    
   }, {
     Mode: {
       BelongSelf: 1,
@@ -256,5 +162,62 @@ var app = app || {};
     },
     
   });
+  
+  var newFile = function(event) {
+    var that = event.data.context, type = $(event.target).attr('new-type');
+    if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
+    
+    var modal = Backbone.$('#newfile');
+    modal.find('#newfile-label').text(
+      strings[type == 'dir' ? 'newfolder' : 'newfile']
+    );
+    app.showInputModal(modal);
+    modal.on('shown', function() {
+      modal.off('shown');
+      var input = modal.find('.modal-input'), cnfm = modal.find('.modal-confirm');
+      modal.on('hide', function() { input.off(); cnfm.off(); modal.off('hide'); });
+      input.on('input', function() {
+        var name = Backbone.$.trim(input.val()), err = false;
+        if(!name) { err = 'inputfilename'; }
+        if(app.fileNameReg.test(name)) { err = 'filenameinvalid'; }
+        if(name.length > 32) { err = 'filenamelength'; }
+        if(err) {
+          if(name) { app.showMessageInDialog(modal, err); }
+          cnfm.attr('disabled', 'disabled');
+        } else {
+          modal.find('.help-inline').text('');
+          modal.find('.control-group').removeClass('error');
+          cnfm.removeAttr('disabled');
+        }
+      });
+      cnfm.attr('disabled', 'disabled').on('click', function() {
+        if(cnfm.attr('disabled') !== undefined) { return; }
+        var name = Backbone.$.trim(modal.find('#newfile-input').val());
+        that.collection.create({type:type,path:that.collection.path+'/'+name}, {
+          loading: modal.find('.modal-buttons'),
+          error: function(m, data) { app.showMessageInDialog(modal,data.err); },
+          success: function() {
+            modal.modal('hide');
+            if(type == 'dir') {
+              app.showMessageBox('newfolder', 'createfoldersuccess');
+            } else {
+              app.showMessageBox('newfile', 'createfilesuccess');
+            }
+          },
+        });
+      });
+    });
+  };
+  
+  app.init || (app.init = {});
+
+  app.init.filesView = function() {
+    if(app.views['files']) { return; }
+    app.collections['files'] || app.init.files();
+    app.views['files'] = new app.FilesView({
+      collection: app.collections['files'],
+      mode: app.FilesView.Mode.BelongSelf,
+    });
+  };
   
 })();

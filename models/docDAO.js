@@ -81,7 +81,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 										}
 										else{
 											lock.release(rootPath);
-											return callback(null);
+											return callback(null, newDir[0].createTime);
 										}
 									});
 								}
@@ -122,7 +122,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 														}
 														else{
 															lock.release(rootPath);
-															return callback(null);
+                              return callback(null, newDoc[0].createTime);
 														}
 													});
 												}

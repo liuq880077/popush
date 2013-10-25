@@ -1,31 +1,16 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function ($) {
+(function () {
 	'use strict';
 
-	// The Application
-	// ---------------
-
-	// Our overall **AppView** is the top-level piece of UI.
 	app.LoginView = Backbone.View.extend({
 
-		// Instead of generating a new element, bind to the existing skeleton of
-		// the App already present in the HTML.
 		el: '#login',
 
-		// Delegated events for creating new items, and clearing completed ones.
 		events: {
 			'keypress #login-inputName': 'loginOnEnter',
 			'keypress #login-inputPassword': 'loginOnEnter',
-			'click #register-view': 'registerview',
-			'click #login-submit': 'login'
-		},
-		
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
-		initialize: function () {
+			'click #login-submit': 'login',
 		},
 
 		/* 由登陆视图切换到注册视图 */
@@ -73,6 +58,12 @@ var app = app || {};
 				this.login();
 		},
 		
-
 	});
-})(jQuery);
+  
+  app.init || (app.init = {});
+
+  app.init.loginView = function() {
+    app.views['login'] || (app.views['login'] = new app.LoginView());
+  };
+  
+})();

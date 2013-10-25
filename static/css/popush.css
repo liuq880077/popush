@@ -11,9 +11,9 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
   margin-left: 5px;
   margin-right: 5px;
 }
-  
+
 .app-loading {
-  margin: 1px 0 2px 0;
+  margin: 0px auto;
   text-align: center;
 }
   
@@ -61,7 +61,7 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 .shared-character.online {filter:alpha(opacity=100);-moz-opacity:1;-khtml-opacity:1;opacity:1;}
 
 #file-list-table .col2, #file-list-table .col3, #file-list-table .col4, #file-list-table .col5 {vertical-align:middle;}
-#file-list-table .col1 {width:40px;text-align:right;}
+#file-list-table .col1 {width:32px;text-align:right; padding-left: 16px;}
 #file-list-table .col3 {width:60px;text-align:center;}
 #file-list-table .col3.owner {width:140px;text-align:center;}
 #file-list-table .col3.owner img {max-width:32px;max-height:32px;margin-right:7px;}
