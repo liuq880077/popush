@@ -1,3 +1,4 @@
+var app = app || {};
 var runLock = false;
 var debugLock = false;
 var waiting = false;
@@ -15,8 +16,6 @@ var debugableext = [
 ];
 
 var cursors = {};
-
-var docobj;
 
 var lock = false;
 var doc;
@@ -153,7 +152,7 @@ function newcursor(content) {
 function sendbreak(from, to, text){
 	var req = {version:doc.version, from:from, to:to, text:text};
 	if(bq.length == 0){
-		socket.emit('bps', req);
+		app.socket.emit('bps', req);
 	}
 	bq.push(req);
 }
@@ -226,13 +225,13 @@ function checkrunanddebug(ext) {
 
 function runtoline(n) {
 	if(runningline >= 0) {
-		editor.removeLineClass(runningline, '*', 'running');
-		editor.setGutterMarker(runningline, 'runat', null);
+		app.editor.removeLineClass(runningline, '*', 'running');
+		app.editor.setGutterMarker(runningline, 'runat', null);
 	}
 	if(n >= 0) {
-		editor.addLineClass(n, '*', 'running');
-		editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
-		editor.scrollIntoView({line:n, ch:0});
+		app.editor.addLineClass(n, '*', 'running');
+		app.editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
+		app.editor.scrollIntoView({line:n, ch:0});
 	}
 	runningline = n;
 }
@@ -241,9 +240,9 @@ function runtoline(n) {
 function removeallbreakpoints() {
 	for (var i = 0; i < bps.length; i++){
 		if (bps[i] == "1"){
-			var info = editor.lineInfo(i);
+			var info = app.editor.lineInfo(i);
 			if (info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
-				editor.setGutterMarker(i, 'breakpoints', null);
+				app.editor.setGutterMarker(i, 'breakpoints', null);
 			}
 		}
 	}
@@ -253,13 +252,13 @@ function removeallbreakpoints() {
 /* 初始化断点 */
 function initbreakpoints(bpsstr) {
 	bps = bpsstr;
-	for (var i = bpsstr.length; i < editor.lineCount(); i++){
+	for (var i = bpsstr.length; i < app.editor.lineCount(); i++){
 		bps += "0";
 	}
 	for (var i = 0; i < bps.length; i++){
 		if (bps[i] == "1"){
 			var element = $('<div><img src="images/breakpoint.png" /></div>').get(0);
-			editor.setGutterMarker(i, 'breakpoints', element);
+			app.editor.setGutterMarker(i, 'breakpoints', element);
 		}
 	}
 }
@@ -267,12 +266,12 @@ function initbreakpoints(bpsstr) {
 var oldscrolltop = 0;
 
 function openeditor(o) {
-	if(operationLock)
-		return;
-	operationLock = true;
-	filelist.loading();
-	docobj = o;
-	socket.emit('join', {
+//	if(operationLock)
+//		return;
+//	operationLock = true;
+//	filelist.loading();
+//	docobj = o;
+	app.socket.emit('join', {
 		path: o.path
 	});
 }
@@ -283,7 +282,7 @@ function closeeditor() {
 	$('#filecontrol').show();
 	$('#footer').show();
 
-	socket.emit('leave', {
+	app.socket.emit('leave', {
 	});
 
 	refreshfilelist(function(){;}, function(){
@@ -298,7 +297,7 @@ function chat() {
 	if(text == '')
 		return;
 
-	socket.emit('chat', {
+	app.socket.emit('chat', {
 		text: text
 	});
 	$('#chat-input').val('');
@@ -311,7 +310,7 @@ function stdin() {
 	var text = $('#console-input').val();
 
 	if(runLock || debugLock) {
-		socket.emit('stdin', {
+		app.socket.emit('stdin', {
 			data: text + '\n'
 		});
 	} else {
@@ -347,7 +346,7 @@ function appendtoconsole(content, type) {
 		type = '';
 	}
 	$('#console-inner').append(
-		'<span' + type + '">' + htmlescape(content) + '</span>'
+		'<span' + type + '">' + app.htmlescape(content) + '</span>'
 	);
 	var o = $('#console-inner').get(0);
 	o.scrollTop = o.scrollHeight;
@@ -385,13 +384,13 @@ $(function() {
 			}
 		} else {
 			if(this.elements[id].notnew) {
-				socket.emit('rm-expr', {
+				app.socket.emit('rm-expr', {
 					expr: this.elements[id].expression
 				});
 			}
 			
 			if(expression != '') {
-				socket.emit('add-expr', {
+				app.socket.emit('add-expr', {
 					expr: expression
 				});
 			}
@@ -404,40 +403,40 @@ $(function() {
 
 	expressionlist.removeExpression = function(id) {
 		this.doneall();
-		socket.emit('rm-expr', {
+		app.socket.emit('rm-expr', {
 			expr: this.elements[id].expression
 		});
 	};
 
 });
 
-socket.on('add-expr', function(data) {
+app.socket.on('add-expr', function(data) {
 	if(data.expr) {
 		expressionlist.addExpression(data.expr);
 		expressionlist.setValue(data.expr, data.val);
 	}
 });
 
-socket.on('rm-expr', function(data) {
+app.socket.on('rm-expr', function(data) {
 	expressionlist.removeElementByExpression(data.expr);
 });
 
 /* 收到"chat"命令
  * 在chatroom中添加新内容 */
-socket.on('chat', function(data) {
-	var text = htmlescape(data.text);
+app.socket.on('chat', function(data) {
+	var text = app.htmlescape(data.text);
 
 	var time = new Date(data.time);
 	
 	appendtochatbox(data.name, (data.name == currentUser.name?'self':''), text, time);
 });
 
-socket.on('deleted', function(data) {
+app.socket.on('deleted', function(data) {
 	closeeditor();
 	showmessagebox('info', 'deleted', 1);
 });
 
-socket.on('unshared', function(data) {
+app.socket.on('unshared', function(data) {
 	if(data.name == currentUser.name) {
 		closeeditor();
 		showmessagebox('info', 'you unshared', 1);
@@ -447,14 +446,14 @@ socket.on('unshared', function(data) {
 	}
 });
 
-socket.on('shared', function(data) {
+app.socket.on('shared', function(data) {
 	memberlistdoc.add(data);
 	memberlistdoc.setonline(data.name, false);
 	memberlistdoc.sort();
 	appendtochatbox(strings['systemmessage'], 'system', data.name + '&nbsp;' + strings['gotshared'], new Date(data.time));
 });
 
-socket.on('moved', function(data) {
+app.socket.on('moved', function(data) {
 	var thepath = data.newPath.split('/');
 	thepath.shift();
 	var thename;
@@ -482,7 +481,7 @@ socket.on('moved', function(data) {
 	checkrunanddebug(ext);
 	
 	appendtochatbox(strings['systemmessage'], 'system', strings['movedto'] + thename, new Date(data.time));
-	$('#current-doc').html(htmlescape(thename));
+	$('#current-doc').html(app.htmlescape(thename));
 });
 
 /* 离开语音聊天室 */
@@ -632,9 +631,9 @@ function run() {
 		return;
 	operationLock = true;
 	if(runLock) {
-		socket.emit('kill');
+		app.socket.emit('kill');
 	} else {
-		socket.emit('run', {
+		app.socket.emit('run', {
 			version: doc.version,
 			type: ext
 		});
@@ -661,9 +660,9 @@ function debug() {
 		return;
 	operationLock = true;
 	if(debugLock) {
-		socket.emit('kill');
+		app.socket.emit('kill');
 	} else {
-		socket.emit('debug', {
+		app.socket.emit('debug', {
 			version: doc.version,
 			type: ext
 		});
@@ -685,28 +684,28 @@ function setdebug() {
 /////////////////////// debug //////////////////////////////////
 function debugstep() {
 	if(debugLock && waiting) {
-		socket.emit('step', {
+		app.socket.emit('step', {
 		});
 	}
 }
 
 function debugnext() {
 	if(debugLock && waiting) {
-		socket.emit('next', {
+		app.socket.emit('next', {
 		});
 	}
 }
 
 function debugfinish() {
 	if(debugLock && waiting) {
-		socket.emit('finish', {
+		app.socket.emit('finish', {
 		});
 	}
 }
 
 function debugcontinue() {
 	if(debugLock && waiting) {
-		socket.emit('resume', {
+		app.socket.emit('resume', {
 		});
 	}
 }
@@ -726,7 +725,7 @@ function closeconsole() {
 	consoleopen = false;
 	$('#under-editor').hide();
 	$('#editor-console').removeClass('active');
-	resize();
+	app.resize();
 }
 
 function openconsole() {
@@ -734,76 +733,33 @@ function openconsole() {
 		consoleopen = true;
 		$('#under-editor').show();
 		$('#editor-console').addClass('active');
-		resize();
+		app.resize();
 	}
 	$('#console-input').focus();
 }
 
 /////////////////////// other //////////////////////////////////
-function resize() {
-	var w;
-	var h = $(window).height();
-	if(h < 100)
-		h = 100;
-	var cbh = h-$('#member-list-doc').height()-138;
-	var cbhexp = cbh > 100 ? 0 : 100 - cbh;
-	if(cbh < 100)
-		cbh = 100;
-	$('#chat-show').css('height', cbh + 'px');
-	$('#chatbox').css('height', (h-83+cbhexp) + 'px');
-	w = $('#editormain').parent().width();
-	$('#editormain').css('width', w);
-	var underh = h > 636 ? 212 : h/3;
-	if(!consoleopen)
-		underh = 0;
-	$('#under-editor').css('height', underh + 'px');
-	$('#console').css('width', (w-w/3-2) + 'px');
-	$('#varlist').css('width', (w/3-1) + 'px');
-	$('#console').css('height', (underh-12) + 'px');
-	$('#varlist').css('height', (underh-12) + 'px');
-	$('#varlistreal').css('height', (underh-42) + 'px');
-	$('#console-inner').css('height', (underh-81) + 'px');
-	$('#console-input').css('width', (w-w/3-14) + 'px');
-	if(!isFullScreen(editor))
-		$('.CodeMirror').css('height', (h-underh-$('#over-editor').height()-90) + 'px');
 
-	w = $('#chat-show').width();
-	if(w != 0)
-		$('#chat-input').css('width', (w-70) + 'px');
-	
-	$('#file-list .span10').css('min-height', (h-235) + 'px');
-	
-	w = $('#login-box').parent('*').width();
-	$('#login-box').css('left', ((w-420)/2-30) + 'px');
-	w = $('#register-box').parent('*').width();
-	$('#register-box').css('left', ((w-420)/2-30) + 'px');
-	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
-
-	$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
-
-	editor.refresh();
-}
-
-///////////////////// websocket & callback //////////////////////
-socket.on('run', function(data){
+///////////////////// webapp.socket & callback //////////////////////
+app.socket.on('run', function(data){
 	appendtochatbox(strings['systemmessage'], 'system', data.name + '&nbsp;&nbsp;' + strings['runsaprogram'], new Date(data.time));
 	setrun();
 	operationLock = false;
 });
 
-socket.on('debug', function(data){
+app.socket.on('debug', function(data){
 	appendtochatbox(strings['systemmessage'], 'system', data.name + '&nbsp;&nbsp;' + strings['startdebug'], new Date(data.time));
 	
 	setdebug();
 
-	editor.setOption('readOnly', true);
-	old_text = editor.getValue();
+	app.editor.setOption('readOnly', true);
+	old_text = app.editor.getValue();
 	old_bps = bps;
-	editor.setValue(data.text);
+	app.editor.setValue(data.text);
 	removeallbreakpoints();
 	initbreakpoints(data.bps);
 
-	var editordoc = editor.getDoc();
+	var editordoc = app.editor.getDoc();
 	var hist = editordoc.getHistory();
 	hist.done.pop();
 	editordoc.setHistory(hist);
@@ -811,7 +767,7 @@ socket.on('debug', function(data){
 	operationLock = false;
 });
 
-socket.on('running', function(data){
+app.socket.on('running', function(data){
 	if(!debugLock)
 		return;
 	waiting = false;
@@ -820,7 +776,7 @@ socket.on('running', function(data){
 	$('#console-title').text(strings['console']);
 });
 
-socket.on('waiting', function(data){
+app.socket.on('waiting', function(data){
 	if(!debugLock)
 		return;
 	waiting = true;
@@ -841,19 +797,19 @@ socket.on('waiting', function(data){
 		$('#console-title').text(strings['console'] + strings['waiting'] + strings['nosource']);
 });
 
-socket.on('stdout', function(data){
+app.socket.on('stdout', function(data){
 	appendtoconsole(data.data);
 });
 
-socket.on('stdin', function(data){
+app.socket.on('stdin', function(data){
 	appendtoconsole(data.data, 'stdin');
 });
 
-socket.on('stderr', function(data){
+app.socket.on('stderr', function(data){
 	appendtoconsole(data.data, 'stderr');
 });
 
-socket.on('exit', function(data){
+app.socket.on('exit', function(data){
 	operationLock = false;
 
 	if(data.err.code !== undefined)
@@ -867,18 +823,18 @@ socket.on('exit', function(data){
 		runLock = false;
 	}
 	if(debugLock) {
-		editor.setValue(old_text);
+		app.editor.setValue(old_text);
 		removeallbreakpoints();
 		initbreakpoints(old_bps);
 
-		var editordoc = editor.getDoc();
+		var editordoc = app.editor.getDoc();
 		var hist = editordoc.getHistory();
 		hist.done.pop();
 		editordoc.setHistory(hist);
 
-		editor.setOption('readOnly', false);	
+		app.editor.setOption('readOnly', false);	
 		if(q.length > 0){
-			socket.emit('change', q[0]);
+			app.socket.emit('change', q[0]);
 		}
 		$('#editor-debug').html('<i class="icon-eye-open"></i>');
 		$('#editor-debug').attr('title', strings['debug-title']);
@@ -893,7 +849,7 @@ socket.on('exit', function(data){
 });
 
 /* 新用户加入协同编程 */
-socket.on('join', function(data){
+app.socket.on('join', function(data){
 	if(data.err) {
 		showmessageindialog('openeditor', data.err);
 		$('#editor').slideUp('fast');
@@ -910,7 +866,7 @@ socket.on('join', function(data){
 });
 
 /* 某用户离开 */
-socket.on('leave', function(data){
+app.socket.on('leave', function(data){
 	memberlistdoc.setonline(data.name, false);
 	memberlistdoc.sort();
 	appendtochatbox(strings['systemmessage'], 'system', data.name + '&nbsp;' + strings['leave'], new Date(data.time));
@@ -921,8 +877,7 @@ socket.on('leave', function(data){
 	}
 });
 
-socket.on('set', function(data){
-	
+app.socket.on('set', function(data){
 	savetimestamp = 1;
 	setsavedthen(1);
 
@@ -936,24 +891,24 @@ socket.on('set', function(data){
 	debugLock = false;
 	waiting = false;
 
-	$('#current-doc').html(htmlescape(docobj.showname));
+	$('#current-doc').html(app.htmlescape(app.docobj.shownName));
 	$('#chat-input').val('');
 	$('#chat-show-inner').text('');
 	$('#editor').show();
 	$('#filecontrol').hide();
 	$('#footer').hide();
-	var filepart = docobj.name.split('.');
+	var filepart = app.docobj.name.split('.');
 	ext = filepart[filepart.length - 1];
-	changelanguage(ext);
-	checkrunanddebug(ext);
+//	changelanguage(ext);
+//	checkrunanddebug(ext);
 
-	editor.refresh();
+	app.editor.refresh();
 	
-	if(currentDir.length == 1) {
-		memberlistdoc.fromdoc(docobj);
-	}
-	memberlistdoc.setalloffline();
-	memberlistdoc.setonline(currentUser.name, true);
+//	if(currentDir.length == 1) {
+//		memberlistdoc.fromdoc(app.docobj);
+//	}
+//	memberlistdoc.setalloffline();
+//	memberlistdoc.setonline(currentUser.name, true);
 
 	for(var k in cursors) {
 		$(cursors[k].element).remove();
@@ -977,24 +932,25 @@ socket.on('set', function(data){
 
 	lock = true;
 	doc = data;
-	editor.setValue(doc.text);
-	editor.clearHistory();
-	editor.setOption('readOnly', false);
+	app.editor.setValue(doc.text);
+	app.editor.clearHistory();
+	app.editor.setOption('readOnly', false);
 	initbreakpoints(data.bps);
 	for(var i in data.users) {
-		memberlistdoc.setonline(i, true);
-		if(i == currentUser.name)
-			continue;
-		var cursor = newcursor(i);
-		if(cursors[i] && cursors[i].element)
-			$(cursors[i].element).remove();
-		cursors[i] = { element:cursor, pos:0 };
+//		memberlistdoc.setonline(i, true);
+//		if(i == currentUser.name)
+//			continue;
+//		var cursor = newcursor(i);
+//		if(cursors[i] && cursors[i].element)
+//			$(cursors[i].element).remove();
+//		cursors[i] = { element:cursor, pos:0 };
 	}
-	memberlistdoc.sort();
+//	memberlistdoc.sort();
 
-	filelist.removeloading();
-	$('#console-inner').html('');
-	closeconsole();
+//	filelist.removeloading();
+//	$('#console-inner').html('');
+//	closeconsole();
+	alert('asd');
 	expressionlist.clear();
 	for(var k in data.exprs) {
 		expressionlist.addExpression(k);
@@ -1002,8 +958,7 @@ socket.on('set', function(data){
 	}
 	
 	$('#console-title').text(strings['console']);
-	
-	resize();
+	app.resize();
 	$('body').scrollTop(99999);
 	
 	if(data.running) {
@@ -1011,7 +966,7 @@ socket.on('set', function(data){
 	}
 	if(data.debugging) {
 		setdebug();
-		editor.setOption('readOnly', true);
+		app.editor.setOption('readOnly', true);
 		old_text = data.text;
 		old_bps = data.bps;
 		if(data.state == 'waiting') {
@@ -1031,7 +986,7 @@ socket.on('set', function(data){
 	delete data.state;
 });
 
-socket.on('ok', function(data){
+app.socket.on('ok', function(data){
 	var chg = q.shift();
 	if(!chg)
 		return;
@@ -1047,14 +1002,14 @@ socket.on('ok', function(data){
 		bq[i].version = bq[i].version % 65536;
 	}
 	if(q.length > 0){
-		socket.emit('change', q[0]);
+		app.socket.emit('change', q[0]);
 	}
 	if (bq.length > 0){
-		socket.emit('bps', bq[0]);
+		app.socket.emit('bps', bq[0]);
 	}
 });
 
-socket.on('bpsok', function(data){
+app.socket.on('bpsok', function(data){
 	var chg = bq.shift();
 	if (!chg)
 		return;
@@ -1072,14 +1027,14 @@ socket.on('bpsok', function(data){
 		bq[i].version = bq[i].version % 65536;
 	}
 	if(q.length > 0){
-		socket.emit('change', q[0]);
+		app.socket.emit('change', q[0]);
 	}
 	if (bq.length > 0){
-		socket.emit('bps', bq[0]);
+		app.socket.emit('bps', bq[0]);
 	}
 });
 
-socket.on('bps', function(data){
+app.socket.on('bps', function(data){
 	var tfrom = data.from;
 	var tto = data.to;
 	var ttext = data.text;
@@ -1131,23 +1086,23 @@ socket.on('bps', function(data){
 	if (data.to == data.from + 1){
 		if (data.text == "1"){
 			var element = $('<div><img src="images/breakpoint.png" /></div>').get(0);
-			editor.setGutterMarker(data.from, 'breakpoints', element);
+			app.editor.setGutterMarker(data.from, 'breakpoints', element);
 		}
 		else if (data.text == "0"){
-			var info = editor.lineInfo(data.from);
+			var info = app.editor.lineInfo(data.from);
 			if (info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
-				editor.setGutterMarker(data.from, 'breakpoints', null);
+				app.editor.setGutterMarker(data.from, 'breakpoints', null);
 			}
 		}
 	}
 	doc.version++;
 	doc.version = doc.version % 65536;
 	if(bq.length > 0){
-		socket.emit('bps', bq[0]);
+		app.socket.emit('bps', bq[0]);
 	}
 });
 
-socket.on('change', function(data){
+app.socket.on('change', function(data){
 	lock = true;
 	var tfrom = data.from;
 	var tto = data.to;
@@ -1244,13 +1199,13 @@ socket.on('change', function(data){
 		}
 	}
 	var delta = tfrom + ttext.length - tto;
-	var editorDoc = editor.getDoc();
+	var editorDoc = app.editor.getDoc();
 	var hist = editorDoc.getHistory();
 	var donefrom = new Array(hist.done.length);
 	var doneto = new Array(hist.done.length);
 	for (var i = 0; i < hist.done.length; i++) {
-		donefrom[i] = editor.indexFromPos(hist.done[i].changes[0].from);
-		doneto[i] = editor.indexFromPos(hist.done[i].changes[0].to);
+		donefrom[i] = app.editor.indexFromPos(hist.done[i].changes[0].from);
+		doneto[i] = app.editor.indexFromPos(hist.done[i].changes[0].to);
 	}
 	var undonefrom = new Array(hist.undone.length);
 	var undoneto = new Array(hist.undone.length);
@@ -1262,29 +1217,29 @@ socket.on('change', function(data){
 		if (doneto[i] <= tfrom){
 		}
 		else if (doneto[i] <= tto && donefrom[i] <= tfrom){
-			hist.done[i].changes[0].to = editor.posFromIndex(tfrom);
+			hist.done[i].changes[0].to = app.editor.posFromIndex(tfrom);
 			//doneto[i] = tfrom;
 		}
 		else if (doneto[i] <= tto && donefrom[i] > tfrom){
-			hist.done[i].changes[0].from = editor.posFromIndex(tfrom);
-			hist.done[i].changes[0].to = editor.posFromIndex(tfrom);					
+			hist.done[i].changes[0].from = app.editor.posFromIndex(tfrom);
+			hist.done[i].changes[0].to = app.editor.posFromIndex(tfrom);					
 		}
 	}
 	for (var i = 0; i < hist.undone.length; i++){
 		if (undoneto[i] <= tfrom){
 		}
 		else if (undoneto[i] <= tto && undonefrom[i] <= tfrom){
-			hist.undone[i].changes[0].to = editor.posFromIndex(tfrom);
+			hist.undone[i].changes[0].to = app.editor.posFromIndex(tfrom);
 			//undoneto[i] = tfrom;
 		}
 		else if (undoneto[i] <= tto && undonefrom[i] > tfrom){
-			hist.undone[i].changes[0].from = editor.posFromIndex(tfrom);
-			hist.undone[i].changes[0].to = editor.posFromIndex(tfrom);					
+			hist.undone[i].changes[0].from = app.editor.posFromIndex(tfrom);
+			hist.undone[i].changes[0].to = app.editor.posFromIndex(tfrom);					
 		}
 	}
 	//var cursor = editorDoc.getCursor();
-	//var curfrom = editor.indexFromPos(cursor);
-	editor.replaceRange(ttext, editor.posFromIndex(tfrom), editor.posFromIndex(tto));
+	//var curfrom = app.editor.indexFromPos(cursor);
+	app.editor.replaceRange(ttext, app.editor.posFromIndex(tfrom), app.editor.posFromIndex(tto));
 	//if (curfrom == tfrom){
 	//	editorDoc.setCursor(cursor);
 	//}
@@ -1296,7 +1251,7 @@ socket.on('change', function(data){
 		else if (doneto[i] <= tto && donefrom[i] > tfrom){		
 		}
 		else if (doneto[i] > tto && donefrom[i] <= tfrom){
-			hist.done[i].changes[0].to = editor.posFromIndex(doneto[i] + delta);
+			hist.done[i].changes[0].to = app.editor.posFromIndex(doneto[i] + delta);
 			/*var arr = ttext.split("\n");
 			hist.done[i].changes[0].text[hist.done[i].changes[0].text.length-1] += arr[0];
 			arr.shift();
@@ -1304,12 +1259,12 @@ socket.on('change', function(data){
 				hist.done[i].changes[0].text = hist.done[i].changes[0].text.concat(arr);*/
 		}				
 		else if (doneto[i] > tto && donefrom[i] <= tto){
-			hist.done[i].changes[0].from = editor.posFromIndex(tfrom + ttext.length);
-			hist.done[i].changes[0].to = editor.posFromIndex(donefrom[i] + doneto[i] - tto);
+			hist.done[i].changes[0].from = app.editor.posFromIndex(tfrom + ttext.length);
+			hist.done[i].changes[0].to = app.editor.posFromIndex(donefrom[i] + doneto[i] - tto);
 		}
 		else if (donefrom[i] > tto){
-			hist.done[i].changes[0].from = editor.posFromIndex(donefrom[i] + ttext.length + tfrom - tto);
-			hist.done[i].changes[0].to = editor.posFromIndex(doneto[i] + ttext.length + tfrom - tto);
+			hist.done[i].changes[0].from = app.editor.posFromIndex(donefrom[i] + ttext.length + tfrom - tto);
+			hist.done[i].changes[0].to = app.editor.posFromIndex(doneto[i] + ttext.length + tfrom - tto);
 		}
 	}
 	for (var i = 0; i < hist.undone.length; i++){
@@ -1320,7 +1275,7 @@ socket.on('change', function(data){
 		else if (undoneto[i] <= tto && undonefrom[i] > tfrom){		
 		}
 		else if (undoneto[i] > tto && undonefrom[i] <= tfrom){
-			hist.undone[i].changes[0].to = editor.posFromIndex(undoneto[i] + delta);
+			hist.undone[i].changes[0].to = app.editor.posFromIndex(undoneto[i] + delta);
 			/*var arr = ttext.split("\n");
 			hist.undone[i].changes[0].text[hist.undone[i].changes[0].text.length-1] += arr[0];
 			arr.shift();
@@ -1328,12 +1283,12 @@ socket.on('change', function(data){
 				hist.undone[i].changes[0].text = hist.undone[i].changes[0].text.concat(arr);*/
 		}				
 		else if (undoneto[i] > tto && undonefrom[i] <= tto){
-			hist.undone[i].changes[0].from = editor.posFromIndex(tfrom + ttext.length);
-			hist.undone[i].changes[0].to = editor.posFromIndex(undonefrom[i] + undoneto[i] - tto);
+			hist.undone[i].changes[0].from = app.editor.posFromIndex(tfrom + ttext.length);
+			hist.undone[i].changes[0].to = app.editor.posFromIndex(undonefrom[i] + undoneto[i] - tto);
 		}
 		else if (undonefrom[i] > tto){
-			hist.undone[i].changes[0].from = editor.posFromIndex(undonefrom[i] + ttext.length + tfrom - tto);
-			hist.undone[i].changes[0].to = editor.posFromIndex(undoneto[i] + ttext.length + tfrom - tto);
+			hist.undone[i].changes[0].from = app.editor.posFromIndex(undonefrom[i] + ttext.length + tfrom - tto);
+			hist.undone[i].changes[0].to = app.editor.posFromIndex(undoneto[i] + ttext.length + tfrom - tto);
 		}
 	}
 	for (var i = 0; i < hist.done.length; i++){
@@ -1353,12 +1308,12 @@ socket.on('change', function(data){
 	doc.version++;
 	doc.version = doc.version % 65536;
 	if(q.length > 0){
-		socket.emit('change', q[0]);
+		app.socket.emit('change', q[0]);
 	}
 	
-	var pos = editor.posFromIndex(data.from + data.text.length);
+	var pos = app.editor.posFromIndex(data.from + data.text.length);
 	cursors[data.name].pos = data.from + data.text.length;
-	editor.addWidget(pos, cursors[data.name].element, false);
+	app.editor.addWidget(pos, cursors[data.name].element, false);
 });
 
 var buffertext = "";
@@ -1377,7 +1332,7 @@ function sendbuffer(){
 		if (bufferto == -1){
 			var req = {version:doc.version, from:bufferfrom, to:bufferfrom, text:buffertext};
 			if(q.length == 0){
-				socket.emit('change', req);
+				app.socket.emit('change', req);
 			}
 			q.push(req);
 			buffertext = "";
@@ -1386,7 +1341,7 @@ function sendbuffer(){
 		else {
 			var req = {version:doc.version, from:bufferfrom, to:bufferto, text:buffertext};
 			if(q.length == 0){
-				socket.emit('change', req);
+				app.socket.emit('change', req);
 			}
 			q.push(req);
 			bufferfrom = -1;
@@ -1406,8 +1361,7 @@ function save(){
 }
 
 function registereditorevent() {
-	
-	CodeMirror.on(editor.getDoc(), 'change', function(editorDoc, chg){
+	CodeMirror.on(app.editor.getDoc(), 'change', function(editorDoc, chg){
 
 		//console.log(chg);
 
@@ -1420,8 +1374,8 @@ function registereditorevent() {
 			return true;
 		}
 
-		var cfrom = editor.indexFromPos(chg.from);
-		var cto = editor.indexFromPos(chg.to);
+		var cfrom = app.editor.indexFromPos(chg.from);
+		var cto = app.editor.indexFromPos(chg.to);
 		var removetext = "";
 		for (var i = 0; i < chg.removed.length - 1; i++){
 			removetext += chg.removed[i] + '\n';
@@ -1439,11 +1393,11 @@ function registereditorevent() {
 		for (var k in cursors){
 			if (cto <= cursors[k].pos){
 				cursors[k].pos += delta;
-				editor.addWidget(editor.posFromIndex(cursors[k].pos), cursors[k].element, false);
+				app.editor.addWidget(app.editor.posFromIndex(cursors[k].pos), cursors[k].element, false);
 			}
 			else if (cfrom < cursors[k].pos) {
 				cursors[k].pos = cfrom + cattext.length;
-				editor.addWidget(editor.posFromIndex(cursors[k].pos), cursors[k].element, false);
+				app.editor.addWidget(app.editor.posFromIndex(cursors[k].pos), cursors[k].element, false);
 			}
 		}
 		
@@ -1469,12 +1423,12 @@ function registereditorevent() {
 			sendbuffer();
 			var req = {version:doc.version, from:cfrom, to:cto, text:cattext};
 			if(q.length == 0){
-				socket.emit('change', req);
+				app.socket.emit('change', req);
 			}
 			q.push(req);
 			var btext = "";
 			for (var i = 0; i < chg.text.length; i++){
-				btext += havebreakat(editor, bfrom + i);
+				btext += havebreakat(app.editor, bfrom + i);
 			}
 			/*
 			if (chg.text[0] == "")
@@ -1533,7 +1487,7 @@ function registereditorevent() {
 			if (bufferto == -1){
 				var req = {version:doc.version, from:bufferfrom, to:bufferfrom, text:buffertext};
 				if(q.length == 0){
-					socket.emit('change', req);
+					app.socket.emit('change', req);
 				}
 				q.push(req);
 				buffertext = "";
@@ -1542,7 +1496,7 @@ function registereditorevent() {
 			else {
 				var req = {version:doc.version, from:bufferfrom, to:bufferto, text:buffertext};
 				if(q.length == 0){
-					socket.emit('change', req);
+					app.socket.emit('change', req);
 				}
 				q.push(req);
 				bufferfrom = -1;
@@ -1552,7 +1506,7 @@ function registereditorevent() {
 		
 		var req = {version:doc.version, from:cfrom, to:cto, text:cattext};
 		if(q.length == 0){
-			socket.emit('change', req);
+			app.socket.emit('change', req);
 		}
 		q.push(req);
 		

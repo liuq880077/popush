@@ -1,5 +1,5 @@
 var app = app || {};
-
+app.editor = {};
 (function() {
 
 /* global variables */
@@ -122,6 +122,15 @@ app.showMessageInDialog = function (selector, stringid, index) {
   dlg.find('.help-inline' + eq).text(strings[stringid] || stringid);
 }
 
+app.htmlescape = function(text) {
+	return text.
+		replace(/&/gm, '&amp;').
+		replace(/</gm, '&lt;').
+		replace(/>/gm, '&gt;').
+		replace(/ /gm, '&nbsp;').
+		replace(/\n/gm, '<br />');
+}
+
 /* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
 app.checkCookie = function(){
   var language = app.getCookie('language')
@@ -172,16 +181,81 @@ app.changeLanguage = function() {
   }); 
 };
 
-app.resize = function() {
-  var w;
-  var h = $(window).height();
-  if(h < 100)
-    h = 100;  
-  w = $('#login-box').parent('*').width();
-  $('#login-box').css('left', ((w-420)/2-30) + 'px');
-  w = $('#register-box').parent('*').width();
-  $('#register-box').css('left', ((w-420)/2-30) + 'px');
+app.isFullScreen = function(cm) {
+	return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);
 };
+
+app.winHeight = function() {
+	return window.innerHeight || (document.documentElement || document.body).clientHeight;
+};
+
+app.setFullScreen = function(cm, full) {
+	var wrap = cm.getWrapperElement();
+	if (full) {
+		$('#editormain').css('position', 'static');
+		$('#editormain-inner').css('position', 'static');
+		$('#fullscreentip').fadeIn();
+		setTimeout('$(\'#fullscreentip\').fadeOut();', 1000);
+		wrap.className += " CodeMirror-fullscreen";
+		wrap.style.height = winHeight() + "px";
+		document.documentElement.style.overflow = "hidden";
+	} else {
+		$('#editormain').css('position', 'fixed');
+		$('#editormain-inner').css('position', 'relative');
+		$('#fullscreentip').hide();
+		wrap.className = wrap.className.replace(" CodeMirror-fullscreen", "");
+		wrap.style.height = "";
+		document.documentElement.style.overflow = "";
+	}
+	cm.refresh();
+	cm.focus();
+};
+
+app.resize = function() {
+	var w;
+	var h = $(window).height();
+	if(h < 100)
+		h = 100;
+	var cbh = h-$('#member-list-doc').height()-138;
+	var cbhexp = cbh > 100 ? 0 : 100 - cbh;
+	if(cbh < 100)
+		cbh = 100;
+	$('#chat-show').css('height', cbh + 'px');
+	$('#chatbox').css('height', (h-83+cbhexp) + 'px');
+	w = $('#editormain').parent().width();
+	$('#editormain').css('width', w);
+	var underh = h > 636 ? 212 : h/3;
+	if(!consoleopen)
+		underh = 0;
+	$('#under-editor').css('height', underh + 'px');
+	$('#console').css('width', (w-w/3-2) + 'px');
+	$('#varlist').css('width', (w/3-1) + 'px');
+	$('#console').css('height', (underh-12) + 'px');
+	$('#varlist').css('height', (underh-12) + 'px');
+	$('#varlistreal').css('height', (underh-42) + 'px');
+	$('#console-inner').css('height', (underh-81) + 'px');
+	$('#console-input').css('width', (w-w/3-14) + 'px');
+	if(!app.isFullScreen(app.editor))
+		$('.CodeMirror').css('height', (h-underh-$('#over-editor').height()-90) + 'px');
+
+	w = $('#chat-show').width();
+	if(w != 0)
+		$('#chat-input').css('width', (w-70) + 'px');
+	
+	$('#file-list .span10').css('min-height', (h-235) + 'px');
+	
+	w = $('#login-box').parent('*').width();
+	$('#login-box').css('left', ((w-420)/2-30) + 'px');
+	w = $('#register-box').parent('*').width();
+	$('#register-box').css('left', ((w-420)/2-30) + 'px');
+	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
+
+	$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
+
+	app.editor.refresh();
+};
+
+app.docobj = {};
 
 (function () {
   
@@ -225,8 +299,6 @@ $(document).ready(function() {
   
   $('body').show();
   $('#login-inputName').focus();
-  app.resize();
-  $(window).resize(app.resize);
   
   app.views['login'] = new app.LoginView;
   app.views['register'] = new app.RegisterView;
@@ -241,8 +313,11 @@ $(document).ready(function() {
   temp = app.collections['members'] = new app.Members();
   app.views['members'] = new app.MemberlistView({collection: temp});
   
+  temp = app.collections['cooperators'] = new app.Members();
+  app.views['cooperators'] = new app.MemberlistView({collection: temp});
+
   app.main_socket();
-  
+ 
   /* TODO: remove this, and use a router. */
   $('.container-fluid').on('click', 'a.file-go', function(e) {
     var h = $(e.target).attr('href');
@@ -251,10 +326,75 @@ $(document).ready(function() {
     }
   });
   
-  /* app.socket.emit('login', {
-    name: 'gdh1995',
-    password: 'gdh1995',
-  }); */
+	expressionlist = expressionList('#varlist-table');
+
+	CodeMirror.on(window, "resize", function() {
+		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
+		if (!showing) return;
+		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
+	});
+
+	app.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
+		lineNumbers: true,
+		lineWrapping: true,
+		indentUnit: 4,
+		indentWithTabs: true,
+		extraKeys: {
+			"Esc": function(cm) {
+				if (isFullScreen(cm)) setFullScreen(cm, false);
+				resize();
+			},
+			"Ctrl-S": saveevent
+		},
+		gutters: ["runat", "CodeMirror-linenumbers", "breakpoints"]
+	});
+	
+	app.editor.on("gutterClick", function(cm, n) {
+		gutterclick(cm, n);
+	});
+	
+	gutterclick = function(cm, n) {};
+	
+	registereditorevent();
+	if(!ENABLE_RUN) {
+		$('#editor-run').remove();
+		if(!ENABLE_DEBUG) {
+			$('#editor-console').remove();
+		}
+	}
+
+	if(!ENABLE_DEBUG) {
+		$('#editor-debug').remove();
+	}
+	
+	var Browser = {};
+	var ua = navigator.userAgent.toLowerCase();	
+	var s;
+	(s = ua.match(/msie ([\d.]+)/)) ? Browser.ie = s[1] :
+	(s = ua.match(/firefox\/([\d.]+)/)) ? Browser.firefox = s[1] :
+	(s = ua.match(/chrome\/([\d.]+)/)) ? Browser.chrome = s[1] :
+	(s = ua.match(/opera.([\d.]+)/)) ? Browser.opera = s[1] :
+	(s = ua.match(/version\/([\d.]+).*safari/)) ? Browser.safari = s[1] : 0;
+
+	if((!Browser.chrome || parseInt(Browser.chrome) < 18) &&
+		(!Browser.opera || parseInt(Browser.opera) < 12)) {
+		novoice = true;
+		$('#voice-on').addClass('disabled');
+		$('#voice-on').removeAttr('title');
+		$('#voice-on').popover({
+			html: true,
+			content: strings['novoice'],
+			placement: 'left',
+			trigger: 'hover',
+			container: 'body'
+		});
+	}
+
+  app.resize();
+  $(window).resize(app.resize);
+	$(window).scroll(function() {
+		$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
+	});
 });
 
 })();

@@ -42,6 +42,25 @@ var app = app || {};
 			});
 		},
 
+		// Remove the item, destroy the model from *localStorage* and delete its view.
+		remove: function (name) {
+				this.collection.each(function(model){
+					if (model.get('name') == name) {
+						model.destroy();
+					}
+				});
+		}
+
+		setonline: function (name, isonline) {
+				if(isonline)
+					$('#avatar-' + name).addClass('online');
+				else
+					$('#avatar-' + name).removeClass('online');
+				this.collection.each(function(model){
+					model.set({online: isonline);
+				});
+		}
+
 		// Add all items in the **Todos** collection at once.
 		addAll: function (collection, opts) {
       /*

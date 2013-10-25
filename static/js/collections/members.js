@@ -17,9 +17,14 @@ var app = app || {};
 			return this.last().get('order') + 1;
 		},
 
-		comparator: function (todo) {
-			return todo.get('order');
-		},
+		comparator: function (member) {
+			var value = "00";
+			if (!member.owner)
+				value[0] = '1';
+			if (!member.online)
+				value[1] = '1';
+			return value + member.get('name');
+		}
 		
 		isset: function(a) {
 			return typeof(a) != "undefined" && a !== null;

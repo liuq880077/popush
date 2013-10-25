@@ -20,8 +20,13 @@ var app = app || {};
 
     /* The DOM events specific to an item. */
     events: {
-      'click a.file-go': function() {
-        /* app.views['files'].go(this.model.get('path')); */
+      'click a.file-go': function(e) {
+      	if(this.model.get('type') == 'doc'){
+      		e.stopPropagation();
+      		app.docobj = this.model.json;
+      		app.socket.emit('join', {path: this.model.get('path')});
+      		return;
+      	}
       },
       'click a.file-go-share': 'share',
       'click a.file-go-delete': 'del',
