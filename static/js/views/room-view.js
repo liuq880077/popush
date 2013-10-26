@@ -321,7 +321,8 @@ app.RoomView = Backbone.View.extend({
   app.init.roomView = function() {
     if(app.views['room']) { return; }
     app.room || app.init.room();
-    var view = app.views['room'] = new app.RoomView({room: app.room});
+    var view = app.views['room'] = new app.RoomView();
+    view.room = app.room;
     app.room.view = view;
     /* TODO: move to other place */
     
