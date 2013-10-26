@@ -1,5 +1,4 @@
 var app = app || {};
-if(app.Room) { return; }
 
 (function() {
 var Room = function() {
@@ -58,8 +57,8 @@ Room.stringFill = function (ch, length) {
   return r.join('');
 };
 
-Room.RunableExt: {'c':1,'cpp':1, 'js':1, 'py':1, 'pl':1,'rb':1,'lua':1, 'java':1},
-Room.DebugableExt: {'c':1, 'cpp':1},
+Room.RunableExt = {'c':1,'cpp':1, 'js':1, 'py':1, 'pl':1,'rb':1,'lua':1, 'java':1};
+Room.DebugableExt = {'c':1, 'cpp':1};
 
 _.extend(Room.prototype, {
 
@@ -205,7 +204,7 @@ _.extend(Room.prototype, {
     if(!this.debugLock) { return; }
     this.waiting = true;
     this.view.onWaiting(data);
-    for(var k in data.exprs) { this.expressionList.setValue(k, data.exprs[k]); }
+    for(var k in data.exprs) { this.app.views['expressions'].setValue(k, data.exprs[k]); }
   },
   
   /** --------- Members ----------- */
@@ -219,13 +218,12 @@ _.extend(Room.prototype, {
     }
     if(el) { c[name] = el; }
     else { delete c[name]; }
-  }
+  },
   
   /* TODO: members & cursors*/
   onJoin: function(data) {
     /* TODO: members */
-    room.members.setOnline(data.name, true);
-    room.members.sort();
+    app.views['cooperators'].setonline(data.name, true);
     this.setCursor(name, { pos: 0,
       element: room.newCursor(data.name),
     });
@@ -233,10 +231,9 @@ _.extend(Room.prototype, {
   
   /* TODO: members */
   onLeave: function() {
-    this.members.setonline(data.name, false);
-    this.members.sort();
+    app.views.setonline(data.name, false);
     this.setCursor(data.name, null);
-  }
+  },
   
   /* TODO: */
   saveEvent: function(cm) {
@@ -316,10 +313,10 @@ _.extend(Room.prototype, {
     editor.refresh();
     
     if(currentDir.length == 1) {
-      memberlistdoc.fromdoc(docobj);
+      app.collections['cooperators'].updatedoc(docobj);
     }
-    memberlistdoc.setalloffline();
-    memberlistdoc.setonline(currentUser.name, true);
+    app.views['cooperators'].setalloffline();
+    app.views['cooperators'].setonline(currentUser.name, true);
 
     for(var k in cursors) {
       $(cursors[k].element).remove();
@@ -348,7 +345,7 @@ _.extend(Room.prototype, {
     editor.setOption('readOnly', false);
     initbreakpoints(data.bps);
     for(var i in data.users) {
-      memberlistdoc.setonline(i, true);
+      app.views['cooperators'].setonline(i, true);
       if(i == currentUser.name)
         continue;
       var cursor = newcursor(i);
@@ -356,15 +353,14 @@ _.extend(Room.prototype, {
         $(cursors[i].element).remove();
       cursors[i] = { element:cursor, pos:0 };
     }
-    memberlistdoc.sort();
 
     filelist.removeloading();
     $('#console-inner').html('');
     closeconsole();
-    expressionlist.clear();
+    app.collections['expressions'].reset();
     for(var k in data.exprs) {
-      expressionlist.addExpression(k);
-      expressionlist.setValue(k, data.exprs[k]);
+      app.collections['expressions'].addExpression(k);
+      app.collections['expressions'].setValue(k, data.exprs[k]);
     }
     
     $('#console-title').text(strings['console']);
@@ -464,8 +460,6 @@ app.init || (app.init = {});
 
 app.init.room = function() {
   app.room || (app.room = new app.Room());
-  app.collections.members || (app.collections.members = new app.Members());
-  app.room.members || (app.room.members = app.collections.members);
 };
 
 })();

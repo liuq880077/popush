@@ -116,10 +116,21 @@ var app = app || {};
         although it's a little slower.
         */
 			/* this.$el.html(''); */
-      _.each(opts.previousModels, function(m) { m.trigger('remove'); });
-      
-			app.collections['members'].each(this.addOne, this);
+      		this.clear();
+		    _.each(opts.previousModels, function(m) { m.trigger('remove'); });
+			app.collections['expressions'].each(this.addOne, this);
 		},
 
 	});
+	
+  app.init || (app.init = {});
+
+  app.init.expressionsView = function() {
+    if(app.views['expressions']) { return; }
+    app.collections['expressions'] || app.init.expressions();
+    app.views['expressions'] = new app.MembersView({
+      collection: app.collections['expressions'],
+    });
+  };
+  
 })(jQuery);

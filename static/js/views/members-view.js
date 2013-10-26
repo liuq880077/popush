@@ -54,6 +54,11 @@ var app = app || {};
     app.views['members'] = new app.MembersView({
       collection: app.collections['members'],
     });
+    if(app.views['cooperators']) { return; }
+    app.collections['cooperators'] || app.init.members();
+    app.views['cooperators'] = new app.MembersView({
+      collection: app.collections['cooperators'],
+    });
   };
   
 })();

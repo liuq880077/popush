@@ -23,4 +23,10 @@ var app = app || {};
 		
 	});
 
+  app.init || (app.init = {});
+
+  app.init.expressions = function() {
+    app.collections['expressions'] || (app.collections['expressions'] = new app.Expressions());
+  };
+
 })();

@@ -98,19 +98,19 @@ var room, listeners = {
   
   ok: function(data) {
     return;
-  };
+  },
   
   bpsok: function(data) {
     return;
-  };
+  },
 
   bps: function(data) {
     return;
-  };
+  },
   
   change: function(data) {
     return;
-  };
+  },
   
 };
 

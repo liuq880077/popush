@@ -202,7 +202,7 @@ app.RoomView = Backbone.View.extend({
     var t = this.$chatIn.val();
     (t) && this.room.chat(t);
     this.$chatIn.val('');
-  }
+  },
    
   /* OK: */
   toChatBox: function(name, type, content, time) {
