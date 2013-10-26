@@ -253,7 +253,7 @@
         </div>
         <div class="span3" id="chatbox">
           <div id="member-list-doc">
-            <img src="images/character.png" width="40" height="40" class="pull-left shared-character" />
+<!--            <img src="images/character.png" width="40" height="40" class="pull-left shared-character" />-->
           </div>
           <div id="chat-show" style="height:284px;">
             <div id="chat-show-inner">
@@ -461,6 +461,9 @@
   <script type="text/template" id="member-template">
     <img src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
   </script>
+  <script type="text/template" id="member-doc-template">
+    <img id="avatar-<%= name %>" src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
+  </script>
   <script type="text/javascript" src="js/localization/zh-CN.js"></script>
   <script type="text/javascript" src="js/localization/en-US.js"></script>
   <script type="text/javascript" src="js/api/ie.js"></script>
@@ -470,6 +473,7 @@
   <script type="text/javascript" src="js/models/user.js"></script>
   <script type="text/javascript" src="js/collections/files.js"></script>
   <script type="text/javascript" src="js/collections/members.js"></script>
+  <script type="text/javascript" src="js/collections/expressions.js"></script>
   <script type="text/javascript" src="js/sockets/main-socket.js"></script>
   <script type="text/javascript" src="js/sockets/file-sync.js"></script>
   <script type="text/javascript" src="js/sockets/room-socket.js"></script>

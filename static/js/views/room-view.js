@@ -72,7 +72,7 @@ app.RoomView = Backbone.View.extend({
   },
     
   exit: function() {
-    this.leaveVoiceRoom();
+//    this.leaveVoiceRoom();
     $("body").animate({scrollTop: this.oldscrolltop});
     this.stopListening();
   },
@@ -242,7 +242,7 @@ app.RoomView = Backbone.View.extend({
     if(this.room.timestamp == stamp) {
       this.room.isSaving = false;
       this.$docState.removeClass('red').text(strings['saved'] || 'saved');
-      this.$btnHome.popover('destroy').attr('title', strings['back'] || 'back');
+//      this.$btnHome.popover('destroy').attr('title', strings['back'] || 'back');
       this.setRunState();
     }
   },
@@ -273,6 +273,10 @@ app.RoomView = Backbone.View.extend({
     this.$('#voice-on').removeClass('active');
   },
   
+  isFullScreen: function(cm) {
+	return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);    
+  },
+  
   resize: function() {
     var w, h = $(window).height(), o = this, cbh, cbhexp, underh;
     (h < 100) && (h = 100);
@@ -294,12 +298,12 @@ app.RoomView = Backbone.View.extend({
       width: (w / 3 - 1) + 'px',
       height: (underh - 12) + 'px',
     });
-    o.varsReal.css('height', (underh - 42) + 'px');
-    o.conIn.css({
+    o.$varsReal.css('height', (underh - 42) + 'px');
+    o.$conIn.css({
       height: (underh - 81) + 'px',
       width: (w - w / 3 - 14) + 'px',
     });
-    if(!this.isFullScreen(editor))
+    if(!this.isFullScreen(this.editor))
       this.$('.CodeMirror').css('height',
         (h - underh - this.$('#over-editor').height() - 90) + 'px');
 
@@ -310,7 +314,7 @@ app.RoomView = Backbone.View.extend({
     ) + 'px');
     o.$mainBox.css('left', ( -$(window).scrollLeft() ) + 'px');
 
-    editor.refresh();
+    this.editor.refresh();
   },
   
   
@@ -326,6 +330,12 @@ app.RoomView = Backbone.View.extend({
     app.room.view = view;
     /* TODO: move to other place */
     
+    CodeMirror.on(window, "resize", function() {
+		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
+		if (!showing) return;
+		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
+	});
+	
     view.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
       lineNumbers: true,
       lineWrapping: true,
@@ -340,6 +350,16 @@ app.RoomView = Backbone.View.extend({
       },
       gutters: ["runat", "CodeMirror-linenumbers", "breakpoints"],
     });
+
+	view.gutterclick = function(cm, n) {};
+
+	view.editor.on("gutterClick", function(cm, n) {
+		view.gutterclick(cm, n);
+	});
+	
+    $(window).scroll(function() {
+		$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
+	});
   };
     
 })();

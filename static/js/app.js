@@ -374,11 +374,8 @@ $(document).ready(function() {
 	}
 */	
   app.resize();
-/*  $(window).resize(app.resize);
-	$(window).scroll(function() {
-		$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
-	});
-*/
+  $(window).resize(app.resize);
+
 });
 
 })();

@@ -13,6 +13,8 @@ var app = app || {};
 		// Instead of generating a new element, bind to the existing skeleton of
 		// the App already present in the HTML.
 		el: '#member-list',
+		
+		isdoc: 0,
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
@@ -32,6 +34,8 @@ var app = app || {};
 		// appending its element to the `<ul>`.
 		addOne: function (user) {
 			var view = new app.MemberView({ model: user });
+			if (this.isdoc == 1)
+				view.template = _.template($('#member-doc-template').html());
 			var text = view.render().$el;
 			this.$el.append(text);
 			text.find('.member-avatar').popover({
@@ -52,19 +56,19 @@ var app = app || {};
 		},
 
 		setonline: function (name, isonline) {
-				if(isonline)
-					$('#avatar-' + name).addClass('online');
-				else
-					$('#avatar-' + name).removeClass('online');
 				this.collection.each(function(model){
-					model.set({online: isonline});
+					if (model.get('name')==name)
+					{
+						model.set({online: isonline});
+						$('#avatar-' + name).addClass('online');
+					}
 				});
 		},
 		
 		setalloffline: function() {
 			this.collection.each(function(model){
+				model.set('online',false);
 				$('#avatar-' + model.get('name')).removeClass('online');
-				model.set({online: false});
 			});
 		},
 
@@ -93,6 +97,8 @@ var app = app || {};
     app.collections['cooperators'] || app.init.members();
     app.views['cooperators'] = new app.MemberlistView({
       collection: app.collections['cooperators'],
+      el: '#member-list-doc'
     });
+    app.views['cooperators'].isdoc = 1;
   };
 })(jQuery);

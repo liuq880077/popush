@@ -49,16 +49,13 @@ var Room = function() {
   param: ch: char to fill with;
   return a new string with 'length' 'ch's, such as 100 '0's.
   */
-Room.stringFill = function (ch, length) {
+app.stringFill = function (ch, length) {
   for(var a = length, r = [], s = ch; a; s += s) {
     if (a % 2) { r.push(s); a = (a-1) / 2; }
   }
   delete s;
   return r.join('');
 };
-
-Room.RunableExt = {'c':1,'cpp':1, 'js':1, 'py':1, 'pl':1,'rb':1,'lua':1, 'java':1};
-Room.DebugableExt = {'c':1, 'cpp':1};
 
 _.extend(Room.prototype, {
 
@@ -74,6 +71,97 @@ _.extend(Room.prototype, {
     if(this.q.length == 0 && this.bufferfrom == -1) { this.setSaved(); }
     return r;
   },
+
+  changelanguage : function(language) {
+		if(app.languageMap[language]) {
+			if(app.modeMap[language])
+				this.view.editor.setOption('mode', app.modeMap[language]);
+			else
+				this.view.editor.setOption('mode', this.view.languageMap[language]);
+			CodeMirror.autoLoadMode(this.view.editor, app.languageMap[language]);
+		} else {
+			this.view.editor.setOption('mode', 'text/plain');
+			CodeMirror.autoLoadMode(this.view.editor, '');
+		}
+  },
+  
+  isrunable: function(ext) {
+	for(var i=0; i<app.RunableExt.length; i++) {
+		if(app.RunableExt[i] == ext)
+			return true;
+	}
+	return false;
+  },
+
+  isdebugable: function(ext) {
+	for(var i=0; i<app.DebugableExt.length; i++) {
+		if(app.DebugableExt[i] == ext)
+			return true;
+	}
+	return false;
+  },
+  
+  removebreakpointat: function(cm, n){
+	var info = cm.lineInfo(n);
+	if (info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
+		cm.setGutterMarker(n, 'breakpoints', null);
+		//bps = bps.substr(0, n) + "0" + bps.substr(n+1);
+		this.sendbreak(n, n+1, "0");
+		return true;
+	}
+	return false;
+  },
+
+  addbreakpointat: function(cm, n){
+	var addlen = n - this.bps.length;
+	if (addlen > 0){
+		var addtext = "";
+		for (var i = this.bps.length; i < n-1; i++){
+			addtext += "0";
+		}
+		addtext += "1";
+		//bps += addtext;
+		this.sendbreak(this.bps.length, this.bps.length, addtext);
+	}
+	else{
+		//bps = bps.substr(0, n) + "1" + bps.substr(n+1);
+		this.sendbreak(n, n+1, "1");
+	}
+
+	var element = $('<div><img src="images/breakpoint.png" /></div>').get(0);
+	cm.setGutterMarker(n, 'breakpoints', element);
+  },
+
+  setrunanddebugstate: function(){
+	$('#editor-run').removeClass('disabled');
+	$('#editor-debug').removeClass('disabled');
+	if(!this.runEnabled())
+		$('#editor-run').addClass('disabled');
+	if(!this.debugEnabled())
+		$('#editor-debug').addClass('disabled');
+  },
+  
+  checkrunanddebug: function(ext) {
+		if(app.Package.ENABLE_RUN) {
+			this.runable = this.isrunable(ext);
+		}
+		if(app.Package.ENABLE_DEBUG) {
+			this.debugable = this.isdebugable(ext);
+			if(this.debugable) {
+				this.view.gutterclick = function(cm, n) {
+					if(this.debugLock && !this.waiting)
+						return;
+					if (!this.removebreakpointat(cm, n)){
+						this.addbreakpointat(cm, n);
+					}
+				};
+			} else {
+				this.view.gutterclick = function(cm, n) { };
+			}
+			this.removeAllBreaks();
+		}
+		this.setrunanddebugstate();
+	},
 
   /* TODO: try merge this */
   runEnabled: function() {
@@ -111,7 +199,7 @@ _.extend(Room.prototype, {
     for(var i = 0, l = str.length, cm = this.view.editor, el; i < l; i++) {
       if(str[i] != "1") { this.view.setBreak(cm, i, true); }
     }
-    this.bps = str + Room.stringFill('0', cm.lineCount() - l);
+    this.bps = str + app.stringFill('0', cm.lineCount() - l);
   },
   
   /* OK: */
@@ -125,7 +213,7 @@ _.extend(Room.prototype, {
       var oldl = this.bps.length;
       if(n <= oldl) { this.sendBreak(n, n + 1, '1'); }
       else {
-        this.sendBreak(oldl, oldl, Room.stringFill('0', n - 1 - oldl) + '1');
+        this.sendBreak(oldl, oldl, app.stringFill('0', n - 1 - oldl) + '1');
       }
       this.view.setBreak(cm, n, true);
     }
@@ -135,12 +223,12 @@ _.extend(Room.prototype, {
   onMoved: function() {
     var ext = this.ext = this.docModel.json.name.match(app.fileExtReg)[2],
       editor = this.view.editor;
-    editor.setOption('mode', Room.modeMap[ext] || Room.languageMap[ext]
+    editor.setOption('mode', app.modeMap[ext] || app.languageMap[ext]
       || 'text/plain');
-    CodeMirror.autoLoadMode(editor, Room.languageMap[ext] || '');
+    CodeMirror.autoLoadMode(editor, app.languageMap[ext] || '');
     
-    this.runable = app.Package.ENABLE_RUN && (!!Room.RunableExt[ext]);
-    var newDa = app.Package.ENABLE_DEBUG && (!!Room.DebugableExt[ext]);
+    this.runable = app.Package.ENABLE_RUN && (!!app.RunableExt[ext]);
+    var newDa = app.Package.ENABLE_DEBUG && (!!app.DebugableExt[ext]);
     if(newDa != this.debugable) {
       if(newDa) {
         var that = this;
@@ -292,14 +380,15 @@ _.extend(Room.prototype, {
     this.q.length = 0;
     this.bq.length = 0;
     this.lock = false;
-
+	var docobj = this.docModel.json;
+	docobj.members = this.docModel.get('members');
     $('#editor-run').html('<i class="icon-play"></i>').attr('title',
       strings['run-title'] || 'run');
     this.runLock = false;
     this.debugLock = false;
     this.waiting = false;
 
-    $('#current-doc').html(htmlescape(docobj.showname));
+    $('#current-doc').html(_.escape(docobj.shownName));
     $('#chat-input').val('');
     $('#chat-show-inner').text('');
     $('#editor').show();
@@ -307,24 +396,24 @@ _.extend(Room.prototype, {
     $('#footer').hide();
     var filepart = docobj.name.split('.');
     ext = filepart[filepart.length - 1];
-    changelanguage(ext);
-    checkrunanddebug(ext);
+    this.changelanguage(ext);
+    this.checkrunanddebug(ext);
 
-    editor.refresh();
+    this.view.editor.refresh();
     
-    if(currentDir.length == 1) {
+    if(this.docModel.get('path').split('/').length == 3) {
       app.collections['cooperators'].updatedoc(docobj);
     }
     app.views['cooperators'].setalloffline();
-    app.views['cooperators'].setonline(currentUser.name, true);
+    app.views['cooperators'].setonline(app.currentUser.name, true);
 
-    for(var k in cursors) {
-      $(cursors[k].element).remove();
+    for(var k in this.cursors) {
+      $(this.cursors[k].element).remove();
     }
 
-    cursors = {};
+    this.cursors = {};
     
-    oldscrolltop = $('body').scrollTop();
+    this.view.oldscrolltop = $('body').scrollTop();
     
     window.voiceon = false;
     window.voiceLock = false;
@@ -336,49 +425,50 @@ _.extend(Room.prototype, {
 
     $('#voice-on').removeClass('active');
     
-    operationLock = false;
+    this.operationLock = false;
 
-    lock = true;
-    doc = data;
-    editor.setValue(doc.text);
-    editor.clearHistory();
-    editor.setOption('readOnly', false);
-    initbreakpoints(data.bps);
+    this.lock = true;
+    this.doc = data;
+    this.view.editor.setValue(this.doc.text);
+    this.view.editor.clearHistory();
+    this.view.editor.setOption('readOnly', false);
+    this.initBreaks(data.bps);
     for(var i in data.users) {
       app.views['cooperators'].setonline(i, true);
-      if(i == currentUser.name)
+      if(i == app.currentUser.name)
         continue;
       var cursor = newcursor(i);
-      if(cursors[i] && cursors[i].element)
-        $(cursors[i].element).remove();
-      cursors[i] = { element:cursor, pos:0 };
+      if(this.cursors[i] && this.cursors[i].element)
+        $(this.cursors[i].element).remove();
+      this.cursors[i] = { element:cursor, pos:0 };
     }
 
-    filelist.removeloading();
+//    filelist.removeloading();
     $('#console-inner').html('');
-    closeconsole();
+    this.view.setConsole(false);
     app.collections['expressions'].reset();
     for(var k in data.exprs) {
-      app.collections['expressions'].addExpression(k);
-      app.collections['expressions'].setValue(k, data.exprs[k]);
+      app.collections['expressions'].add({expression: k, notnew: true});
+      app.views['expressions'].setValue(k, data.exprs[k]);
     }
     
     $('#console-title').text(strings['console']);
     
-    resize();
+    
+    this.view.resize();
     $('body').scrollTop(99999);
     
     if(data.running) {
-      setrun();
+      this.view.setRun();
     }
     if(data.debugging) {
-      setdebug();
-      editor.setOption('readOnly', true);
-      old_text = data.text;
-      old_bps = data.bps;
+      this.setDebug();
+      this.view.editor.setOption('readOnly', true);
+      this.old_text = data.text;
+      this.old_bps = data.bps;
       if(data.state == 'waiting') {
-        waiting = true;
-        runtoline(data.line - 1);
+        this.waiting = true;
+        this.view.runTo(data.line - 1);
         $('.debugandwait').removeClass('disabled');
         if(data.line !== null)
           $('#console-title').text(strings['console'] + strings['waiting']);
@@ -386,7 +476,7 @@ _.extend(Room.prototype, {
           $('#console-title').text(strings['console'] + strings['waiting'] + strings['nosource']);
       }
     }
-    setrunanddebugstate();
+    this.setrunanddebugstate();
 
     delete data.running;
     delete data.debugging;
@@ -396,7 +486,7 @@ _.extend(Room.prototype, {
 });
 
 
-Room.languageMap = { 
+app.languageMap = { 
   'c':      'clike',
   'clj':    'clojure',
   'coffee': 'coffeescript',
@@ -425,7 +515,7 @@ Room.languageMap = {
   'xml':    'xml',
 };
 
-Room.modeMap = {
+app.modeMap = {
   'c':      'text/x-csrc',
   'clj':    'text/x-clojure',
   'coffee': 'text/x-coffeescript',
@@ -453,6 +543,9 @@ Room.modeMap = {
   'vbs':    'text/x-vb',
   'xml':    'application/xml',
 };
+
+app.RunableExt = ['c','cpp', 'js', 'py', 'pl','rb','lua', 'java'];
+app.DebugableExt = ['c', 'cpp'];
 
 app.Room = Room;
 

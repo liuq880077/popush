@@ -203,10 +203,10 @@ function havebreakat (cm, n) {
 /* 输入：文件名后缀
  * 检查该文件是否能运行，是否能调试，并复制给runable 和debugable */
 function checkrunanddebug(ext) {
-	if(ENABLE_RUN) {
+	if(app.Package.ENABLE_RUN) {
 		runable = isrunable(ext);
 	}
-	if(ENABLE_DEBUG) {
+	if(app.Package.ENABLE_DEBUG) {
 		debugable = isdebugable(ext);
 		if(debugable) {
 			gutterclick = function(cm, n) {
@@ -937,7 +937,7 @@ socket.on('set', function(data){
 	debugLock = false;
 	waiting = false;
 
-	$('#current-doc').html(htmlescape(docobj.showname));
+	$('#current-doc').html(htmlescape(docobj.shownName));
 	$('#chat-input').val('');
 	$('#chat-show-inner').text('');
 	$('#editor').show();

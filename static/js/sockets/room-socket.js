@@ -6,7 +6,7 @@ var app = app || {};
 var onSet = function(data) {
   /* if 'data' has 'err', the message belongs to 'join', */
   /* and then throw it. */
-  app.room.onSet(data);
+  app.room.onSet.call(app.room, data);
 };
 
 var room, listeners = {
