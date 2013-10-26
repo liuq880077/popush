@@ -68,6 +68,7 @@ var app = app || {};
 
   app.init.members = function() {
     app.collections['members'] || (app.collections['members'] = new app.Members());
+    app.collections['cooperators'] || (app.collections['cooperators'] = new app.Members());
   };
 
 })();
