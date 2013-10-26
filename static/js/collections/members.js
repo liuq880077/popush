@@ -67,7 +67,6 @@ var app = app || {};
   app.init || (app.init = {});
 
   app.init.members = function() {
-    alert('a');
     app.collections['members'] || (app.collections['members'] = new app.Members());
   };
 
