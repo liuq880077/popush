@@ -23,7 +23,7 @@ var onLogin = function(data) {
     $('#nav-avatar').attr('src', data.user.avatar);
     data.user.owner = data.user.online = true;
     app.currentUser = data.user;
-    app.collections['members'].reset(data.user);
+    app.collections['members'].update([data.user]);
     
     $.cookie('sid', data.sid, {expires:7});
 

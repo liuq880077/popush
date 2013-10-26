@@ -81,4 +81,18 @@ var app = app || {};
 		},
 
 	});
+  app.init || (app.init = {});
+
+  app.init.membersView = function() {
+    if(app.views['members']) { return; }
+    app.collections['members'] || app.init.members();
+    app.views['members'] = new app.MemberlistView({
+      collection: app.collections['members'],
+    });
+    if(app.views['cooperators']) { return; }
+    app.collections['cooperators'] || app.init.members();
+    app.views['cooperators'] = new app.MemberlistView({
+      collection: app.collections['cooperators'],
+    });
+  };
 })(jQuery);
