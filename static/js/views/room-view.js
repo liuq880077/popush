@@ -232,9 +232,10 @@ app.RoomView = Backbone.View.extend({
   
   setSaved: function() {
     this.room.timestamp = new Date().getTime();
+    var that = this;
     window.setTimeout(function() {
-      this.setSaved2(this.room.timestamp);
-    }, this.room.saveTimeout);
+      that.setSaved2(that.room.timestamp);
+    }, that.room.saveTimeout);
     this.room.saveTimeout = 500;
   },
 
@@ -330,36 +331,70 @@ app.RoomView = Backbone.View.extend({
     app.room.view = view;
     /* TODO: move to other place */
     
-    CodeMirror.on(window, "resize", function() {
+	var Browser = {};
+	var ua = navigator.userAgent.toLowerCase();	
+	var s;
+	(s = ua.match(/msie ([\d.]+)/)) ? Browser.ie = s[1] :
+	(s = ua.match(/firefox\/([\d.]+)/)) ? Browser.firefox = s[1] :
+	(s = ua.match(/chrome\/([\d.]+)/)) ? Browser.chrome = s[1] :
+	(s = ua.match(/opera.([\d.]+)/)) ? Browser.opera = s[1] :
+	(s = ua.match(/version\/([\d.]+).*safari/)) ? Browser.safari = s[1] : 0;
+
+	if((!Browser.chrome || parseInt(Browser.chrome) < 18) &&
+		(!Browser.opera || parseInt(Browser.opera) < 12)) {
+		app.novoice = true;
+		$('#voice-on').addClass('disabled');
+		$('#voice-on').removeAttr('title');
+		$('#voice-on').popover({
+			html: true,
+			content: strings['novoice'],
+			placement: 'left',
+			trigger: 'hover',
+			container: 'body'
+		});
+	}
+	
+	CodeMirror.on(window, "resize", function() {
 		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
 		if (!showing) return;
 		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
 	});
-	
-    view.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
-      lineNumbers: true,
-      lineWrapping: true,
-      indentUnit: 4,
-      indentWithTabs: true,
-      extraKeys: {
-        'Esc': function(cm) {
-          if(view.isFullScreen(cm)) { view.setFullScreen(cm, false); }
-          view.resize();
-        },
-        'Ctrl-S': function() { view.room.saveEvent(); },
-      },
-      gutters: ["runat", "CodeMirror-linenumbers", "breakpoints"],
-    });
 
+	view.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
+		lineNumbers: true,
+		lineWrapping: true,
+		indentUnit: 4,
+		indentWithTabs: true,
+		extraKeys: {
+			"Esc": function(cm) {
+				if (view.isFullScreen(cm)) 
+					view['room'].setFullScreen(cm, false);
+				view.resize();
+			},
+			"Ctrl-S": view.room.saveevent
+		},
+		gutters: ["runat", "CodeMirror-linenumbers", "breakpoints"]
+	});
+	
 	view.gutterclick = function(cm, n) {};
 
 	view.editor.on("gutterClick", function(cm, n) {
 		view.gutterclick(cm, n);
 	});
+		
+	view.room.registereditorevent();
 	
-    $(window).scroll(function() {
-		$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
-	});
+	if(!app.Package.ENABLE_RUN) {
+		$('#editor-run').remove();
+		if(!ENABLE_DEBUG) {
+			$('#editor-console').remove();
+		}
+	}
+
+	if(!app.Package.ENABLE_DEBUG) {
+		$('#editor-debug').remove();
+	}
+	
   };
     
 })();

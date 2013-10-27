@@ -290,28 +290,6 @@ $(document).ready(function() {
   $('[localization]').html(getLanguageString);
   $('[title]').attr('title', getLanguageString);
   
-	var Browser = {};
-	var ua = navigator.userAgent.toLowerCase();	
-	var s;
-	(s = ua.match(/msie ([\d.]+)/)) ? Browser.ie = s[1] :
-	(s = ua.match(/firefox\/([\d.]+)/)) ? Browser.firefox = s[1] :
-	(s = ua.match(/chrome\/([\d.]+)/)) ? Browser.chrome = s[1] :
-	(s = ua.match(/opera.([\d.]+)/)) ? Browser.opera = s[1] :
-	(s = ua.match(/version\/([\d.]+).*safari/)) ? Browser.safari = s[1] : 0;
-
-	if((!Browser.chrome || parseInt(Browser.chrome) < 18) &&
-		(!Browser.opera || parseInt(Browser.opera) < 12)) {
-		novoice = true;
-		$('#voice-on').addClass('disabled');
-		$('#voice-on').removeAttr('title');
-		$('#voice-on').popover({
-			html: true,
-			content: strings['novoice'],
-			placement: 'left',
-			trigger: 'hover',
-			container: 'body'
-		});
-	}
   
   $('body').show();
   app.resize();
@@ -334,45 +312,6 @@ $(document).ready(function() {
     }
   });
   
-/*	CodeMirror.on(window, "resize", function() {
-		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
-		if (!showing) return;
-		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
-	});
-
-	app.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
-		lineNumbers: true,
-		lineWrapping: true,
-		indentUnit: 4,
-		indentWithTabs: true,
-		extraKeys: {
-			"Esc": function(cm) {
-				if (isFullScreen(cm)) setFullScreen(cm, false);
-				resize();
-			},
-			"Ctrl-S": saveevent
-		},
-		gutters: ["runat", "CodeMirror-linenumbers", "breakpoints"]
-	});
-	
-	app.editor.on("gutterClick", function(cm, n) {
-		gutterclick(cm, n);
-	});
-	
-	gutterclick = function(cm, n) {};
-	
-	registereditorevent();
-	if(!ENABLE_RUN) {
-		$('#editor-run').remove();
-		if(!ENABLE_DEBUG) {
-			$('#editor-console').remove();
-		}
-	}
-
-	if(!ENABLE_DEBUG) {
-		$('#editor-debug').remove();
-	}
-*/	
   app.resize();
   $(window).resize(app.resize);
 

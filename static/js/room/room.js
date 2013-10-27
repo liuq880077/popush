@@ -13,7 +13,7 @@ var Room = function() {
     cursors: {},
     docModel: null,
     lock: false,
-    doc: null,
+    docData: null,
     q: [],
     timer: null,
     ext: '',
@@ -26,7 +26,11 @@ var Room = function() {
     timestamp: 0,
     isSaving: false,
     saveTimeout: 500,
-    
+    buffertimeout: app.Package.SAVE_TIME_OUT,
+    buffertext: "",
+	bufferfrom: -1,
+	bufferto: -1,
+
     voice: {
       userArray: [],
       audioArray: [],
@@ -62,13 +66,13 @@ _.extend(Room.prototype, {
   /* OK: */
   push: function(item) {
     this.q.push(item);
-    this.setSaving();
+    this.view.setSaving();
   },
   
   /* OK: */
   shift: function() {
     var r = this.q.shift();
-    if(this.q.length == 0 && this.bufferfrom == -1) { this.setSaved(); }
+    if(this.q.length == 0 && this.bufferfrom == -1) { this.view.setSaved(); }
     return r;
   },
 
@@ -106,7 +110,7 @@ _.extend(Room.prototype, {
 	if (info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
 		cm.setGutterMarker(n, 'breakpoints', null);
 		//bps = bps.substr(0, n) + "0" + bps.substr(n+1);
-		this.sendbreak(n, n+1, "0");
+		this.sendBreak(n, n+1, "0");
 		return true;
 	}
 	return false;
@@ -121,11 +125,11 @@ _.extend(Room.prototype, {
 		}
 		addtext += "1";
 		//bps += addtext;
-		this.sendbreak(this.bps.length, this.bps.length, addtext);
+		this.sendBreak(this.bps.length, this.bps.length, addtext);
 	}
 	else{
 		//bps = bps.substr(0, n) + "1" + bps.substr(n+1);
-		this.sendbreak(n, n+1, "1");
+		this.sendBreak(n, n+1, "1");
 	}
 
 	var element = $('<div><img src="images/breakpoint.png" /></div>').get(0);
@@ -170,12 +174,12 @@ _.extend(Room.prototype, {
 
   /* TODO: try merge this */
   debugEnabled: function() {
-    return (this.debugable && !this.runLock && (!this.isSaving || debugLock));
+    return (this.debugable && !this.runLock && (!this.isSaving || this.debugLock));
   },
 
   /* OK: */
   sendBreak: function(from, to, text) {
-    var req = {version: this.doc.version, from: from, to: to, text: text};
+    var req = {version: this.docData.version, from: from, to: to, text: text};
     if(this.bq.length == 0) { this.socket('bps', req); }
     this.bq.push(req);
   },
@@ -325,12 +329,12 @@ _.extend(Room.prototype, {
   
   /* TODO: */
   saveEvent: function(cm) {
-    if(this.timestamp != 0) { this.setSaved2(this.timestamp); }
+    if(this.timestamp != 0) { this.view.setSaved2(this.timestamp); }
     this.timestamp = 0;
   },
   
   run: function() {
-    if(!this.runenabled())
+    if(!this.runEnabled())
       return;
     if(this.operationLock)
       return;
@@ -352,11 +356,40 @@ _.extend(Room.prototype, {
   },
   
   sendBuffer: function() {
+  	if (this.bufferfrom != -1) {
+		if (this.bufferto == -1){
+			var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferfrom, text:this.buffertext};
+			if(this.q.length == 0){
+				this.socket('change', req);
+			}
+			this.push(req);
+			this.buffertext = "";
+			this.bufferfrom = -1;
+		}
+		else {
+			var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferto, text:this.buffertext};
+			if(this.q.length == 0){
+				this.socket('change', req);
+			}
+			this.push(req);
+			this.bufferfrom = -1;
+			this.bufferto = -1;
+		}
+		this.buffertimeout = app.Package.SAVE_TIME_OUT;
+	}
   },
   
-  save: function() {
+  save: function(){
+	this.view.setSaving();
+	if (this.timer != null){
+		clearTimeout(this.timer);
+	}
+	var that = this;
+	this.timer = setTimeout(function() {
+		that.sendBuffer();
+	}, this.buffertimeout);
   },
-  
+
   register: function() {
   },
   
@@ -373,6 +406,7 @@ _.extend(Room.prototype, {
   
   onSet: function(data) {
     /* app.room.init(data); */
+	app.Lock.remove();
     this.view.enter(data);
     this.timestamp = 1;
     this.view.setSaved2(this.timestamp);
@@ -428,8 +462,8 @@ _.extend(Room.prototype, {
     this.operationLock = false;
 
     this.lock = true;
-    this.doc = data;
-    this.view.editor.setValue(this.doc.text);
+    this.docData = data;
+    this.view.editor.setValue(this.docData.text);
     this.view.editor.clearHistory();
     this.view.editor.setOption('readOnly', false);
     this.initBreaks(data.bps);
@@ -477,12 +511,175 @@ _.extend(Room.prototype, {
       }
     }
     this.setrunanddebugstate();
-
+    this.startListen();
     delete data.running;
     delete data.debugging;
     delete data.state;
-  }
+  },
   
+  havebreakat: function (cm, n) {
+	var info = cm.lineInfo(n);
+	if (info && info.gutterMarkers && info.gutterMarkers["breakpoints"]) {
+		return "1";
+	}
+	return "0";
+  },
+  
+  registereditorevent: function() {
+	var editor = this.view.editor;
+	var room = this;
+	CodeMirror.on(editor.getDoc(), 'change', function(editorDoc, chg){
+
+		//console.log(chg);
+
+		if(room.debugLock){
+			return true;
+		}
+
+		if(room.lock){
+			room.lock = false;
+			return true;
+		}
+
+		var cfrom = editor.indexFromPos(chg.from);
+		var cto = editor.indexFromPos(chg.to);
+		var removetext = "";
+		for (var i = 0; i < chg.removed.length - 1; i++){
+			removetext += chg.removed[i] + '\n';
+		}
+		removetext += chg.removed[chg.removed.length - 1];
+		cto = cfrom + removetext.length;
+		var cattext = "";
+		for (var i = 0; i < chg.text.length - 1; i++){
+			cattext += chg.text[i] + '\n';
+		}
+		cattext += chg.text[chg.text.length - 1];
+
+		var delta = cfrom + cattext.length - cto;
+
+		for (var k in room.cursors){
+			if (cto <= room.cursors[k].pos){
+				room.cursors[k].pos += delta;
+				editor.addWidget(editor.posFromIndex(room.cursors[k].pos), room.cursors[k].element, false);
+			}
+			else if (cfrom < room.cursors[k].pos) {
+				room.cursors[k].pos = cfrom + cattext.length;
+				editor.addWidget(editor.posFromIndex(room.cursors[k].pos), room.cursors[k].element, false);
+			}
+		}
+		
+		/*if (cfrom == cto && 
+			(cfrom == bufferfrom + buffertext.length || bufferfrom == -1)
+			&& cattext.length == 1 && 
+			((cattext[0] >= 'a' && cattext[0] <= 'z') || (cattext[0] >= 'A' && cattext[0] <= 'Z') ||
+			(cattext[0] >= '0' && cattext[0] <= '9'))){
+			if (bufferfrom == -1){
+				buffertext = cattext;
+				bufferfrom = cfrom;
+			}
+			else {
+				buffertext += cattext;
+			}
+			save();
+			return;
+		}*/
+		var bfrom = chg.from.line;
+		var bto = chg.to.line;
+
+		if (chg.text.length != (bto-bfrom+1)){
+			room.sendBuffer();
+			var req = {version:room.docData.version, from:cfrom, to:cto, text:cattext};
+			if(room.q.length == 0){
+				room.socket('change', req);
+			}
+			room.push(req);
+			var btext = "";
+			for (var i = 0; i < chg.text.length; i++){
+				btext += room.havebreakat(editor, bfrom + i);
+			}
+			/*
+			if (chg.text[0] == "")
+				btext = havebreakat(editor, bfrom);
+			//var btext = "";
+			for (var i = 0; i < chg.text.length - 2; i++){
+				btext += "0";
+			}
+			btext[btext.length-1] = bps[bto];*/
+			room.sendBreak(bfrom, bto+1, btext);
+			return;
+		}
+		if (chg.text.length > 1){
+			room.buffertimeout = room.buffertimeout / 2;
+		}
+		if (room.bufferto == -1 && cfrom == cto &&
+			(cfrom ==  room.bufferfrom + room.buffertext.length ||  room.bufferfrom == -1)){
+			if (room.bufferfrom == -1){
+				room.buffertext = cattext;
+				room.bufferfrom = cfrom;
+			}
+			else {
+				room.buffertext += cattext;
+			}
+			room.save();
+			return;
+		}
+		else if (room.bufferto == -1 && chg.origin == "+delete" &&
+			room.bufferfrom != -1 && cto == room.bufferfrom + room.buffertext.length && cfrom >= room.bufferfrom){
+			room.buffertext = room.buffertext.substr(0, cfrom - room.bufferfrom);
+			if (room.buffertext.length == 0){
+				room.bufferfrom = -1;
+				if(room.q.length == 0){
+					room.view.setsaved();
+				}
+				return;
+			}
+			room.save();
+			return;
+		}
+		else if (chg.origin == "+delete" &&
+			room.bufferfrom == -1){
+			room.bufferfrom = cfrom;
+			room.bufferto = cto;
+			room.buffertext = "";
+			room.save();
+			return;
+		}
+		else if (room.bufferto != -1 && chg.origin == "+delete" &&
+			cto == room.bufferfrom){
+			room.bufferfrom = cfrom;
+			room.save();
+			return;
+		}
+		else if (room.bufferfrom != -1) {
+			if (room.bufferto == -1){
+				var req = {version:room.docData.version, from:room.bufferfrom, to:room.bufferfrom, text:room.buffertext};
+				if(room.q.length == 0){
+					room.socket('change', req);
+				}
+				room.push(req);
+				room.buffertext = "";
+				room.bufferfrom = -1;
+			}
+			else {
+				var req = {version:room.docData.version, from:room.bufferfrom, to:room.bufferto, text:room.buffertext};
+				if(q.length == 0){
+					room.socket('change', req);
+				}
+				room.push(req);
+				room.bufferfrom = -1;
+				room.bufferto = -1;
+			}
+		}
+		
+		var req = {version:room.docData.version, from:cfrom, to:cto, text:cattext};
+		if(room.q.length == 0){
+			room.socket('change', req);
+		}
+		room.push(req);
+		
+	});
+  }
+
 });
 
 
@@ -556,4 +753,5 @@ app.init.room = function() {
 };
 
 })();
+
 
