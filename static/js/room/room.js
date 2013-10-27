@@ -294,8 +294,8 @@ _.extend(Room.prototype, {
   /* OK: */
   onDebug2: function(text, bps) {
     this.debugLock = true;
-    this.view.onDebug(text);
-    this.oldBps = bps;
+    this.view.setDebug(text);
+    this.old_bps = bps;
     this.removeAllBreaks();
     this.initBreaks(bps);
   },
@@ -680,7 +680,7 @@ _.extend(Room.prototype, {
 			}
 			else {
 				var req = {version:room.docData.version, from:room.bufferfrom, to:room.bufferto, text:room.buffertext};
-				if(q.length == 0){
+				if(room.q.length == 0){
 					room.socket('change', req);
 				}
 				room.push(req);

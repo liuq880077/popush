@@ -178,7 +178,7 @@ app.RoomView = Backbone.View.extend({
   /* OK: */
   removeAllBreaks: function(bps) {
     for(var i = 0, l = bps.length, cm = this.editor, info; i < l; i++) {
-      if(b[i] != '0') {
+      if(bps[i] != '0') {
         info = cm.lineInfo(i);
         if (info.gutterMarkers && info.gutterMarkers['breakpoints']) {
           cm.setGutterMarker(i, 'breakpoints', null);
@@ -234,7 +234,7 @@ app.RoomView = Backbone.View.extend({
     this.$btnRun.addClass('disabled');
     this.$conTitle.text(strings['console']);
     this.setConsole(true);
-    this.room.oldText = this.editor.getValue();
+    this.room.old_text = this.editor.getValue();
     this.editor.setValue(text);
     this.popHistory();
   },
