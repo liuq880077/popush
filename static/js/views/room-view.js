@@ -24,7 +24,7 @@ app.RoomView = Backbone.View.extend({
       $btnHome:   '#editor-back',
       $btnCon:    '#editor-console',
       $under:   '#under-editor',
-      $con:     'console',
+      $con:     '#console',
       $conTitle:'#console-title',
       $conIn:   '#console-input',
       $conBox:  '#console-inner',
@@ -39,7 +39,7 @@ app.RoomView = Backbone.View.extend({
       $varsBtns:'.debugandwait',
       $mainBox:   '#editormain-inner',
       $main:      '#editormain',
-      $tip:       'fullscreentip',
+      $tip:       '#fullscreentip',
     };
     for(var i in m) { this[i] = e.find(m[i]); }
   },
@@ -51,12 +51,63 @@ app.RoomView = Backbone.View.extend({
     'click #editor-run': 'run',
     'click #editor-debug': 'debug',
     'click #editor-console': 'toggleConsole',
+    'click #editor-full': 'setConsoleFull',
+    'click #toggle-chat': 'togglechat',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
     'keydown #chat-input': function(e) {
       ((e.keyCode || e.which) == 13) && this.chat();
     },
+  },
+  
+  togglechat: function() {
+	if(app.viewswitchLock)
+		return;
+	if(this.room.chatstate) {
+		$('#editormain').parent().removeClass('span12');
+		$('#editormain').parent().addClass('span9');
+		$('#chatbox').show();
+		$('#toggle-chat').html('<i class="icon-forward"></i>');
+		$('#toggle-chat').attr('title', strings['hide-title']);
+	} else {
+		$('#chatbox').hide();
+		$('#editormain').parent().removeClass('span9');
+		$('#editormain').parent().addClass('span12');
+		$('#toggle-chat').html('<i class="icon-backward"></i>');
+		$('#toggle-chat').attr('title', strings['show-title']);
+	}
+	var o = $('#chat-show').get(0);
+	o.scrollTop = o.scrollHeight;
+	this.editor.refresh();
+	this.resize();
+	this.room.chatstate = !this.room.chatstate;
+  },
+  
+  setFullScreen: function(cm, full) {
+	var wrap = cm.getWrapperElement();
+	if (full) {
+		$('#editormain').css('position', 'static');
+		$('#editormain-inner').css('position', 'static');
+		$('#fullscreentip').fadeIn();
+		setTimeout('$(\'#fullscreentip\').fadeOut();', 1000);
+		wrap.className += " CodeMirror-fullscreen";
+		wrap.style.height = app.winHeight() + "px";
+		document.documentElement.style.overflow = "hidden";
+	} else {
+		$('#editormain').css('position', 'fixed');
+		$('#editormain-inner').css('position', 'relative');
+		$('#fullscreentip').hide();
+		wrap.className = wrap.className.replace(" CodeMirror-fullscreen", "");
+		wrap.style.height = "";
+		document.documentElement.style.overflow = "";
+	}
+	cm.refresh();
+	cm.focus();
+  },
+
+  setConsoleFull: function() {
+  	this.setFullScreen(this.editor, true);
   },
   
   toggleConsole: function() {
@@ -138,10 +189,10 @@ app.RoomView = Backbone.View.extend({
 
   /* OK: TODO: merge 'runEnabled' */
   setRunState: function() {
-    if(this.room.runEnabled()) { this.$btnRun.removeAttr('disabled'); }
-    else { this.$btnRun.attr('disabled', 'disabled'); }
-    if(this.room.debugEnabled()) { this.$btnDebug.removeAttr('disabled'); }
-    else { this.$btnDebug.attr('disabled', 'disabled'); }
+    if(this.room.runEnabled()) { this.$btnRun.removeClass('disabled'); }
+    else { this.$btnRun.addClass('disabled'); }
+    if(this.room.debugEnabled()) { this.$btnDebug.removeClass('disabled'); }
+    else { this.$btnDebug.addClass('disabled'); }
   },
     
   /* OK: */
@@ -410,7 +461,7 @@ app.RoomView = Backbone.View.extend({
 		extraKeys: {
 			"Esc": function(cm) {
 				if (view.isFullScreen(cm)) 
-					view['room'].setFullScreen(cm, false);
+					view.setFullScreen(cm, false);
 				view.resize();
 			},
 			"Ctrl-S": view.room.saveevent

@@ -137,28 +137,6 @@ app.winHeight = function() {
 	return window.innerHeight || (document.documentElement || document.body).clientHeight;
 };
 
-app.setFullScreen = function(cm, full) {
-	var wrap = cm.getWrapperElement();
-	if (full) {
-		$('#editormain').css('position', 'static');
-		$('#editormain-inner').css('position', 'static');
-		$('#fullscreentip').fadeIn();
-		setTimeout('$(\'#fullscreentip\').fadeOut();', 1000);
-		wrap.className += " CodeMirror-fullscreen";
-		wrap.style.height = winHeight() + "px";
-		document.documentElement.style.overflow = "hidden";
-	} else {
-		$('#editormain').css('position', 'fixed');
-		$('#editormain-inner').css('position', 'relative');
-		$('#fullscreentip').hide();
-		wrap.className = wrap.className.replace(" CodeMirror-fullscreen", "");
-		wrap.style.height = "";
-		document.documentElement.style.overflow = "";
-	}
-	cm.refresh();
-	cm.focus();
-};
-
 app.resize = function() {
 	var w;
 	var h = $(window).height();

@@ -7,7 +7,7 @@ var Room = function() {
     debugLock: false,
     operationLock: false,
     waiting: false,
-    
+	chatstate: false,
     runable: true,
     debugable: false,
     cursors: {},
