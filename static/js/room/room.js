@@ -55,7 +55,14 @@ var Room = function() {
   */
 app.stringFill = function (ch, length) {
   for(var a = length, r = [], s = ch; a; s += s) {
-    if (a % 2) { r.push(s); a = (a-1) / 2; }
+    if (a % 2) { 
+    	r.push(s);
+    	a = (a-1) / 2; 
+    }
+    else {
+    	r.push(s); 
+    	a = a / 2;
+    }
   }
   delete s;
   return r.join('');
@@ -74,6 +81,15 @@ _.extend(Room.prototype, {
     var r = this.q.shift();
     if(this.q.length == 0 && this.bufferfrom == -1) { this.view.setSaved(); }
     return r;
+  },
+  
+  appendtochatbox: function(name, type, content, time) {
+	$('#chat-show-inner').append(
+		'<p class="chat-element"><span class="chat-name ' + type +
+		'">' + name + '&nbsp;&nbsp;' + time.toTimeString().substr(0, 8) + '</span><br />' + content + '</p>'
+		);
+	var o = $('#chat-show').get(0);
+	o.scrollTop = o.scrollHeight;
   },
 
   changelanguage : function(language) {
@@ -429,9 +445,9 @@ _.extend(Room.prototype, {
     $('#filecontrol').hide();
     $('#footer').hide();
     var filepart = docobj.name.split('.');
-    ext = filepart[filepart.length - 1];
-    this.changelanguage(ext);
-    this.checkrunanddebug(ext);
+    this.ext = filepart[filepart.length - 1];
+    this.changelanguage(this.ext);
+    this.checkrunanddebug(this.ext);
 
     this.view.editor.refresh();
     
@@ -480,7 +496,9 @@ _.extend(Room.prototype, {
 //    filelist.removeloading();
     $('#console-inner').html('');
     this.view.setConsole(false);
-    app.collections['expressions'].reset();
+    app.collections['expressions'].each(function(model){
+    	model.destroy();
+    });
     for(var k in data.exprs) {
       app.collections['expressions'].add({expression: k, notnew: true});
       app.views['expressions'].setValue(k, data.exprs[k]);

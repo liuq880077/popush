@@ -79,9 +79,9 @@ var room, listeners = {
 	room.operationLock = false;
 
 	if(data.err.code !== undefined)
-		appendtochatbox(strings['systemmessage'], 'system', strings['programfinish'] + '&nbsp;' + data.err.code, new Date(data.time));
+		room.appendtochatbox(strings['systemmessage'], 'system', strings['programfinish'] + '&nbsp;' + data.err.code, new Date(data.time));
 	else
-		appendtochatbox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
+		room.appendtochatbox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
 
 	if(room.runLock) {
 		$('#editor-run').html('<i class="icon-play"></i>');
@@ -481,19 +481,22 @@ var stopListen = function() {
 };			    
 
 
-var emit = function(m, d, d1) {
+var emit = function(m, d) {
   switch(m) {
   case 'join':  d = {path: d}; break;
   case 'stdin': d = {data: d}; break;
   case 'chat':  d = {text: d}; break;
-  case 'kill':  d = undefined; break; /* TODO: ack whether it's ok */
-  case 'run':   d = {version: d, type: d1}; break;
+  case 'kill':  d = null; break; /* TODO: ack whether it's ok */
+  case 'run':   break;
   case 'step': case 'next': case 'finish': case 'resume':
     d = { }; break;
   case 'bps': break;
    
   }
-  app.socket.emit(m, d);
+  if (d != null)
+    app.socket.emit(m, d);
+  else
+  	app.socket.emit(m);
 };
 
 app.init || (app.init = {});

@@ -20,11 +20,6 @@ var app = app || {};
 		},
 
 		editingelem: null,
-
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
-		poptemplate: _.template($('#member-popover-template').html()),
 		
 		initialize: function () {
 			this.listenTo(this.collection, 'add', this.addExpression);
@@ -128,7 +123,7 @@ var app = app || {};
   app.init.expressionsView = function() {
     if(app.views['expressions']) { return; }
     app.collections['expressions'] || app.init.expressions();
-    app.views['expressions'] = new app.MembersView({
+    app.views['expressions'] = new app.ExpressionlistView({
       collection: app.collections['expressions'],
     });
   };

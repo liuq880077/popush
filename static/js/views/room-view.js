@@ -48,12 +48,48 @@ app.RoomView = Backbone.View.extend({
     'shown': 'enter',
     'hide': 'exit',
     'click #chat-send': 'chat',
+    'click #editor-run': 'run',
+    'click #editor-debug': 'debug',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
     'keydown #chat-input': function(e) {
       ((e.keyCode || e.which) == 13) && this.chat();
     },
+  },
+  
+  run: function() {
+  	if(!this.room.runEnabled())
+		return;
+	if(this.room.operationLock)
+		return;
+	this.room.operationLock = true;
+	if(this.room.runLock) {
+		this.room.socket('kill');
+	} else {
+		var that = this;
+		this.room.socket('run', {
+			version: that.room.docData.version,
+			type: that.room.ext
+		});
+	}
+  },
+  
+  debug: function() {
+	if(!this.room.debugEnabled())
+		return;
+	if(this.room.operationLock)
+		return;
+	this.room.operationLock = true;
+	if(this.room.debugLock) {
+		this.room.socket('kill');
+	} else {
+		var that = this;
+		this.room.socket('debug', {
+			version: that.room.docData.version,
+			type: that.room.ext
+		});
+	}  
   },
   
   setShownName: function() {
@@ -129,6 +165,7 @@ app.RoomView = Backbone.View.extend({
     this.$btnDebug.addClass('disabled');
     this.$conTitle.text(strings['console'] || 'console');
     this.setConsole(true);
+    app.views['expressions'].clear();
   },
 
   /* OK: */
