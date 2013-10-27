@@ -168,11 +168,12 @@ _.extend(Room.prototype, {
 		if(app.Package.ENABLE_DEBUG) {
 			this.debugable = this.isdebugable(ext);
 			if(this.debugable) {
+				var that = this;
 				this.view.gutterclick = function(cm, n) {
-					if(this.debugLock && !this.waiting)
+					if(that.debugLock && !that.waiting)
 						return;
-					if (!this.removebreakpointat(cm, n)){
-						this.addbreakpointat(cm, n);
+					if (!that.removebreakpointat(cm, n)){
+						that.addbreakpointat(cm, n);
 					}
 				};
 			} else {
@@ -217,7 +218,7 @@ _.extend(Room.prototype, {
   initBreaks: function(str) {
     if(!this.debugable) { return; }
     for(var i = 0, l = str.length, cm = this.view.editor, el; i < l; i++) {
-      if(str[i] != "1") { this.view.setBreak(cm, i, true); }
+      if(str[i] == "1") { this.view.setBreak(cm, i, true); }
     }
     this.bps = str + app.stringFill('0', cm.lineCount() - l);
   },

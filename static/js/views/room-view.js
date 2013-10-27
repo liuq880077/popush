@@ -267,13 +267,13 @@ app.RoomView = Backbone.View.extend({
   /* OK: */
   runTo: function(n) {
     if(this.runningLine >= 0) {
-      Panel.editor.removeLineClass(this.runningLine, '*', 'running');
-      Panel.editor.setGutterMarker(this.running, 'runat', null);
+      this.editor.removeLineClass(this.runningLine, '*', 'running');
+      this.editor.setGutterMarker(this.running, 'runat', null);
     }
     if(n >= 0) {
-      Panel.editor.addLineClass(n, '*', 'running');
-      Panel.editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
-      Panel.editor.scrollIntoView({line: n, ch: 0});
+      this.editor.addLineClass(n, '*', 'running');
+      this.editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
+      this.editor.scrollIntoView({line: n, ch: 0});
     }
     this.runningline = n;
   },
