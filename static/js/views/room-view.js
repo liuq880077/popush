@@ -50,12 +50,17 @@ app.RoomView = Backbone.View.extend({
     'click #chat-send': 'chat',
     'click #editor-run': 'run',
     'click #editor-debug': 'debug',
+    'click #editor-console': 'toggleConsole',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
     'keydown #chat-input': function(e) {
       ((e.keyCode || e.which) == 13) && this.chat();
     },
+  },
+  
+  toggleConsole: function() {
+ 	 this.setConsole(!this.consoleOpened);
   },
   
   run: function() {
