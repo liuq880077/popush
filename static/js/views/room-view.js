@@ -53,6 +53,10 @@ app.RoomView = Backbone.View.extend({
     'click #editor-console': 'toggleConsole',
     'click #editor-full': 'setConsoleFull',
     'click #toggle-chat': 'togglechat',
+    'click #debugstep': 'debugstep',
+    'click #debugnext': 'debugnext',
+    'click #debugfinish': 'debugfinish',
+    'click #debugcontinue': 'debugcontinue',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
@@ -60,6 +64,34 @@ app.RoomView = Backbone.View.extend({
       ((e.keyCode || e.which) == 13) && this.chat();
     },
   },
+  
+  debugstep: function() {
+	if(this.room.debugLock && this.room.waiting) {
+		this.room.socket('step', {
+		});
+	}
+  },
+  
+  debugnext: function() {
+	if(this.room.debugLock && this.room.waiting) {
+		this.room.socket('next', {
+		});
+	}
+  },
+  
+  debugfinish: function() {
+	if(this.room.debugLock && this.room.waiting) {
+		this.room.socket('finish', {
+		});
+	}
+  },
+  
+  debugcontinue: function() {
+ 	if(this.room.debugLock && this.room.waiting) {
+		this.room.socket('resume', {
+		});
+	}
+ },
   
   togglechat: function() {
 	if(app.viewswitchLock)
@@ -268,14 +300,14 @@ app.RoomView = Backbone.View.extend({
   runTo: function(n) {
     if(this.runningLine >= 0) {
       this.editor.removeLineClass(this.runningLine, '*', 'running');
-      this.editor.setGutterMarker(this.running, 'runat', null);
+      this.editor.setGutterMarker(this.runningLine, 'runat', null);
     }
     if(n >= 0) {
       this.editor.addLineClass(n, '*', 'running');
       this.editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
       this.editor.scrollIntoView({line: n, ch: 0});
     }
-    this.runningline = n;
+    this.runningLine = n;
   },
   
   /* OK: */

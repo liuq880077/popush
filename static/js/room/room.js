@@ -515,7 +515,7 @@ _.extend(Room.prototype, {
       this.view.setRun();
     }
     if(data.debugging) {
-      this.setDebug();
+      this.view.setDebug();
       this.view.editor.setOption('readOnly', true);
       this.old_text = data.text;
       this.old_bps = data.bps;
