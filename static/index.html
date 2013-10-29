@@ -136,6 +136,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="#" data-toggle="modal" new-type="doc" localization>newfile</a></li>
                   <li><a href="#" data-toggle="modal" new-type="dir" localization>newfolder</a></li>
+                  <li><a href="#" id='upload' new-type="up" localization>upload</a></li>
                   <!--<li class="divider"></li>
                   <li><a href="#" localization>import</a></li>-->
                 </ul>
@@ -174,6 +175,7 @@
       <% if(model.inRoot) { %><li><a href="#" class="file-go-share" localization><%=strings["sharemanage"]%></a></li> <% } %>
       <li><a href="#" class="file-go-delete" localization><%=strings["delete"]%></a></li>
       <li><a href="#" class="file-go-rename" localization><%=strings["rename"]%></a></li>
+      <li><a href="#" class="file-go-download" localization><%=strings["download"]%></a></li>
     </ul>
   </div>
 </td></script>
@@ -206,7 +208,7 @@
                   <button class="btn" type="button" id="editor-console" title="console"><i class="icon-share"></i></button>
                 </div>
                 <div class="btn-group pull-left" style="margin-left:0">
-                  <button class="btn" type="button" id="editor-back" onclick="closeeditor()"><i class="icon-home"></i></button>
+                  <button class="btn" type="button" id="editor-back"><i class="icon-home"></i></button>
                 </div>
                 <div class="btn-group" id="current-doc-outer">
                   <p id="current-doc-p">

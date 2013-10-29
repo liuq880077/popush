@@ -57,12 +57,28 @@ app.RoomView = Backbone.View.extend({
     'click #debugnext': 'debugnext',
     'click #debugfinish': 'debugfinish',
     'click #debugcontinue': 'debugcontinue',
+    'click #editor-back': 'closeeditor',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
     'keydown #chat-input': function(e) {
       ((e.keyCode || e.which) == 13) && this.chat();
     },
+  },
+  
+  closeeditor: function() {
+  	$('#editor').hide();
+	$('#filecontrol').show();
+	$('#footer').show();
+
+	app.socket.emit('leave', {
+	});
+    $("body").animate({scrollTop: this.oldscrolltop}); 
+//	refreshfilelist(function(){;}, function(){
+//		$("body").animate({scrollTop: oldscrolltop});
+//	});
+
+//	leaveVoiceRoom();
   },
   
   debugstep: function() {

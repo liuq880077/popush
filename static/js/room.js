@@ -286,11 +286,11 @@ function closeeditor() {
 	socket.emit('leave', {
 	});
 
-	refreshfilelist(function(){;}, function(){
-		$("body").animate({scrollTop: oldscrolltop});
-	});
+//	refreshfilelist(function(){;}, function(){
+//		$("body").animate({scrollTop: oldscrolltop});
+//	});
 
-	leaveVoiceRoom();
+//	leaveVoiceRoom();
 }
 
 function chat() {

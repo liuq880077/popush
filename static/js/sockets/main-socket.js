@@ -60,6 +60,10 @@ var onRegister = function(data) {
   app.registerLock = false; 
 };
 
+var onDownload = function(data) {
+	alert(data);
+};
+
 app.init || (app.init = {});
 
 (function() {
@@ -69,6 +73,7 @@ app.init || (app.init = {});
     _init = true;
     app.socket.on('login', onLogin);
     app.socket.on('register', onRegister);
+    app.socket.on('download', onDownload);
   };
 })();
 

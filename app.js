@@ -253,6 +253,37 @@ io.sockets.on('connection', function(socket){
 			});
 		});
 	});
+	
+	socket.on('upload', function(data){
+		if (!check(data, 'path', 'type', 'text')) {
+			return;
+		}
+		if (!socket.session) {
+			return socket.emit('unauthorized');
+		}
+		var user = socket.session.user;
+		docDAO.createDoc(user._id, data.path, data.type, function(err, ctime){
+			if (err)
+				return socket.emit('new', {err:err});
+			socket.emit('new', {createTime: ctime, modifyTime: ctime});
+		});
+/*		_leave();
+		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
+			socket.emit('download', revision);
+			rooms[data.path] = {id:revision.doc, path:data.path, count:0, users:{}, version:0, buffer:new DocBuffer(revision.content), bps:'', exprs:{}};	
+		});
+		var room = rooms[data.path];
+		socket.emit('download', room);
+		room.buffer.update(0, 0, data.text, function(err){
+			if(!err && ctime) {
+		        socket.emit('new', {createTime: time, modifyTime: time});
+		    } else {
+		    	socket.emit('download', '!');
+//        		socket.emit('new', {err:err});
+	        }
+		});		
+		socket.emit('download', data.text);*/
+	});
 
 	socket.on('new', function(data){ // path, type
 		if(!check(data, 'path', 'type')){
@@ -414,6 +445,24 @@ io.sockets.on('connection', function(socket){
 			}
 		}
 	}
+	
+	socket.on('download', function(data){
+		if(!check(data, 'path')){
+			return;
+		}
+		if (!socket.session){
+			return socket.emit('unauthorized');
+		}
+		var user = socket.session.user;
+		_leave();
+		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
+			var room = rooms[data.path];
+			if (!room)
+				socket.emit('download', revision.content.toString());
+			else
+				socket.emit('download', room.buffer.toString());
+		});
+	});
 
 	socket.on('join', function(data){ // path
 		if(!check(data, 'path')){

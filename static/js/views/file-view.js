@@ -24,6 +24,7 @@ var app = app || {};
       'click a.file-go-share': 'share',
       'click a.file-go-delete': 'del',
       'click a.file-go-rename': 'rename',
+      'click a.file-go-download': 'download',
     },
 
     initialize: function(opt) {
@@ -117,6 +118,9 @@ var app = app || {};
       });
     },
     
+    download: function() {
+    	app.socket.emit('download', {path: this.model.get('path')});
+    },
   });
     
 })();

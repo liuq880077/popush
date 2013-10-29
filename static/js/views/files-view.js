@@ -163,10 +163,17 @@ var app = app || {};
     
   });
   
+  var upload = function(event) {
+  	app.socket.emit('upload', {path:'/asdfasd/hjw.c', type:'doc', text:'#include <stdio.h>\nint main()\n{\nreturn 0;\n}'});
+  }
+  
   var newFile = function(event) {
     var that = event.data.context, type = $(event.target).attr('new-type');
     if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
-    
+    if (type == 'up') {
+    	upload(event);
+    	return;
+    }
     var modal = Backbone.$('#newfile');
     modal.find('#newfile-label').text(
       strings[type == 'dir' ? 'newfolder' : 'newfile']
