@@ -426,9 +426,11 @@ app.RoomView = Backbone.View.extend({
       height: (underh - 12) + 'px',
     });
     o.$varsReal.css('height', (underh - 42) + 'px');
-    o.$conIn.css({
+    o.$conBox.css({
       height: (underh - 81) + 'px',
-      width: (w - w / 3 - 14) + 'px',
+    });
+    o.$conIn.css({
+      width: (w-w/3-14) + 'px',
     });
     if(!this.isFullScreen(this.editor))
       this.$('.CodeMirror').css('height',
