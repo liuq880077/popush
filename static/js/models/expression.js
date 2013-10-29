@@ -11,6 +11,7 @@ var app = app || {};
 	app.expression = Backbone.Model.extend({
 		defaults: {
 			expression: '',
+			value: null,
 			notnew: true,
 		},
 

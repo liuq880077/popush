@@ -465,14 +465,12 @@
     <img id="avatar-<%= name %>" src="<%= avatar %>" width="40" height="40" class="member-avatar pull-left online shared-character user-<%= name %>" />
   </script>
   	<script type="text/template" id="expression-template">
-      <tr id="express-elem" onmouseover="$(this).find(\'a\').show()" onmouseout="$(this).find(\'a\').hide()">
- 	    <td class="col1"></td>
-        <td class="col2">
-		  <span class="title"></span>
-	      <input id="te" type="text"/>
+		<td class="col1"></td>
+		<td class="col2">
+		  <span class="title" ><%=expression%></span>
+		  <input id="te" type="text" />
 		</td>
-	   <td class="col3"></td>
-	 </tr> 
+		<td class="col3"><%=value%></td>
   </script>
   <script type="text/javascript" src="js/localization/zh-CN.js"></script>
   <script type="text/javascript" src="js/localization/en-US.js"></script>
@@ -481,6 +479,7 @@
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/models/file.js"></script>
   <script type="text/javascript" src="js/models/user.js"></script>
+  <script type="text/javascript" src="js/models/expression.js"></script>
   <script type="text/javascript" src="js/collections/files.js"></script>
   <script type="text/javascript" src="js/collections/members.js"></script>
   <script type="text/javascript" src="js/collections/expressions.js"></script>

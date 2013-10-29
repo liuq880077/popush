@@ -5,6 +5,7 @@ var app = app || {};
 	'use strict';
 
 	app.ExpressionView = Backbone.View.extend({
+		tagName:  'tr id="express-elem" onmouseover="$(this).find(\'a\').show()" onmouseout="$(this).find(\'a\').hide()"',
 		// Cache the template function for a single item.
 		template: _.template($('#expression-template').html()),
 		
@@ -27,12 +28,16 @@ var app = app || {};
 		// Re-render the titles of the todo item.
 		render: function () {
 			this.$el.html(this.template(this.model.toJSON()));
+			if (this.model.get('value')==null || this.model.get('value')=='') {
+				this.$el.find('.col3').html('<span style="color:red">undefined</span>');
+			}
+			this.$el.find('input').hide();
 			return this;
 		},
-
+		
 		renameTry: function(e) {
 			if(e.keyCode==13)
-				renameExpressionDone();
+				this.renameExpressionDone();
 		},
 		
 		doneall: function() {
@@ -74,6 +79,8 @@ var app = app || {};
 					span.show();
 				}
 			} else {
+				if (this.model.get('expression') == expression)
+					return;
 				if(this.model.notnew) {
 					app.socket.emit('rm-expr', {
 						expr: this.model.expression

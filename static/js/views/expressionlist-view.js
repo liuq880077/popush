@@ -16,7 +16,7 @@ var app = app || {};
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-			'click #adde': 'addExpression',
+			'click #adde': 'addExp',
 		},
 
 		editingelem: null,
@@ -24,6 +24,10 @@ var app = app || {};
 		initialize: function () {
 			this.listenTo(this.collection, 'add', this.addExpression);
 			this.listenTo(this.collection, 'reset', this.addAll);
+		},
+		
+		addExp: function () {
+			this.addExpression();
 		},
 
 		clear: function() {
@@ -36,7 +40,7 @@ var app = app || {};
 		},
 
 		seteditingelem: function(elem) {
-			editingelem = elem;
+			this.editingelem = elem;
 		},
 
 		addExpression: function(m) {
@@ -47,14 +51,14 @@ var app = app || {};
 				view = new app.ExpressionView({ model: m });
 				elem = view.render().$el;
 				elem.find('span').hide();
+				elem.find('input').show();
+				elem.find('.col3').html('');
 				this.$el.find('.new').before(elem);
 				elem.find('input').focus();
 			}
 			else {
 				view = new app.ExpressionView({ model: m });
 				elem = view.render().$el;
-				elem.find('input').hide();
-				elem.find('span').text(expression);
 				this.$el.find('.new').before(elem);
 			}
 		},
@@ -67,16 +71,18 @@ var app = app || {};
 		},
 
 		findElementByExpression: function(expression) {
+			var that = null;
 			this.collection.each(function(model){
 				if(model.get('expression') == expression) {
-					return model;
+					that = model;
 				}
 			});
+			return that;
 		},
 		
 		removeElement: function(model) {
-			if(editingelem.model == model)
-				editingelem = null;
+			if(this.editingelem.model == model)
+				this.editingelem = null;
 			model.destroy();
 		},
 
@@ -90,20 +96,9 @@ var app = app || {};
 		},
 		
 		geteditingelem: function() {
-			return editingelem;
+			return this.editingelem;
 		},
 		
-		setValue: function(expression, value) {
-			var v = this.findElementByExpression(expression);
-			if(!v)
-				return;
-			var elem = v.$el;
-			if(value !== null)
-				elem.find('.col3').text(value);
-			else
-				elem.find('.col3').html('<span style="color:red">undefined</span>');
-		},
-
 		// Add all items in the **Todos** collection at once.
 		addAll: function (collection, opts) {
       /*

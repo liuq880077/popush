@@ -36,7 +36,11 @@ var onLogin = function(data) {
     app.collections['files'].trigger('sync');
     delete data.user.docs; /* avoid bad memory. */
 
-    
+//    socket.emit('share', {
+//		path: '/asdfasd/d',
+//		name: 'fafafafa'
+//	});
+
     /* window.location.href = '#/' + data.user.name; */
   }
   app.cleanLoading();

@@ -253,7 +253,6 @@ app.RoomView = Backbone.View.extend({
     this.$btnDebug.addClass('disabled');
     this.$conTitle.text(strings['console'] || 'console');
     this.setConsole(true);
-    app.views['expressions'].clear();
   },
 
   /* OK: */
@@ -329,13 +328,15 @@ app.RoomView = Backbone.View.extend({
     this.$chatIn.val('');
   },
    
-  /* OK: */
   toChatBox: function(name, type, content, time) {
-    this.$chatBox.append(this.TChat({n: name, ty: type, t: time, c: content}));
-    var p = this.$chatShow[0];
-    p.scrollTop = p.scrollHeight;
+	$('#chat-show-inner').append(
+		'<p class="chat-element"><span class="chat-name ' + type +
+		'">' + name + '&nbsp;&nbsp;' + time.toTimeString().substr(0, 8) + '</span><br />' + content + '</p>'
+		);
+	var o = $('#chat-show').get(0);
+	o.scrollTop = o.scrollHeight;
   },
-  
+
   /* OK: */
   toConsole: function(content, type) {
     type = (type) ? ('<span class="' + type + '">') : '<span>';

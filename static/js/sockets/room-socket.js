@@ -28,7 +28,7 @@ var room, listeners = {
       room.exit();
       app.showMessageBox('info', 'you unshared', 1);
     } else {
-      room.onSystemChat(data.name, 'unshared', data.time);
+	  room.view.toChatBox(strings['systemmessage'], 'system', strings['unshared'] + '&nbsp;' + data.err.code, new Date(data.time));
       /* TODO: */
       room.members.remove(data.name);
     }
@@ -36,7 +36,7 @@ var room, listeners = {
 
   /* TODO: members */
   shared: function(data) {
-    room.onSystemChat(data.name, 'gotshared', data.time);
+	room.view.toChatBox(strings['systemmessage'], 'system', strings['shared'] + '&nbsp;' + data.err.code, new Date(data.time));
     /* TODO: */
     room.members.add(data);
     /* memberlistdoc.setonline(data.name, false); */
@@ -47,17 +47,16 @@ var room, listeners = {
     if(!data.newPath) { return; }
     room.docModel.set({path: data.newPath});
     room.onMoved();
-    room.onSystemChat((strings['moved to'] || 'moved to')
-      + room.docModel.json.shownName, '', data.time);
+	room.view.toChatBox(strings['systemmessage'], 'system', strings['movedto'] + '&nbsp;', new Date(data.time));
   },
   
   run: function(data){
-    room.onSystemChat(data.name, 'runsaprogram', data.time);
+	room.view.toChatBox(strings['systemmessage'], 'system', strings['runsaprogram'] + '&nbsp;', new Date(data.time));
     room.onRun();
   },
   
   debug: function(data) {
-    room.onSystemChat(data.name, 'startdebug', data.time);
+	room.view.toChatBox(strings['systemmessage'], 'system', strings['startdebug'] + '&nbsp;', new Date(data.time));
     room.onDebug(data || {});
   },
   
@@ -79,9 +78,9 @@ var room, listeners = {
 	room.operationLock = false;
 
 	if(data.err.code !== undefined)
-		room.appendtochatbox(strings['systemmessage'], 'system', strings['programfinish'] + '&nbsp;' + data.err.code, new Date(data.time));
+		room.view.toChatBox(strings['systemmessage'], 'system', strings['programfinish'] + '&nbsp;' + data.err.code, new Date(data.time));
 	else
-		room.appendtochatbox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
+		room.view.toChatBox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
 
 	if(room.runLock) {
 		$('#editor-run').html('<i class="icon-play"></i>');
@@ -106,7 +105,7 @@ var room, listeners = {
 		$('#editor-debug').attr('title', strings['debug-title']);
 		room.view.runTo(-1);
 		app.collections['expressions'].each(function(model){
-			app.views['expressions'].setValue(model.get('expression'), null);
+			model.set({'value': null});
 		});
 		room.debugLock = false;
 	}
@@ -251,6 +250,16 @@ var room, listeners = {
     return;
   },
   
+    "add-expr": function(data) {
+		if(data.expr) {
+			app.collections['expressions'].add({expression: data.expr, value: data.val});
+		}
+	},
+
+    "rm-expr": function(data) {
+		app.views['expressions'].removeElementByExpression(data.expr);
+	},
+	
   change: function(data) {
 	room.lock = true;
 	var tfrom = data.from;

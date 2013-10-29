@@ -82,15 +82,6 @@ _.extend(Room.prototype, {
     if(this.q.length == 0 && this.bufferfrom == -1) { this.view.setSaved(); }
     return r;
   },
-  
-  appendtochatbox: function(name, type, content, time) {
-	$('#chat-show-inner').append(
-		'<p class="chat-element"><span class="chat-name ' + type +
-		'">' + name + '&nbsp;&nbsp;' + time.toTimeString().substr(0, 8) + '</span><br />' + content + '</p>'
-		);
-	var o = $('#chat-show').get(0);
-	o.scrollTop = o.scrollHeight;
-  },
 
   changelanguage : function(language) {
 		if(app.languageMap[language]) {
@@ -313,7 +304,10 @@ _.extend(Room.prototype, {
     if(!this.debugLock) { return; }
     this.waiting = true;
     this.view.onWaiting(data);
-    for(var k in data.exprs) { this.app.views['expressions'].setValue(k, data.exprs[k]); }
+    for(var k in data.exprs) 
+    { 
+//    	this.app.views['expressions'].setValue(k, data.exprs[k]); 
+    }
   },
   
   /** --------- Members ----------- */
@@ -457,7 +451,6 @@ _.extend(Room.prototype, {
     }
     app.views['cooperators'].setalloffline();
     app.views['cooperators'].setonline(app.currentUser.name, true);
-
     for(var k in this.cursors) {
       $(this.cursors[k].element).remove();
     }
@@ -500,9 +493,9 @@ _.extend(Room.prototype, {
     app.collections['expressions'].each(function(model){
     	model.destroy();
     });
+    app.views['expressions'].clear();
     for(var k in data.exprs) {
-      app.collections['expressions'].add({expression: k, notnew: true});
-      app.views['expressions'].setValue(k, data.exprs[k]);
+      app.collections['expressions'].add({expression: k, value: data.exprs[k], notnew: true});
     }
     
     $('#console-title').text(strings['console']);
