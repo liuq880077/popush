@@ -482,6 +482,7 @@ app.RoomView = Backbone.View.extend({
 	
 	CodeMirror.on(window, "resize", function() {
 		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
+		view.resize();
 		if (!showing) return;
 		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
 	});
