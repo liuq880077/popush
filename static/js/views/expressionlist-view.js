@@ -83,13 +83,15 @@ var app = app || {};
 		removeElement: function(model) {
 			if(this.editingelem.model == model)
 				this.editingelem = null;
-			model.destroy();
+			model.trigger('remove');
+			this.collection.remove(model);
 		},
 
 		removeElementByExpression: function(expression) {
+			var that = this;
 			this.collection.each(function(model){
 				if(model.get('expression') == expression) {
-					this.removeElement(model);
+					that.removeElement(model);
 					return;
 				}
 			});

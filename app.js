@@ -796,7 +796,7 @@ io.sockets.on('connection', function(socket){
 		}
 		var user = socket.session.user;
 		var room = socket.session.room;
-		if(room && !room.exprs.hasOwnProperty(data.expr) && data.expr != ''){
+//		if(room && !room.exprs.hasOwnProperty(data.expr) && data.expr != ''){
 			room.exprs[data.expr] = null;
 			if(room.dbger && room.dbger.state == 'waiting'){
 				room.dbger.print(data.expr, function(val){
@@ -809,7 +809,7 @@ io.sockets.on('connection', function(socket){
 			}else{
 				return _broadcast(room.id, 'add-expr', {expr:data.expr, val:room.exprs[data.expr]});
 			}
-		}
+//		}
 	});
 
 	socket.on('rm-expr', function(data){ // expr

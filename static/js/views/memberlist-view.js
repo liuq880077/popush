@@ -50,7 +50,8 @@ var app = app || {};
 		remove: function (name) {
 				this.collection.each(function(model){
 					if (model.get('name') == name) {
-						model.destroy();
+						model.trigger('remove');
+						this.remove(model);
 					}
 				});
 		},

@@ -427,9 +427,9 @@
         </div>
         <div class="form-inline" id="share-buttons">
           <span localization>newuser:</span>
-          <input type="text" id="share-inputName" onkeydown="pressenter(arguments[0],share)" />
-          <button class="btn" type="button" onclick="share()" localization>add</button>
-          <button class="btn pull-right" type="button" onclick="unshare()" localization>delete</button>
+          <input type="text" id="share-inputName" />
+          <button class="btn" type="button" id="share-confirm" localization>add</button>
+          <button class="btn pull-right" type="button" id="share-remove" localization>delete</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -474,6 +474,13 @@
 		</td>
 		<td class="col3"><%=value%></td>
   </script>
+  <script type="text/template" id="sharer-template">
+    <a href="javascript:;">
+	<img src="<%= avatar %>" width="32" height="32" class="sharer-avatar userlistimg user-<%= name %>" />
+	<%=name%>
+	</a>
+  </script>
+
   <script type="text/javascript" src="js/localization/zh-CN.js"></script>
   <script type="text/javascript" src="js/localization/en-US.js"></script>
   <script type="text/javascript" src="js/api/ie.js"></script>
@@ -492,6 +499,8 @@
   <script type="text/javascript" src="js/views/register-view.js"></script>
   <script type="text/javascript" src="js/views/member-view.js"></script>
   <script type="text/javascript" src="js/views/memberlist-view.js"></script>
+  <script type="text/javascript" src="js/views/sharer-view.js"></script>
+  <script type="text/javascript" src="js/views/sharerlist-view.js"></script>
   <script type="text/javascript" src="js/views/file-view.js"></script>
   <script type="text/javascript" src="js/views/files-view.js"></script>
   <script type="text/javascript" src="js/views/room-view.js"></script>

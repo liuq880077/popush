@@ -93,7 +93,10 @@ app.init || (app.init = {});
       if(data.err) {
         app.Lock.error(data);
       } else {
-        app.Lock.success(data);
+      	if (!app.isShare)
+	        app.Lock.success(data);
+	    else
+	    	app.views['shares'].sharedone(data);
       }
       if(data.notRemove !== false) {
         app.Lock.remove();
@@ -104,6 +107,7 @@ app.init || (app.init = {});
     app.socket.on('delete', socketOn);
     app.socket.on('move', socketOn);
     app.socket.on('doc', socketOn);
+    app.socket.on('share', socketOn);
   };
 })();
 

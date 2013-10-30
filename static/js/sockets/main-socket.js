@@ -64,6 +64,24 @@ var onDownload = function(data) {
 	alert(data);
 };
 
+var onShare = function(data) {
+	app.Lock.removeLoading();
+};
+
+var onUnShare = function(data){
+	if(data.err){
+		app.showmessage('share-message', data.err, 'error');
+		app.operationLock = false;
+		app.removeloading('share-buttons');
+	} else {
+		app.dochandler = app.views['sharers'].sharedone;
+		app.socket.emit('doc', {
+			path: app.sharemodel.get('path'),
+		});
+	}
+};
+
+
 app.init || (app.init = {});
 
 (function() {
@@ -74,6 +92,8 @@ app.init || (app.init = {});
     app.socket.on('login', onLogin);
     app.socket.on('register', onRegister);
     app.socket.on('download', onDownload);
+	app.socket.on('share', onShare);
+	app.socket.on('unshare', onUnShare);
   };
 })();
 

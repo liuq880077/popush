@@ -11,6 +11,7 @@ _.defaults(app, {
   viewswitchLock: false,
   loginLock: false,
   registerLock: false,
+  isShare: false,
   views: {},
   collections: {},
   currentUser: null,
@@ -18,6 +19,7 @@ _.defaults(app, {
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
   fileExtReg: /(.*[\/\.])?\s*(\S+$)/,
   router: null,
+  sharemodel: null,
   /* for Room */
   noVoice: false,
   inRoom: false,

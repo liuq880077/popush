@@ -56,8 +56,9 @@ var app = app || {};
     },
     
     share: function() {
+      app.sharemodel = this.model;
+      app.collections['shares'].update(this.model.get('members'));
       $('#share').modal('show');
-      app.views['shareManage'].show(this.modal);
     },
 
     del: function() {
