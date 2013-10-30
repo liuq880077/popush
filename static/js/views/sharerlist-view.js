@@ -80,19 +80,31 @@ var app = app || {};
 
 		/* 在"共享管理"pop-up框中点击删除按钮触发的js函数，socket.emit('unshare') */
 		unshare: function() {
-			var selected = userlist.getselection();   //需要改
-			if(!selected) {
+			if (app.isShare)
+				return;
+			if(!this.selected) {
 				app.showmessage('share-message', 'selectuser', 'error');
 				return;
 			}
 			if(app.operationLock)
 				return;
 			app.operationLock = true;
-			app.loading('share-buttons');
-			app.socket.emit('unshare', {
-				path: app.sharemodel.get('path'),
-				name: selected.get('name')
+			var that = this, isOK = app.Lock.attach({
+				loading: '#share-buttons',
+				error: function(data) {
+					app.showmessage('share-message', data.err, 'error');
+				},
+				success: function(data) {
+					app.Lock.remove();
+					that.refreshUser(data);
+				},
 			});
+			if (isOK) {
+				app.socket.emit('unshare', {
+					path: app.sharemodel.get('path'),
+					name: that.selected.get('name')
+				});
+			}
 		}
 		
 	});

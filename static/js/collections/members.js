@@ -36,7 +36,10 @@ var app = app || {};
 		
 		update: function (data) {
 			var col = this;
-			col.each(function(m){m.trigger('remove');col.remove(m);});
+			col.each(function(m){
+//			    m.trigger('remove');
+			    col.remove(m);
+			});
 			for (var i = 0; i < data.length; ++i) {
 				var d = data[i];
 				col.add({
@@ -50,7 +53,10 @@ var app = app || {};
 		
 		updatedoc: function (doc) {
 			var col = this;
-			col.each(function(m){m.trigger('remove');col.remove(m);});
+			col.each(function(m){
+//			    m.trigger('remove');
+			    col.remove(m);
+			});
 			this.add({name: col.isset(doc.owner.name)?doc.owner.name:'',
 					  avatar: col.isset(doc.owner.avatar)?doc.owner.avatar:'',
 					  online: col.isset(doc.owner.online)?doc.owner.online:false,

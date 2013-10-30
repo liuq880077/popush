@@ -108,6 +108,7 @@ app.init || (app.init = {});
     app.socket.on('move', socketOn);
     app.socket.on('doc', socketOn);
     app.socket.on('share', socketOn);
+    app.socket.on('unshare', socketOn);
   };
 })();
 
