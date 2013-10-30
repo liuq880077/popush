@@ -4,6 +4,8 @@ bin/
 node_modules/
 tmp/*
 db/
+mongo*
 static/faces/*
 static/index.js
 static/index.css
+*.bat
