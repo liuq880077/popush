@@ -64,17 +64,42 @@ var onDownload = function(data) {
 	alert(data);
 };
 
+var onVersion = function(data) {
+  if(data.version != app.Package.VERSION) {
+    window.location.reload(true);
+  }
+  if(app.failed)
+    return;
+  
+  if(app.Lock.getMessage() !== 'pageIsLoading') {
+    app.Lock.fail();
+  }
+  app.cleanLoading();
+  
+  var sid = $.cookie('sid');
+  if(sid){
+    app.socket.emit('relogin', {sid: sid});
+  } else {
+    window.location.href = '#login';
+  }
+  app.Lock.detach();
+};
+
 app.init || (app.init = {});
 
 (function() {
   var _init = false;
   app.init.mainSocket = function() {
-    if(_init) { return; }
-    _init = true;
-    app.socket.on('login', onLogin);
-    app.socket.on('register', onRegister);
-    app.socket.on('download', onDownload);
+    if(_init) { return; } else { _init = true; }
+    
+    var socket = app.socket;
+    socket.on('connect', function() { app.socket.emit('version', { }); } );
+    socket.on('version', onVersion);
+    socket.on('login', onLogin);
+    socket.on('register', onRegister);
+    socket.on('download', onDownload);
   };
+  
 })();
 
 })();

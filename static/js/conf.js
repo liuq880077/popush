@@ -9,5 +9,6 @@ app.Package = {
   ENABLE_RUN: true,
   ENABLE_DEBUG: true,
   ROUTE_ROOT: '/',
+  CODE_MIRROR_MODEURL: 'js/lib/codemirror/%N.js',
   ALLOW_MISS: true,
 };

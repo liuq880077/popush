@@ -3,19 +3,12 @@ var app = app || {};
 (function () {
 	/* 'use strict'; */
 
-	/**
-	  Expression Model
-	  ----------
-	  */
-
-	app.expression = Backbone.Model.extend({
+	app.Expression = Backbone.Model.extend({
 		defaults: {
-			expression: '',
+			expression: ' ',
 			value: null,
 			notnew: true,
 		},
-
-		update: Backbone.Model.prototype.save,
     
 	});
   

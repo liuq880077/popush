@@ -1,13 +1,9 @@
 var app = app || {};
-app.editor = {};
-(function() {
+var strings = strings || {};
 
 /* global variables */
 _.defaults(app, {
   socket: io.connect(app.Package.SOCKET_IO),
-  loadDone: false,
-  failed: false,
-  firstconnect: true,
   viewswitchLock: false,
   loginLock: false,
   registerLock: false,
@@ -21,23 +17,26 @@ _.defaults(app, {
   router: null,
   sharemodel: null,
   /* for Room */
+  editor: {},
   noVoice: false,
   inRoom: false,
 });
 
 /* check if the user has logged in. */
 /* if not, it will go to '#login'. */
-app.userVerify = function() {
+app.loginVerify = function() {
   if(app.loginLock == false && app.currentUser) {
     return true;
   } else {
-    window.location.href = '#login';
+    windows.setTimeout(function () {
+      window.location.href = '#login';
+    }, 5);
     return false;
   }
 };
 
-app.showmessage = function(id, stringid, type){
-  var o = $('#' + id);
+app.showMessageBar = function(id, stringid, type){
+  var o = $(id);
   o.removeClass('alert-error alert-success alert-info');
   if(type && type != 'warning')
     o.addClass('alert-' + type);
@@ -83,6 +82,7 @@ app.showMessageInDialog = function (selector, stringid, index) {
   modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
 }
 
+/* 
 app.setCookie = function(c_name, value, expiredays) {
   $.cookie(c_name, value, {expires: expiredays});
 };
@@ -90,54 +90,7 @@ app.setCookie = function(c_name, value, expiredays) {
 app.getCookie = function(c_name) {
   return(window.unescape($.cookie(c_name) || ''));
 };
-
-/* 检查关于语言选项的cookie, 设置strings=strings_en/strings_cn */
-app.checkCookie = function(){
-  var language = app.getCookie('language');
-  if(language == 'cn') {
-    strings = strings_cn;
-  }
-  else if(language == 'en') {
-    strings = strings_en;
-  }
-  else {
-    app.setCookie('language','cn',365);
-    strings = strings_cn;
-  }
-};
-
-/* 点击"中英切换"按钮触发的js函数，中文版本/英文版本之间切换 */
-app.changeLanguage = function() {
-  if (strings === strings_cn) {
-    app.setCookie('language','en',365);
-    strings_old = strings;
-    strings = strings_en;
-  }
-  else {
-    app.setCookie('language','cn',365);
-    strings_old = strings;
-    strings = strings_cn;
-  }
-  
-  var map = {}, i;
-  for(i in strings_old) {
-    map[strings_old[i]] = strings[i];
-  }
-  var fromMap = function(index, old) {
-    return map[old] || old;
-  }
-  $('[title]').attr('title', fromMap);
-  $('[localization]').html(fromMap);
-  delete map;
-};
-
-app.isFullScreen = function(cm) {
-	return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);
-};
-
-app.winHeight = function() {
-	return window.innerHeight || (document.documentElement || document.body).clientHeight;
-};
+ */
 
 app.resize = function() {
 	var w;
@@ -184,117 +137,36 @@ app.resize = function() {
 */
 };
 
-app.Path = {
-  encode: function(path, shared) {
-    if(!path || path.charAt(0) != '/') return '';
-    if(path.length == 1) { return '/' + app.currentUser.name; }
-    var s = path.split('/');
-    if(s[1] == app.currentUser.name) {
-      return (s.length != 2 || shared !== true) ? path : ('/shared@' + s[1]);
-    } else {
-      var p = '/shared@' + app.currentUser.name;
-      if(s.length <= 2) { return p; }
-      p += '/' + s[2] + '@' + s[1];
-      return (s.length <= 3) ? p : (p + '/' + s.slice(3).join('/'));
-    }
-  },
-  
-  decode: function(shownPath) {
-    if(typeof shownPath == null) { return ''; }
-    var p = window.decodeURI(shownPath).replace(/\\/g, '/'), s;
-    if(p.charAt(0) != '/') { return ''; }
-    
-    if(p.substring(0, 8) == '/shared@') {
-      s = p.substring(8);
-      var i = s.indexOf('/');
-      if(i <= -1 || i == s.length - 1) {
-        p = '/' + app.currentUser.name;
-      } else {
-        s = s.substring(i + 1).split('/');
-        i = s[0].split('@');
-        if(!i[0] || !i[1]) { return ''; }
-        s[0] = '/' + i[1] + '/' + i[0];
-        p = s.join('/');
-      }
-    }
-    if(p.length <= 1) { p = '/' + app.currentUser.name; }
-    else if(p.charAt(s = p.length - 1) == '/') { p = p.substring(0, s); }
-    return p;
-  },
-};
-
-app.socket.on('version', function(data){
-  if(data.version != app.Package.VERSION) {
-    window.location.reload('Refresh');
-  }
-  if(app.failed)
-    return;
-  if(!app.firstconnect) {
-    //back to login
-  }
-  app.firstconnect = false;
-  $('#loading-init').remove();
-  app.cleanLoading();
-  if($.cookie('sid')){
-    app.socket.emit('relogin', {sid:$.cookie('sid')});
-    app.loading('#login-control');
-    app.loginLock = true;
-  } else {
-    $('#login-control').fadeIn('fast');
-  }
-  app.loadDone = true;
-});
-
-app.socket.on('connect', function(){
-  app.socket.emit('version', {
-  });
-});
-
-
-app.loadfailed = function(){
-  if(app.loadDone)
-    return;
-  app.failed = true;
-  $('#loading-init').remove();
-  app.showmessage('login-message', 'loadfailed');
-};
-
 $(document).ready(function() {
-  
-  window.setTimeout(app.loadfailed, 5000);
-
-  app.checkCookie();
-  var getLanguageString = function(index, old) {
-    return strings[old] || old;
-  };
-  $('[localization]').html(getLanguageString);
-  $('[title]').attr('title', getLanguageString);
-  
-  
-  $('body').show();
-  app.resize();
-  $(window).resize(app.resize);
-  $('#login-inputName').focus();
-      
   var funcs = app.init;
   for(var i in funcs) {
-    if(funcs.hasOwnProperty(i) && typeof funcs[i] == 'function') {
+    if(funcs.hasOwnProperty(i) && typeof funcs[i] === 'function') {
       funcs[i].call(app);
     }
   }
-  delete app.init; /* not necessary */
-  
-  /* TODO: remove this, and use a router. */
-  $('.container-fluid').on('click', 'a.file-go', function(e) {
-    var h = $(e.target).attr('href');
-    if(h.substring(0, 7) == '#index/') {
-      app.views['files'].go(h.substring(6));
-    }
-  });
+  delete funcs;
+  delete app.init; /* now it's no use to run it again*/
+    
+  $('body').show();
   
   app.resize();
-  $(window).resize(app.resize);
-
+  $(window).resize(function() {
+    /* app.resize is only a pointer */
+    (typeof app.resize === 'function') && app.resize();
+  });
+  
+  var isOK = app.Lock.attach() {
+    loading: '#login-control',
+    tbegin: 2000,
+    tend: 5000,
+    data: 'pageIsLoading',
+    fail: function() {
+      app.failed = true;
+      app.showMessageBar('login-message', 'loadfailed');
+    },
+  }
+  if(isOK) {
+    app.socket.emit('connect', { });
+  }
+  app.Lock.detach();
 });
-
-})();

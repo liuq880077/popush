@@ -20,7 +20,7 @@ var app = app || {};
       var name = app.currentUser.name,
         mode = (dir.substring(1, 8 + name.length) == 'shared@' + name)
           ? app.FilesView.Mode.Shared : app.FilesView.Mode.BelongSelf;
-      dir = app.Path.decode(dir);
+      dir = app.File.decode(dir);
       if(!dir) { return; }
       
       var that = this;
@@ -68,7 +68,7 @@ var app = app || {};
     
     afterSync: function(m, d, opts) {
       opts && opts.mode && (this.mode = opts.mode);
-      this.shownUrl = app.Path.encode(this.collection.path
+      this.shownUrl = app.File.encode(this.collection.path
         , this.mode == app.FilesView.Mode.Shared);
       this.render();
     },

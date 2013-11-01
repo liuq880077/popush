@@ -1,5 +1,5 @@
 (function() {
-  if (!CodeMirror.modeURL) CodeMirror.modeURL = "js/lib/codemirror/%N.js";
+  if (!CodeMirror.modeURL) CodeMirror.modeURL = app.Package.CODE_MIRROR_MODEURL;
 
   var loading = {};
   function splitCallback(cont, n) {

@@ -38,7 +38,7 @@ var app = app || {};
 /* new sync */
 app.File.prototype.sync = function(method, model, options) {
   if( !(app.Lock.attach(options)) ) { return false; }
-  var m = 'doc', d = {path: model.get('path')};
+  var m, d = {path: model.get('path')};
   switch(method) {
   case 'read': m = 'doc'; break;
   case 'patch': case 'update': m = 'move';
@@ -88,27 +88,13 @@ app.init || (app.init = {});
     if(_init) { return; }
     _init = true;
     /* setup */
-    var socketOn = function(data) {
-      app.Lock.removeLoading();
-      if(data.err) {
-        app.Lock.error(data);
-      } else {
-      	if (!app.isShare)
-	        app.Lock.success(data);
-	    else
-	    	app.views['shares'].sharedone(data);
-      }
-      if(data.notRemove !== false) {
-        app.Lock.remove();
-      }
-    };
-
-    app.socket.on('new', socketOn);
-    app.socket.on('delete', socketOn);
-    app.socket.on('move', socketOn);
-    app.socket.on('doc', socketOn);
-    app.socket.on('share', socketOn);
-    app.socket.on('unshare', socketOn);
+    var detach = app.Lock.detach;
+    app.socket.on('new', detach);
+    app.socket.on('delete', detach);
+    app.socket.on('move', detach);
+    app.socket.on('doc', detach);
+    app.socket.on('share', detach);
+    app.socket.on('unshare', detach);
   };
 })();
 

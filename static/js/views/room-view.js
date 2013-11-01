@@ -140,7 +140,7 @@ app.RoomView = Backbone.View.extend({
 		$('#fullscreentip').fadeIn();
 		setTimeout('$(\'#fullscreentip\').fadeOut();', 1000);
 		wrap.className += " CodeMirror-fullscreen";
-		wrap.style.height = app.winHeight() + "px";
+		wrap.style.height = $(window).height() + "px";
 		document.documentElement.style.overflow = "hidden";
 	} else {
 		$('#editormain').css('position', 'fixed');
@@ -502,7 +502,7 @@ app.RoomView = Backbone.View.extend({
 		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
 		view.resize();
 		if (!showing) return;
-		showing.CodeMirror.getWrapperElement().style.height = winHeight() + "px";
+		showing.CodeMirror.getWrapperElement().style.height =  $(window).height() + "px";
 	});
 
 	view.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {

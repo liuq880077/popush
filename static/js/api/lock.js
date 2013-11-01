@@ -36,16 +36,12 @@ var _lock = {
     
   begin: function() {
     var l = _lock;
-    if(l.lock) {
-      return false;
-    } else {
-      l.lock = true;
-      l.handle = window.setTimeout(l.add, l.t1);
-      return true;
-    }
+    if(!(l.lock)) { return false; }
+    l.handle = window.setTimeout(l.addLoading, l.t1);
+    return true;
   },
   
-  add: function() {
+  addLoading: function() {
     var l = _lock;
     if(l.lock) {
       app.loading(l.el);
@@ -53,15 +49,13 @@ var _lock = {
         l.handle = window.setTimeout(function() {
           var f = l.fail;
           l.remove();
-          if(typeof f === 'function') {
-            f();
-          }
+          (typeof f === 'function') && f();
         }, l.t2);
       }
     }
   },
   
-  remove: function() {
+  stop: function() {
     var l = _lock;
     window.clearTimeout(l.handle);
     l.lock = false;
@@ -74,9 +68,9 @@ var _lock = {
 };
 
 app.Lock = {
-  isLocking: function() {
-    return _lock.lock;
-  },
+  isLocking: function() { return _lock.lock; },
+  
+  getMessage: function() { return _lock.msg; },
   
   attach: function(selector, timeShowLoading, timeEnd, options) {
     var timeBegin = timeShowLoading;
@@ -110,6 +104,7 @@ app.Lock = {
     var l = _lock;
     if(l.lock)
       return false; /* necessary */
+    l.lock = true;
     options || (options = {});
     l.el = selector;
     l.t1 = timeBegin;
@@ -121,36 +116,22 @@ app.Lock = {
     return l.begin();
   },
   
-  remove: function() {
-    _lock.remove();
-  },
-  
-  removeLoading: function () {
-    app.removeLoading(_lock.el);
-  },
-  
-  getMessage: function() {
-    return _lock.msg;
-  },
-  
-  success: function() {
-    if(typeof _lock.success === 'function') {
-      _lock.success.apply(this, arguments);
+  detach: function(data) {
+    var l = _lock, msg = {msg: l.msg};
+    app.removeLoading(l.el);
+    if(data && data.err) {
+      (typeof l.error === 'function') && l.error.call(msg, data);
+    } else {
+      (typeof l.success === 'function') && l.success.call(msg, data);
     }
+    (data.notRemove !== false) && l.stop();
   },
   
-  error: function() {
-    if(typeof _lock.error === 'function') {
-      _lock.error.apply(this, arguments);
-    }
-  },
-  
-  fail: function() {
-    if(typeof _lock.fail === 'function') {
-      _lock.fail.apply(this, arguments);
-    }
-  },
-  
+  fail: function(data) {
+    var l = _lock, msg = {msg: l.msg}, f = l.fail;
+    l.stop();
+    (typeof f === 'function') && f.call(msg, data);
+  }
 };
 
 })();
