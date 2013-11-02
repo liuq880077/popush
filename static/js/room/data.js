@@ -31,17 +31,6 @@ var Room = function() {
 	bufferfrom: -1,
 	bufferto: -1,
 
-    voice: {
-      userArray: [],
-      audioArray: [],
-      peerUserArray: [],
-      peerArray: [],
-      joinedARoom: false,
-      voiceConnection: null,
-      voiceLock: false,
-      voiceOn: false,
-    },
-    
   }, Room.prototype);
   return this;
 };

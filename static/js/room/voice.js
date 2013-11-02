@@ -2,126 +2,139 @@ var app = app || {};
 
 app.Room && _.extend(app.Room.prototype, {
   leaveVoiceRoom: function() {
-    var voice = this.voice;
-    while(voice.userArray.length > 0){
-      $(voice.audioArray[voice.userArray.shift()]).remove();
-    }
-    while(voice.peerUserArray.length > 0){
-      var peerUName = voice.peerUserArray.shift();
-      if(voice.peerArray[peerUName]){
-        voice.peerArray[peerUName].myOnRemoteStream = function (stream){
-          stream.mediaElement.muted = true;
-          return;
-        };
-      }
-    }
-    if(!voice.joinedARoom){ return; }
-    voice.joinedARoom = false;
-    $('#voice-on').removeClass('active');
-    voice.voiceConnection.myLocalStream.stop();
-    voice.voiceConnection.leave();
-    delete voice.voiceConnection;
+
+	while(window.userArray.length > 0){
+		$(window.audioArray[window.userArray.shift()]).remove();
+	}
+	while(window.peerUserArray.length > 0){
+		var peerUName = window.peerUserArray.shift();
+		if(window.peerArray[peerUName]){
+			window.peerArray[peerUName].myOnRemoteStream = function (stream){
+				stream.mediaElement.muted = true;
+				return;
+			};
+		}
+	}
+	if(!window.joinedARoom){
+		return;
+	}
+	$('#voice-on').removeClass('active');
+	window.voiceConnection.myLocalStream.stop();
+	window.voiceConnection.leave();
+	delete window.voiceConnection;
   },
     
   openVoice: function() {
-    var voice = this.voice;
-    if(app.noVoice || voice.voiceLock) { return; }
-    voice.voiceOn = !voice.voiceOn;
-    if(voice.voiceOn) {
-      if(voice.joinedARoom) { return; }
-      voice.joinedARoom = true;
-      this.view.$('#voice-on').addClass('active');
-      try {
-  var uName = app.currentUser.name, room = this,
-    dataRef = new Firebase('https://popush.firebaseIO.com/' + room.docData.id);
-  dataRef.once('value', function(snapShot) {
-    delete dataRef;
-    if (snapShot.val() == null){
-      var connection = new RTCMultiConnection(room.docData.id);
-      voice.voiceConnection = connection;
-      connection.session = "audio-only";
-      connection.autoCloseEntireSession = true;
+	if(app.novoice)
+		return;
+	window.voiceon = !window.voiceon;
+	if(window.voiceon) {
+		if(window.joinedARoom){
+			return;
+		}
+		$('#voice-on').addClass('active');
+		try{
+			var username = $('#nav-user-name').html();
+			var dataRef = new Firebase('https://popush.firebaseIO.com/' + this.docData.id);
+			var that = this;
+			dataRef.once('value',function(snapShot){
+				delete dataRef;
+				if (snapShot.val() == null){
+					var connection = new RTCMultiConnection(that.docData.id);
+					window.voiceConnection = connection;
+					connection.session = "audio-only";
+					connection.autoCloseEntireSession = true;
 
-      connection.onstream = function (stream) {
-        if((stream.type == 'remote') && (stream.extra.username != uName)) {
-          stream.mediaElement.style.display = "none";
-          stream.mediaElement.muted = false;
-          stream.mediaElement.play();
-          (document.body || document.getElementById('body')).appendChild(stream.mediaElement);
-          voice.userArray.push(stream.extra.username);
-          voice.audioArray[stream.extra.username] = stream.mediaElement;
-        }
-      };
-      connection.onUserLeft = function(userid, extra, ejected) {
-        $(voice.audioArray[extra.username]).remove();
-        if(voice.peerArray[extra.username]) {
-          voice.peerArray[extra.username].myOnRemoteStream = function (stream) {
-            stream.mediaElement.muted = true;
-            return;
-          };
-        }
-      };
-      connection.connect();
-      
-      connection.open({ extra: { username: uName, }, interval: 1000, });
-    }
-    else{
-      var connection = new RTCMultiConnection(room.docData.id);
-      voice.voiceConnection = connection;
-      connection.session = "audio-only";
-      connection.autoCloseEntireSession = true;
-      
-      connection.onNewSession = function (session){
-        if(voice.joinedARoom){ return; }
-        connection.join(session, { username: uName, });
-      };
-      connection.onstream = function (stream) {
-        if ((stream.type == 'remote') && (stream.extra.username != username)) {
-          stream.mediaElement.style.display = "none";
-          stream.mediaElement.muted = false;
-          stream.mediaElement.play();
-          voice.userArray.push(stream.extra.username);
-          voice.audioArray[stream.extra.username] = stream.mediaElement;
-          (document.body || document.getElementById('body')).appendChild(stream.mediaElement);
-        }
-      };
-      connection.onUserLeft = function(userid, extra, ejected) {
-        if(ejected){
-          room.view.$('#voice-on').removeClass('active');
-          while(voice.userArray.length > 0){
-            $(voice.audioArray[window.userArray.shift()]).remove();
-          }
-          while(voice.peerUserArray.length > 0){
-            var peerUName = voice.peerUserArray.shift();
-            if(voice.peerArray[peerUName]){
-              voice.peerArray[peerUName].myOnRemoteStream = function (stream){
-                stream.mediaElement.muted = true;
-                return;
-              };
-            }
-          }
-          delete voice.voiceConnection;
-          voice.voiceOn = !voice.voiceOn;
-        }
-        else{
-          $(voice.audioArray[extra.username]).remove();
-          if(voice.peerArray[extra.username]){
-            voice.peerArray[extra.username].myOnRemoteStream = function (stream){
-              stream.mediaElement.muted = true;
-              return;
-            };
-          }
-        }
-      };
-      connection.connect();
-    }
-  });
-      } catch(err) {
-        app.showMessageBox('error', err, 2500);
-      }
-    } else {
-      this.leaveVoiceRoom();
-    }
+					connection.onstream = function (stream) {
+						if ((stream.type == 'remote') && (stream.extra.username != username)) {
+							stream.mediaElement.style.display = "none";
+							stream.mediaElement.muted = false;
+							stream.mediaElement.play();
+							document.body.appendChild(stream.mediaElement);
+							window.userArray.push(stream.extra.username);
+							window.audioArray[stream.extra.username] = stream.mediaElement;
+						}
+					};
+					connection.onUserLeft = function(userid, extra, ejected) {
+						$(window.audioArray[extra.username]).remove();
+						if(window.peerArray[extra.username]){
+							window.peerArray[extra.username].myOnRemoteStream = function (stream){
+								stream.mediaElement.muted = true;
+								return;
+							};
+						}
+					};
+					connection.connect();
+					
+					connection.open({
+						extra: {
+							username: username
+						},
+						interval: 1000
+					});
+				}
+				else{
+					var connection = new RTCMultiConnection(that.docData.id);
+					window.voiceConnection = connection;
+					connection.session = "audio-only";
+					connection.autoCloseEntireSession = true;
+					
+					connection.onNewSession = function (session){
+						if(window.joinedARoom){
+							return;
+						}
+						connection.join(session, {
+							username: username
+						});
+					};
+					connection.onstream = function (stream) {
+						if ((stream.type == 'remote') && (stream.extra.username != username)) {
+							stream.mediaElement.style.display = "none";
+							stream.mediaElement.muted = false;
+							stream.mediaElement.play();
+							window.userArray.push(stream.extra.username);
+							window.audioArray[stream.extra.username] = stream.mediaElement;
+							document.body.appendChild(stream.mediaElement);
+						}
+					};
+					connection.onUserLeft = function(userid, extra, ejected) {
+						if(ejected){
+							$('#voice-on').removeClass('active');
+							while(window.userArray.length > 0){
+								$(window.audioArray[window.userArray.shift()]).remove();
+							}
+							while(window.peerUserArray.length > 0){
+								var peerUName = window.peerUserArray.shift();
+								if(window.peerArray[peerUName]){
+									window.peerArray[peerUName].myOnRemoteStream = function (stream){
+										stream.mediaElement.muted = true;
+										return;
+									};
+								}
+							}
+							delete window.voiceConnection;
+							window.voiceon = !window.voiceon;
+						}
+						else{
+							$(window.audioArray[extra.username]).remove();
+							if(window.peerArray[extra.username]){
+								window.peerArray[extra.username].myOnRemoteStream = function (stream){
+									stream.mediaElement.muted = true;
+									return;
+								};
+							}
+						}
+					};
+					connection.connect();
+				}
+			});
+		}
+		catch(err){
+			alert(err);
+		}
+	} else {
+		this.leaveVoiceRoom();
+	}
   },
   
 });

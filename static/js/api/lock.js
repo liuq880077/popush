@@ -123,6 +123,10 @@ app.Lock = {
     (data.notRemove !== false) && l.stop();
   },
   
+  remove: function() {
+    _lock.stop();
+  },
+  
   removeLoading: function() {
     app.removeLoading(_lock.el);
   },

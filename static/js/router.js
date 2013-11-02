@@ -19,12 +19,28 @@ var app = app || {};
     },
     
     pages: {
-      login: new Page ({ el: '#login', depend: ['_head1', '_footer'], force: true,
-        show: function() { this.el.fadeIn('fast', function() { app.views.login.show(); }); },
+      login: new Page ({ el: '#login', depend: ['_head1', '_footer', 'ads'], force: true,
+        show: function() {
+          this.el.find('#login-padding').slideUp();
+          /* this.el.fadeIn('fast', function() { app.views.login.show(); }); */
+          this.el.fadeIn('fast');
+        },
+        hide: function() {
+          this.el.find('#login-padding').slideDown();
+          this.el.fadeOut('fast')
+        },
       }),
       
-      register: new Page ({ el: '#register', depend: ['_head1', '_footer'], force: true,
-        show: function() { this.el.fadeIn('fast', function() { app.views.register.show(); }); },
+      register: new Page ({ el: '#register', depend: ['_head1', '_footer', 'ads'], force: true,
+        show: function() {
+          this.el.find('#register-padding').slideDown();
+          /* this.el.fadeIn('fast', function() { app.views.register.show(); }); */
+          this.el.fadeIn('fast');
+        },
+        hide: function() {
+          this.el.find('#register-padding').slideDown();
+          this.el.fadeOut('fast')
+        },
       }),
       
       index: new Page ({ el: '#filecontrol', depend: ['_head2', '_footer'], logined: true, force: true, // force refresh
@@ -49,6 +65,7 @@ var app = app || {};
       }),
       _head2: new Page ({ el: '#nav-head' }),
       _footer: new Page ({ el: '#footer' }),
+      ads: new Page ({ el: '#popush-info' }),
     },
     
     analy: function(name) {

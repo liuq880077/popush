@@ -127,7 +127,7 @@ app.resize = function() {
 $(document).ready(function() {
   app.Lock.attach({
     loading: '#login-control',
-    tbegin: 2000,
+    tbegin: 0,
     tend: -1,
     data: 'pageIsLoading',
     fail: function() {
