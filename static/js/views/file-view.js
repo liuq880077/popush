@@ -56,8 +56,8 @@ var app = app || {};
     },
     
     share: function() {
-      app.sharemodel = this.model;
-      app.collections['shares'].update(this.model.get('members'));
+      app.views.shares.shareModel = this.model;
+      app.collections['shares'].set(this.model.get('members'));
       $('#share').modal('show');
     },
 
@@ -98,7 +98,7 @@ var app = app || {};
             cnfm.attr('disabled', 'disabled');
           } else {
             modal.find('.help-inline').text('');
-            modal.find('.control-group').removeClass('error');
+            modal.find('.form-group').removeClass('error');
             cnfm.removeAttr('disabled');
           }
         });

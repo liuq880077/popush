@@ -23,26 +23,29 @@ var app = app || {};
 			for (var i = 0, d; i < data.length; ++i) {
 				d = data[i];
 				col.add({
-					name:   d.name || '',
-					avatar: d.avatar || '',
+					name:   d.name,
+					avatar: d.avatar,
 					online: d.online || false,
-					owner: d.owner || false
+					owner: d.owner || false,
 				});
 			}
 		},
 		
 		updatedoc: function (doc) {
 			var col = this;
-			col['reset']([{name: col.isset(doc.owner.name)?doc.owner.name:'',
-					  avatar: col.isset(doc.owner.avatar)?doc.owner.avatar:'',
-					  online: col.isset(doc.owner.online)?doc.owner.online:false,
-					  owner: true}]);
+			col['reset']({
+        name: doc.owner.name,
+        avatar: doc.owner.avatar,
+        online: doc.owner.online || false,
+        owner: true,
+      });
 			for(var i=0; i<doc.members.length; i++) {
 				var user = doc.members[i];
-				this.add({name:   user.name   || '',
-          avatar: user.avatar || '',
-          online: user.online || '',
-          owner:  false
+				this.add({
+          name:   user.name,
+          avatar: user.avatar,
+          online: user.online || false,
+          owner:  false,
         });
 			}
 		},

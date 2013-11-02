@@ -75,15 +75,7 @@ app.Room && _.extend(app.Room.prototype, {
   
   onSet: function(data) {
     /* app.room.init(data); */
-	app.Lock.remove();
-
-	window.voiceon = false;
-	window.voiceLock = false;
-	window.userArray = [];
-	window.audioArray = {};
-	window.joinedARoom = false;
-	window.peerArray = {};
-	window.peerUserArray = [];
+    app.Lock.remove();
 
     this.view.enter(data);
     this.timestamp = 1;

@@ -13,7 +13,7 @@ var strings = strings || {};
     for(var i in app.languages) {
       if(i !== 'set') { arr.push(t({key: i, name: app.languages[i].Name})); }
     }
-    $('#language-panel').html(arr.join('')).on('click', 'button', function(e) {
+    $('#language-panel').html(arr.join('')).on('click', 'a', function(e) {
       app.languages.set($(e.target).attr('lang'));
     });
   };

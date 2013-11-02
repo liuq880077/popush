@@ -881,7 +881,7 @@ socket.on('exit', function(data){
 		if(q.length > 0){
 			socket.emit('change', q[0]);
 		}
-		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></i>');
+		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></span>');
 		$('#editor-debug').attr('title', strings['debug-title']);
 		runtoline(-1);
 		for(var k in expressionlist.elements) {

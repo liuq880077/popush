@@ -38,7 +38,7 @@ var app = app || {};
 /* new sync */
 app.File.prototype.sync = function(method, model, options) {
   if( !(app.Lock.attach(options)) ) { return false; }
-  if(opts.virtual === true) { return; }
+  if(options.virtual === true) { return; }
   var m, d = {path: model.get('path')};
   switch(method) {
   case 'read': m = 'doc'; break;

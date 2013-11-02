@@ -120,7 +120,7 @@ app.Lock = {
     } else {
       (typeof l.success === 'function') && l.success.call(msg, data);
     }
-    (data.notRemove !== false) && l.stop();
+    (data.notRemove !== true) && l.stop();
   },
   
   remove: function() {

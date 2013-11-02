@@ -25,7 +25,7 @@ var app = app || {};
 			this.$el.html(
 				'<tr class="new"><td class="col1">&nbsp;</td>' +
 				'<td id="adde" class="col2" title="' +
-					strings['addexpression'] + '"><i class="icon-plus"></i></td>' +
+					strings['addexpression'] + '"><span class="glyphicon glyphicon-plus"></span></td>' +
 				'<td class="col3"></td></tr>'
 				);
 		},

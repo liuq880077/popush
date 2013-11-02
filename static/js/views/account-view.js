@@ -25,7 +25,7 @@ var app = app || {};
           	var old = $('#changepassword-old').val();
 			var pass = $('#changepassword-new').val();
 			var confirm = $('#changepassword-confirm').val();
-			$('#changepassword .control-group').removeClass('error');
+			$('#changepassword .form-group').removeClass('error');
 			$('#changepassword .help-inline').text('');
 			if(pass != confirm) {
 				app.showMessageInDialog('#changepassword', 'doesntmatch', 2);

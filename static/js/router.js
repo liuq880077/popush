@@ -21,25 +21,21 @@ var app = app || {};
     pages: {
       login: new Page ({ el: '#login', depend: ['_head1', '_footer', 'ads'], force: true,
         show: function() {
-          this.el.find('#login-padding').slideUp();
-          /* this.el.fadeIn('fast', function() { app.views.login.show(); }); */
-          this.el.fadeIn('fast');
+          this.el.fadeIn('fast', function() { app.views.login.show(); });
         },
         hide: function() {
           this.el.find('#login-padding').slideDown();
-          this.el.fadeOut('fast')
+          this.el.fadeOut('fast');
         },
       }),
       
       register: new Page ({ el: '#register', depend: ['_head1', '_footer', 'ads'], force: true,
         show: function() {
-          this.el.find('#register-padding').slideDown();
-          /* this.el.fadeIn('fast', function() { app.views.register.show(); }); */
-          this.el.fadeIn('fast');
+          this.el.fadeIn('fast', function() { app.views.register.show(); });
         },
         hide: function() {
-          this.el.find('#register-padding').slideDown();
-          this.el.fadeOut('fast')
+          this.el.find('#register-padding').slideUp();
+          this.el.fadeOut('fast');
         },
       }),
       
@@ -56,13 +52,11 @@ var app = app || {};
       }),
       
       edit: new Page ({ el: '#editor', depend: ['_head2', '_footer'], logined: true, force: true,
-        show: function() { this.el.fadeIn('fast', function() { app.views.room.show(); }); },
+        show: function() { this.el.fadeIn('fast'); },
       }),
       
       // dependency:
-      _head1: new Page ({ el: '#big-one',
-        // hide: function() { this.animate({height:'40px', padding:'0', 'margin-bottom':'20px'}, 'fast');},
-      }),
+      _head1: new Page ({ el: '#big-one' }),
       _head2: new Page ({ el: '#nav-head' }),
       _footer: new Page ({ el: '#footer' }),
       ads: new Page ({ el: '#popush-info' }),
@@ -97,19 +91,19 @@ var app = app || {};
       }
       if(j === -1) {
         window.setTimeout(function() { window.location.href = '#login'; }, 10);
-        return;
-      }
-      for(var h in pages) {
-        if(pages[h].shown && (arr1.indexOf(h) == -1)) {
-          pages[h].hide();
-          pages[h].shown = false;
+      } else {
+        for(var h in pages) {
+          if(pages[h].shown && (arr1.indexOf(h) == -1)) {
+            pages[h].hide();
+            pages[h].shown = false;
+          }
         }
+        for(i = arr1.length, j = 0; i--; ) {
+          p = pages[arr1[i]];
+          if(!(p.shown) || p.force) { p.show(arguments[1]); p.shown = true; j = 1; }
+        }
+        if((j === 1) && (typeof app.resize === 'function')) { app.resize(); }
       }
-      for(i = arr1.length, j = 0; i--; ) {
-        p = pages[arr1[i]];
-        if(!(p.shown) || p.force) { p.show(arguments[1]); p.shown = true; j = 1; }
-      }
-      if((j === 1) && (typeof app.resize === 'function')) { app.resize(); }
       this.routeLock = false;
     },
     
@@ -129,6 +123,10 @@ var app = app || {};
   
   app.init.router = function() {
     if(app.router) { return; } else { app.router = new PageRouter(); }
+    app.init.loginView();
+    app.init.registerView();
+    app.init.filesView();
+    app.init.roomView();
     Backbone.history.start({ root: app.Package.ROUTE_ROOT });
   };
 })();

@@ -54,13 +54,6 @@ var onLogin = function(data) {
     data.doc = data.user;
     delete data.user;
     app.Lock.detach(data);
-
-    // var fc = app.collections['files'], name = data.user.name;
-    // $('#ownedfileex>a').attr('href', '#index/' + name);
-    // $('#sharedfile>a').attr('href', '#index/shared@' + name);
-    // fc.path = '/' + name;
-    // app.collections['files'].reset(data.user.docs);
-    
     delete data.doc.docs; /* avoid bad memory. */
   }
 };
@@ -107,6 +100,7 @@ app.init || (app.init = {});
     
     var socket = app.socket;
     socket.on('connect', function() { app.socket.emit('version', {}); } );
+    socket.on('disconnect', function() { app.isLogined = false; } );
     socket.on('version', onVersion);
     socket.on('login', onLogin);
     socket.on('register', app.Lock.detach);

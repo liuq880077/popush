@@ -42,6 +42,7 @@ var app = app || {};
 		},
 
 		setonline: function (name, isonline) {
+        var that = this;
 				this.collection.each(function(model){
 					if (model.get('name')==name)
 					{

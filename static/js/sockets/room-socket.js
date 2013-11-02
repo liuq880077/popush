@@ -83,7 +83,7 @@ var room, listeners = {
 		room.view.toChatBox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
 
 	if(room.runLock) {
-		$('#editor-run').html('<i class="icon-play"></i>');
+		$('#editor-run').html('<span class="glyphicon glyphicon-play"></span>');
 		$('#editor-run').attr('title', strings['run-title']);
 		room.runLock = false;
 	}
@@ -101,7 +101,7 @@ var room, listeners = {
 		if(room.q.length > 0){
 			room.socket('change', room.q[0]);
 		}
-		$('#editor-debug').html('<i class="icon-eye-open"></i>');
+		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></sapn>');
 		$('#editor-debug').attr('title', strings['debug-title']);
 		room.view.runTo(-1);
 		app.collections['expressions'].each(function(model){

@@ -16,10 +16,10 @@ var app = app || {};
       var name = $('#login-inputName').val(), in_pw = $('#login-inputPassword');
       var pass = in_pw.val();
       in_pw.val('');
-      if(name == '') {
+      if(!name || !pass) {
         app.showMessageBar('login-message', 'pleaseinput', 'error');
       } else if(app.Lock.attach({ loading: '#login-control',
-        error: function() { app.showMessageBar('#login-message', data.err, 'error'); },
+        error: function(data) { app.showMessageBar('#login-message', data.err, 'error'); },
       })) {
         app.socket.emit('login', {
           name: name,

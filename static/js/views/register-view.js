@@ -57,6 +57,7 @@ var app = app || {};
       $('#register-inputPassword').val('');
       $('#register-confirmPassword').val('');
       $('#register-message').slideUp();
+      $('#register-padding').slideDown('fast');
       $('#register-inputName').focus();
     },
 				

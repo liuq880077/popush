@@ -168,9 +168,9 @@ var app = app || {};
   }
   
   var downzip = function(event) {
-	var paths = app.collections['files'].path;
-	var modes = (paths.split('/').length != 2);
-  	app.socket.emit('downzip', {path: paths, mode: modes});
+    var paths = app.collections['files'].path;
+    var modes = (paths.split('/').length != 2);
+    app.socket.emit('downzip', {path: paths, mode: modes});
   }
   
   var newFile = function(event) {
@@ -203,7 +203,7 @@ var app = app || {};
           cnfm.attr('disabled', 'disabled');
         } else {
           modal.find('.help-inline').text('');
-          modal.find('.control-group').removeClass('error');
+          modal.find('.form-group').removeClass('error');
           cnfm.removeAttr('disabled');
         }
       });

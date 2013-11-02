@@ -6,18 +6,16 @@ _.defaults(app, {
   socket: io.connect(app.Package.SOCKET_IO),
   currentUser: null,
   isLogined: false,
-  isShare: false,
   views: {},
   collections: {},
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
   fileExtReg: /(.*[\/\.])?\s*(\S+$)/,
   router: null,
-  sharemodel: null,
+  resize: null, // function pointer
   /* for Room */
   editor: {},
   noVoice: false,
   inRoom: false,
-  resize: null, // function pointer
 });
 
 app.showMessageBar = function(id, stringid, type){
@@ -33,7 +31,7 @@ app.showMessageBar = function(id, stringid, type){
 };
 
 app.showInputModal = function(modal, val) {
-  modal.find('.control-group').removeClass('error').find('input').val('');
+  modal.find('.form-group').removeClass('error').find('input').val('');
   modal.find('.help-inline').text('');
   var i = modal.find('.modal-input').val(val || '');
   modal.modal('show').on('shown', function() {
@@ -64,7 +62,7 @@ app.showInputModal = function(modal, val) {
 app.showMessageInDialog = function (selector, stringid, index) {
   var modal = $(selector),
     eq = (index === undefined) ? '' : (':eq(' + index + ')');
-  modal.find('.control-group' + eq).addClass('error');
+  modal.find('.form-group' + eq).addClass('error');
   (stringid == null) && (stringid = 'inner error');
   modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
 }
@@ -136,6 +134,8 @@ $(document).ready(function() {
     },
   });
 
+  $('body').show();
+  
   var funcs = app.init;
   for(var i in funcs) {
     if(funcs.hasOwnProperty(i) && typeof funcs[i] === 'function') {
@@ -145,8 +145,6 @@ $(document).ready(function() {
   delete funcs;
   delete app.init; /* now it's no use to run it again*/
 
-  $('body').show();
- 
   // if(isOK) {
     // app.socket.emit('connect', { });
   // }
