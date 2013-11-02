@@ -51,8 +51,8 @@ var app = app || {};
         });
       }
       else { app.room.tryEnter(this.model, this.$('.col1 > *')); }
-      e.preventDefault();
-      e.stopPropagation();
+      /* e.preventDefault(); */
+      /* e.stopPropagation(); */
     },
     
     share: function() {
@@ -120,7 +120,11 @@ var app = app || {};
     },
     
     download: function() {
-    	app.socket.emit('download', {path: this.model.get('path')});
+    	if (this.model.get('path') == 'doc')
+	    	app.socket.emit('download', {path: this.model.get('path')});
+	    else
+	    	app.socket.emit('downzip', {path: this.model.get('path'), mode: 1});
+	    	
     },
   });
     

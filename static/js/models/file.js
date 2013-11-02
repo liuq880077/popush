@@ -61,7 +61,7 @@ var app = app || {};
     },
         
     setShow: function() {
-      var a = this.attributes.path,
+      var a = this.attributes,
       	p = a.path, t = a.modifyTime || a.createTime,
         s = p.split('/');
       /* fix a bug when 'owner' is not set in onDoc's data. */
@@ -90,7 +90,7 @@ var app = app || {};
 
   });
   
-  app.File.encode: function(path, shared) {
+  app.File.encode = function(path, shared) {
     if(!path || path.charAt(0) != '/') return '';
     if(path.length == 1) { return '/' + app.currentUser.name; }
     var s = path.split('/');
@@ -104,7 +104,7 @@ var app = app || {};
     }
   };
     
-  app.File.decode: function(shownPath) {
+  app.File.decode = function(shownPath) {
     if(typeof shownPath == null) { return ''; }
     var p = window.decodeURI(shownPath).replace(/\\/g, '/'), s;
     if(p.charAt(0) != '/') { return ''; }

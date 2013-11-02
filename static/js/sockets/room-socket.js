@@ -127,7 +127,7 @@ var room, listeners = {
   
   /* OK: */
   leave: function(data) {
-    this.onSystemChat(data.name, 'leave', data.time);
+    room.onSystemChat(data.name, 'leave', data.time);
     room.onLeave(data);
   },
   
@@ -461,7 +461,7 @@ var room, listeners = {
 		hist.undone[i].headAfter = hist.undone[i].changes[0].from;
 		hist.undone[i].headBefore = hist.undone[i].changes[0].from;
 	}
-	room.view.editorDoc.setHistory(hist);
+	editorDoc.setHistory(hist);
 	room.docData.text = room.docData.text.substr(0, data.from) + data.text + room.docData.text.substr(data.to);
 	room.docData.version++;
 	room.docData.version = room.docData.version % 65536;
@@ -484,8 +484,8 @@ var startListen = function(room1) {
 };
 
 var stopListen = function() {
-  var socket = app.socket;
-  for(var i in ls) { socket.removeListener(i); }
+  var socket = app.socket, ls = listeners;
+  for(var i in ls) { socket.removeListener(i, ls[i]); }
   room = null;
 };			    
 

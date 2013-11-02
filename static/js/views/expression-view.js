@@ -1,31 +1,26 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function ($) {
+(function () {
 	'use strict';
 
 	app.ExpressionView = Backbone.View.extend({
 		tagName:  'tr id="express-elem" onmouseover="$(this).find(\'a\').show()" onmouseout="$(this).find(\'a\').hide()"',
-		// Cache the template function for a single item.
+
 		template: _.template($('#expression-template').html()),
 		
-		// The DOM events specific to an item.
+
 		events: {
 			'click .title': 'renameExpression',
 			'keypress #te': 'renameTry',
 			'blur #te': 'doneall',
 		},
 		
-		// The TodoView listens for changes to its model, re-rendering. Since there's
-		// a one-to-one correspondence between a **Todo** and a **TodoView** in this
-		// app, we set a direct reference on the model for convenience.
 		initialize: function () {
 			this.listenTo(this.model, 'change', this.render);
 			this.listenTo(this.model, 'remove', this.remove);
 			this.listenTo(this.model, 'destroy', this.remove);
 		},
 
-		// Re-render the titles of the todo item.
 		render: function () {
 			this.$el.html(this.template(this.model.toJSON()));
 			if (this.model.get('value')==null || this.model.get('value')=='') {
@@ -51,7 +46,7 @@ var app = app || {};
 			});
 		},
 
-	    renameExpression: function() {
+    renameExpression: function() {
 			this.doneall();
 			if(app.debugLock && !app.waiting)
 				return;
@@ -79,8 +74,6 @@ var app = app || {};
 					span.show();
 				}
 			} else {
-				if (this.model.get('expression') == expression)
-					return;
 				if(this.model.notnew) {
 					app.socket.emit('rm-expr', {
 						expr: this.model.expression
@@ -101,4 +94,4 @@ var app = app || {};
 //			this.model.destroy();
 		//}
 	});
-})(jQuery);
+})();

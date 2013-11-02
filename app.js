@@ -265,7 +265,7 @@ io.sockets.on('connection', function(socket){
 		docDAO.createDoc(user._id, data.path, data.type, function(err, ctime){
 			if (err)
 				return socket.emit('new', {err:err});
-			socket.emit('new', {createTime: ctime, modifyTime: ctime});
+			socket.emit('new', {createTime: ctime});
 		});
 /*		_leave();
 		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
@@ -446,6 +446,73 @@ io.sockets.on('connection', function(socket){
 		}
 	}
 	
+	socket.on('downzip', function(data) {
+		if (!check(data, 'path', 'mode'))
+			return;
+		if (!socket.session) {
+			return socket.emit('unauthorized');
+		}
+		var user = socket.session.user;
+		var files = [];
+		var count = 1;
+		var getDocs = function(files, path, mode) {
+			docDAO.getDocByPath(user._id, path, function(err, doc){
+			if(err){
+				return;
+			}
+			if (mode == 1)
+				doc = doc.docs;
+			for (var i = 0; i < doc.length; ++i) {
+				files.push({path: doc[i].path, type: doc[i].type, text: null})
+			}
+			for (var i = 0; i < doc.length; ++i) {
+				if (doc[i].type == 'dir') {
+					count = count + 1;
+					getDocs(files, doc[i].path, 1);
+				}
+			}
+			--count;
+			if (count == 0) {
+				var counts = 1;
+				var setText = function(ind, text) {
+					ind.text = text;
+				}
+				var sendmsg = function() {
+					--counts;
+					console.log(counts);
+					if (counts == 0) {
+						counts = 1;
+						console.log(files);
+						socket.emit('downzip', {file: files, path: data.path});
+					}
+				};
+				var getContents = function(files) {
+					for (var i = 0; i < files.length; ++i) {
+						if (files[i].type == 'doc') {
+							++counts;
+							docDAO.getRevision(user._id, files[i].path, 0, files[i], function(err, revision, obj){
+								var room = rooms[obj.path];
+								if (!room || room === undefined)
+								{
+									setText(obj, revision.content.toString());
+								}
+								else
+								{
+									setText(obj, room.buffer.toString());
+								}
+								sendmsg();
+							});
+						}
+					}
+					sendmsg();
+				};
+				getContents(files);
+			}
+			});
+		};
+		getDocs(files, data.path, data.mode);
+	});
+	
 	socket.on('download', function(data){
 		if(!check(data, 'path')){
 			return;
@@ -455,12 +522,20 @@ io.sockets.on('connection', function(socket){
 		}
 		var user = socket.session.user;
 		_leave();
-		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
+		docDAO.getRevision(user._id, data.path, 0, null, function(err, revision, obj){
 			var room = rooms[data.path];
+			var n = data.path.split('/');
+			n = n[n.length - 1];
 			if (!room)
-				socket.emit('download', revision.content.toString());
+				socket.emit('download', { 
+					text: revision.content.toString(),
+					name: n,
+				});
 			else
-				socket.emit('download', room.buffer.toString());
+				socket.emit('download', {
+					text: room.buffer.toString(),
+					name: n,
+				});
 		});
 	});
 
@@ -473,7 +548,7 @@ io.sockets.on('connection', function(socket){
 		}
 		var user = socket.session.user;
 		_leave();
-		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
+		docDAO.getRevision(user._id, data.path, 0, null, function(err, revision, obj){
 			if(err){
 				return socket.emit('join', {err:err});
 			}

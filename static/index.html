@@ -18,6 +18,9 @@
   <!-- <script type="text/javascript" src="js/lib/backbone.localStorage.js"></script> -->
   <script type="text/javascript" src="js/lib/codemirror.js"></script>
   <script type="text/javascript" src="js/loadmode.js"></script>
+  <script type="text/javascript" src="js/lib/FileSaver.js"></script>
+  <script type="text/javascript" src="js/lib/jszip.js"></script>
+  <script type="text/javascript" src="js/lib/jszip-deflate.js"></script>
 </head>
 <body style="display:none;">
   <div class="hero-unit" id="big-one">
@@ -110,7 +113,7 @@
                 <input type="password" id="register-inputPassword"/>
               </div>
             </div>
-            <div class="control-group hide" id="register-padding">
+            <div class="control-group" id="register-padding">
               <label class="control-label" for="register-inputPassword" localization>confirm</label>
               <div class="controls">
                 <input type="password" id="register-confirmPassword"/>
@@ -137,6 +140,7 @@
                   <li><a href="#" data-toggle="modal" new-type="doc" localization>newfile</a></li>
                   <li><a href="#" data-toggle="modal" new-type="dir" localization>newfolder</a></li>
                   <li><a href="#" id='upload' new-type="up" localization>upload</a></li>
+                  <li><a href="#" id='downzip' new-type='down' localization>downzip</a></li>
                   <!--<li class="divider"></li>
                   <li><a href="#" localization>import</a></li>-->
                 </ul>
@@ -274,11 +278,11 @@
       </div>
     </div>
     <div id="footer" class="row-fluid">
-      <div class="span10" id="language-panel"><script type="text/template" id="lang-btn-template">
-<button class="change-language" lang="<%=o.key%>" class="btn btn-link" type="button"><%=o.name%></button></script>
+      <div class="span11" id="language-panel"><script type="text/template" id="lang-btn-template">
+<button lang="<%=o.key%>" class="change-language btn btn-link" type="button"><%=o.name%></button></script>
       </div>
 
-      <div class="span2">
+      <div class="span11">
         <p style="text-align:right" localization>popushteam</p>
         <p> &nbsp; </p>
       </div>
@@ -481,6 +485,7 @@
 	</a>
   </script>
 
+  <script type="text/javascript" src="js/localization/lang.js"></script>
   <script type="text/javascript" src="js/localization/zh-CN.js"></script>
   <script type="text/javascript" src="js/localization/en-US.js"></script>
   <script type="text/javascript" src="js/api/ie.js"></script>

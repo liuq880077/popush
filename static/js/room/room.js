@@ -304,9 +304,10 @@ _.extend(Room.prototype, {
     if(!this.debugLock) { return; }
     this.waiting = true;
     this.view.onWaiting(data);
-    for(var k in data.exprs) 
-    { 
-//    	this.app.views['expressions'].setValue(k, data.exprs[k]); 
+    app.collections['expressions'].reset();
+    for(var k in data.exprs)
+    {
+    	app.collections['expressions'].add({expression: k, value: data.exprs[k]}); 
     }
   },
   
@@ -327,15 +328,35 @@ _.extend(Room.prototype, {
   onJoin: function(data) {
     /* TODO: members */
     app.views['cooperators'].setonline(data.name, true);
-    this.setCursor(name, { pos: 0,
-      element: room.newCursor(data.name),
+    this.setCursor(data.name, { pos: 0,
+      element: this.newCursor(data.name),
     });
   },
   
   /* TODO: members */
-  onLeave: function() {
-    app.views.setonline(data.name, false);
+  onLeave: function(data) {
+	app.views['cooperators'].setonline(data.name, false);
     this.setCursor(data.name, null);
+  },
+  
+  newCursor: function(content) {
+	var cursor = $(
+		'<div class="cursor">' +
+			'<div class="cursor-not-so-inner">' +
+				'<div class="cursor-inner">' +
+					'<div class="cursor-inner-inner">' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+		'</div>'
+		).get(0);
+	$(cursor).find('.cursor-inner').popover({
+		html: true,
+		content: '<b>' + content + '</b>',
+		placement: 'bottom',
+		trigger: 'hover'
+	});
+	return cursor;
   },
   
   /* TODO: */
@@ -481,7 +502,7 @@ _.extend(Room.prototype, {
       app.views['cooperators'].setonline(i, true);
       if(i == app.currentUser.name)
         continue;
-      var cursor = newcursor(i);
+      var cursor = this.newCursor(i);
       if(this.cursors[i] && this.cursors[i].element)
         $(this.cursors[i].element).remove();
       this.cursors[i] = { element:cursor, pos:0 };

@@ -1,10 +1,8 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
 (function ($) {
 
 	app.SharerlistView = Backbone.View.extend({
-
 		el: '#share',
 		
 		selected: null,
@@ -17,7 +15,7 @@ var app = app || {};
 
 		initialize: function () {	//需要改
 			this.listenTo(this.collection, 'add', this.addOne);
-//			this.listenTo(this.collection, 'reset', this.addAll);
+			this.listenTo(this.collection, 'reset', this.addAll);
 			this.listenTo(this.collection, 'destroy', this.remove);
 		},
 		
@@ -30,9 +28,12 @@ var app = app || {};
 		sharedone: function(data) {
 			if(!data.err){
 				app.collections['shares'].update(data.doc.members);  //需要改
+				app.sharemodel.set('members', data.doc.members);
 			}
 			this.$('#share-message').hide();
 			app.isShare = false;
+			app.operationLock = false;
+			app.sharemodel = null;
 		},
 
 		addOnEnter: function(e) {
@@ -47,13 +48,13 @@ var app = app || {};
 		share: function (){
 			var name = this.$el.find('#share-inputName').val();
 			if(name == '') {
-				app.showmessage('share-message', 'inputusername', 'error');
+				app.showMessageBar('#share-message', 'inputusername', 'error');
 				return;
 			}
 			var that = this, isOK = app.Lock.attach({
 				loading: '#share-buttons',
 				error: function(data) {
-					app.showmessage('share-message', data.err, 'error');
+					app.showMessageBar('#share-message', data.err, 'error');
 				},
 				success: function(data) {
 					app.Lock.remove();
@@ -83,7 +84,7 @@ var app = app || {};
 			if (app.isShare)
 				return;
 			if(!this.selected) {
-				app.showmessage('share-message', 'selectuser', 'error');
+				app.showMessageBar('#share-message', 'selectuser', 'error');
 				return;
 			}
 			if(app.operationLock)
@@ -92,7 +93,7 @@ var app = app || {};
 			var that = this, isOK = app.Lock.attach({
 				loading: '#share-buttons',
 				error: function(data) {
-					app.showmessage('share-message', data.err, 'error');
+					app.showMessageBar('#share-message', data.err, 'error');
 				},
 				success: function(data) {
 					app.Lock.remove();
@@ -105,8 +106,19 @@ var app = app || {};
 					name: that.selected.get('name')
 				});
 			}
-		}
+		},
 		
+	    addAll: function (c, opts) {
+      /*
+        Both ways are OK, but the second can stop those event-listeners,
+        although it's a little slower.
+        */
+      /* this.$('.file-item').remove(); */
+	      opts || (opts = {});
+	      if(opts.previousModels) {
+	        _.each(opts.previousModels, function(m) { m.trigger('remove'); });
+	      }
+	    }
 	});
 	
   app.init || (app.init = {});

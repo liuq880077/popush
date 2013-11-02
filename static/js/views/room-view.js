@@ -73,6 +73,7 @@ app.RoomView = Backbone.View.extend({
 
 	app.socket.emit('leave', {
 	});
+	this.room.stopListen();
     $("body").animate({scrollTop: this.oldscrolltop}); 
 //	refreshfilelist(function(){;}, function(){
 //		$("body").animate({scrollTop: oldscrolltop});
@@ -345,6 +346,7 @@ app.RoomView = Backbone.View.extend({
   },
    
   toChatBox: function(name, type, content, time) {
+  	time = new Date(time);
 	$('#chat-show-inner').append(
 		'<p class="chat-element"><span class="chat-name ' + type +
 		'">' + name + '&nbsp;&nbsp;' + time.toTimeString().substr(0, 8) + '</span><br />' + content + '</p>'

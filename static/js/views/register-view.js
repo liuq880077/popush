@@ -1,91 +1,64 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function ($) {
+(function () {
 	'use strict';
 
-	// The Application
-	// ---------------
-
-	// Our overall **AppView** is the top-level piece of UI.
 	app.RegisterView = Backbone.View.extend({
-
-		// Instead of generating a new element, bind to the existing skeleton of
-		// the App already present in the HTML.
 		el: '#register',
 
-		// Delegated events for creating new items, and clearing completed ones.
 		events: {
 			'keypress #register-inputName': 'registerOnEnter',
 			'keypress #register-inputPassword': 'registerOnEnter',
 			'keypress #register-confirmPassword': 'registerOnEnter',
 			'click #register-submit': 'register',
-			'click #login-view': 'loginview',
-			'click #login-view-2': 'loginview'
 		},
 
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
-		initialize: function () {
-		},
-		
 		register: function () {
-			var name = $('#register-inputName').val();
-			var pass = $('#register-inputPassword').val();
-			var confirm = $('#register-confirmPassword').val();
+			var name = $('#register-inputName').val()
+        , in_pw1 = $('#register-inputPassword')
+        , in_pw2 = $('#register-confirmPassword')
+        ;
+      var pass = in_pw1.val();
+			var confirm = in_pw2.val();
+      in_pw1.val('');
+      in_pw2.val('');
+      
+      var id = '#register-message', str = '';
 			if(!/^[A-Za-z0-9]*$/.test(name)) {
-				app.showmessage('register-message', 'name invalid');
-				return;
-			}
-			if(name.length < 6 || name.length > 20) {
-				app.showmessage('register-message', 'namelength');
-				return;
-			}
-			if(pass.length > 32){
-				app.showmessage('register-message', 'passlength');
-				return;
-			}
-			if(pass != confirm) {
-				app.showmessage('register-message', 'doesntmatch');
-				return;
-			}
-			if(app.registerLock)
-				return;
-			app.registerLock = true;
-			app.loading('#register-control');
-			app.socket.emit('register', {
-				name:name,
-				password:pass,
-				avatar:'images/character.png'
-			});			
+        str = 'name invalid';
+			} else if(name.length < 6 || name.length > 20) {
+				str = 'namelength';
+			} else if(pass.length > 32){
+        str = 'passlength';
+      } else if(pass != confirm) {
+        str = 'doesntmatch';
+      }
+      if(str) {
+        app.showMessageBar(id, str);
+      } else if(app.Lock.attach({
+        loading: '#register-control',
+        error: function() { app.showMessageBar(id, data.err, 'error');},
+        success: function() { app.showMessageBar(id, 'registerok'); },
+      })) {
+        app.socket.emit('register', {
+          name:name,
+          password:pass,
+          avatar: app.User.prototype.defaults.avatar,
+        });
+      }      
 		},
 
 		registerOnEnter: function(e) {
-			if(e.which == 13 && app.loadDone)
-				this.register();
+			if(e.which == 13) { this.register(); }
 		},
-		
-		loginview: function() {
-			if(app.viewswitchLock)
-				return;
-			app.viewswitchLock = true;
-			$('#register .blink').fadeOut('fast');
-			$('#register-message').slideUp();
-			$('#register-padding').fadeOut('fast', function(){
-				$('#login').show();
-				$('#login .blink').fadeIn('fast');
-				$('#register').hide();
-				$('#login-inputName').val('');
-				$('#login-inputPassword').val('');
-				$('#login-message').hide();
-				$('#login-padding').slideUp('fast', function(){
-					$('#login-inputName').focus();
-					app.viewswitchLock = false;
-				});
-				app.resize();
-			});	
-		},
+    
+    show: function() {
+      $('#register-inputName').val('');
+      $('#register-inputPassword').val('');
+      $('#register-confirmPassword').val('');
+      $('#register-message').slideUp();
+      $('#register-inputName').focus();
+    },
 				
 	});
   app.init || (app.init = {});
@@ -95,4 +68,4 @@ var app = app || {};
     app.views['register'] = new app.RegisterView();
   };
 
-})(jQuery);
+})();

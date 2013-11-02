@@ -1,87 +1,52 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function ($) {
-	'use strict';
+(function () {
+  'use strict';
 
-	// The Application
-	// ---------------
+  app.LoginView = Backbone.View.extend({
+    el: '#login',
 
-	// Our overall **AppView** is the top-level piece of UI.
-	app.LoginView = Backbone.View.extend({
-
-		// Instead of generating a new element, bind to the existing skeleton of
-		// the App already present in the HTML.
-		el: '#login',
-
-		// Delegated events for creating new items, and clearing completed ones.
-		events: {
-			'keypress #login-inputName': 'loginOnEnter',
-			'keypress #login-inputPassword': 'loginOnEnter',
-			'click #register-view': 'registerview',
-			'click #login-submit': 'login'
-		},
-		
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
-		initialize: function () {
-		},
-
-		/* 由登陆视图切换到注册视图 */
-		registerview: function() {
-			if(app.viewswitchLock)
-				return;
-			app.viewswitchLock = true;
-			$('#login .blink').fadeOut('fast');
-			$('#login-message').slideUp();
-			$('#login-padding').slideDown('fast', function(){
-				$('#register').show();
-				$('#register .blink').fadeIn('fast');
-				$('#login').hide();
-				$('#register-inputName').val('');
-				$('#register-inputPassword').val('');
-				$('#register-confirmPassword').val('');
-				$('#register-message').hide();
-				$('#register-padding').fadeIn('fast', function(){
-					$('#register-inputName').focus();
-					app.viewswitchLock = false;
-				});
-				app.resize();
-			});
-		},
-		
-		login: function() {
-			var name = $('#login-inputName').val();
-			var pass = $('#login-inputPassword').val();
-			if(name == '') {
-				app.showmessage('login-message', 'pleaseinput', 'error');
-				return;
-			}
-			if(app.loginLock)
-				return;
-			app.loginLock = true;
-			app.loading('#login-control');
-			app.socket.emit('login', {
-				name: name,
-				password: pass,
-			});
-		},
-		
-		loginOnEnter: function(e) {
-			if(e.which == 13 && app.loadDone)
-				this.login();
-		},
-		
-
-	});
+    events: {
+      'keypress #login-inputName': 'loginOnEnter',
+      'keypress #login-inputPassword': 'loginOnEnter',
+      'click #login-submit': 'login'
+    },
+        
+    login: function() {
+      var name = $('#login-inputName').val(), in_pw = $('#login-inputPassword');
+      var pass = in_pw.val();
+      in_pw.val('');
+      if(name == '') {
+        app.showMessageBar('login-message', 'pleaseinput', 'error');
+      } else if(app.Lock.attach({ loading: '#login-control',
+        error: function() { app.showMessageBar('#login-message', data.err, 'error'); },
+      })) {
+        app.socket.emit('login', {
+          name: name,
+          password: pass,
+        });
+      }
+    },
+    
+    loginOnEnter: function(e) {
+      if(e.which == 13) { this.login(); }
+    },
+    
+    show: function() {
+      $('#login-inputName').val('');
+      $('#login-inputPassword').val('');
+      $('#login-message').slideUp();
+      $('#login-padding').slideUp('fast');
+      $('#login-inputName').focus();
+    },
+    
+  });
   app.init || (app.init = {});
 
   app.init.loginView = function() {
-    if(app.views['login']) { return; }
-    app.views['login'] = new app.LoginView();
+    app.views['login'] || (app.views['login'] = new app.LoginView());
   };
   
-})(jQuery);
+})();
 
 

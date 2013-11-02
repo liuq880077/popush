@@ -32,7 +32,7 @@ var app = app || {};
         };
       }
       _fetch.call(this, opts);
-    }
+    },
         
   });
   

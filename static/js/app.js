@@ -4,14 +4,11 @@ var strings = strings || {};
 /* global variables */
 _.defaults(app, {
   socket: io.connect(app.Package.SOCKET_IO),
-  viewswitchLock: false,
-  loginLock: false,
-  registerLock: false,
+  currentUser: null,
+  isLogined: false,
   isShare: false,
   views: {},
   collections: {},
-  currentUser: null,
-  docLock: false,
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
   fileExtReg: /(.*[\/\.])?\s*(\S+$)/,
   router: null,
@@ -20,20 +17,8 @@ _.defaults(app, {
   editor: {},
   noVoice: false,
   inRoom: false,
+  resize: null, // function pointer
 });
-
-/* check if the user has logged in. */
-/* if not, it will go to '#login'. */
-app.loginVerify = function() {
-  if(app.loginLock == false && app.currentUser) {
-    return true;
-  } else {
-    windows.setTimeout(function () {
-      window.location.href = '#login';
-    }, 5);
-    return false;
-  }
-};
 
 app.showMessageBar = function(id, stringid, type){
   var o = $(id);
@@ -41,7 +26,7 @@ app.showMessageBar = function(id, stringid, type){
   if(type && type != 'warning')
     o.addClass('alert-' + type);
   (stringid == null) && (stringid = 'inner error');
-  $('#' + id + ' span').html(strings[stringid] || stringid);
+  $(id + ' span').html(strings[stringid] || stringid);
   o.slideDown();
 };
 
@@ -51,7 +36,7 @@ app.showInputModal = function(modal, val) {
   var i = modal.find('.modal-input').val(val || '');
   modal.modal('show').on('shown', function() {
     var ok = modal.find('.modal-confirm');
-    i.focus().on('keydown', function(e){
+    i.focus().on('keydown', function(e) {
       var k = e.keyCode || e.which;
       if(k == 13) { ok && ok.click(); }
       else if(k == 27) { modal.modal('hide'); }
@@ -81,16 +66,6 @@ app.showMessageInDialog = function (selector, stringid, index) {
   (stringid == null) && (stringid = 'inner error');
   modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
 }
-
-/* 
-app.setCookie = function(c_name, value, expiredays) {
-  $.cookie(c_name, value, {expires: expiredays});
-};
-
-app.getCookie = function(c_name) {
-  return(window.unescape($.cookie(c_name) || ''));
-};
- */
 
 app.resize = function() {
 	var w;
@@ -137,6 +112,18 @@ app.resize = function() {
 */
 };
 
+
+app.Lock.attach({
+  loading: '#login-control',
+  tbegin: 2000,
+  tend: -1,
+  data: 'pageIsLoading',
+  fail: function() {
+    app.failed = true;
+    app.showMessageBar('login-message', 'loadfailed');
+  },
+});
+
 $(document).ready(function() {
   var funcs = app.init;
   for(var i in funcs) {
@@ -146,27 +133,18 @@ $(document).ready(function() {
   }
   delete funcs;
   delete app.init; /* now it's no use to run it again*/
-    
+
   $('body').show();
+ 
+  // if(isOK) {
+    // app.socket.emit('connect', { });
+  // }
   
-  app.resize();
-  $(window).resize(function() {
-    /* app.resize is only a pointer */
-    (typeof app.resize === 'function') && app.resize();
-  });
+  // app.resize();
+  // $(window).resize(function() {
+    // /* app.resize is only a pointer */
+    // (typeof app.resize === 'function') && app.resize();
+  // });
   
-  var isOK = app.Lock.attach() {
-    loading: '#login-control',
-    tbegin: 2000,
-    tend: 5000,
-    data: 'pageIsLoading',
-    fail: function() {
-      app.failed = true;
-      app.showMessageBar('login-message', 'loadfailed');
-    },
-  }
-  if(isOK) {
-    app.socket.emit('connect', { });
-  }
-  app.Lock.detach();
+  // app.Lock.detach();
 });

@@ -1,78 +1,117 @@
 var app = app || {};
 
 (function(){
-  var Router = Backbone.Router.extend({
+  var Page = app.Page = function(opts) {
+    this.shown = false;
+    _.extend(this, opts);
+    return this;
+  };
+  Page.prototype.hide = function() { this.el.fadeOut('fast'); };
+  Page.prototype.show = function() { this.el.fadeIn('fast'); };
+  
+  var PageRouter = Backbone.Router.extend({
     routes: {
-      '': 'login',
-      'login': 'login',
-      'register': 'register',
-      'index/*filepath':'index'
-    },
-
-    login: function () {
-     	if(app.viewswitchLock)
-				return;
-		app.viewswitchLock = true;
-		$('#register .blink').fadeOut('fast');
-		$('#register-message').slideUp();
-		$('#register-padding').fadeOut('fast', function(){
-		$('#login').show();
-		$('#login .blink').fadeIn('fast');
-		$('#register').hide();
-		$('#login-inputName').val('');
-		$('#login-inputPassword').val('');
-		$('#login-message').hide();
-		$('#login-padding').slideUp('fast', function(){
-			$('#login-inputName').focus();
-			app.viewswitchLock = false;
-			});
-		app.resize();
-		});
+      'login': function() { this.analy('login'); },
+      'register': function() { this.analy('register'); },
+      'index/*filepath': function(arg1) { this.analy('index', arg1); },
+      '/*filepath': function(arg1) { this.analy('index', arg1); },
+      'edit/': function(arg1) { this.analy('edit'); },
     },
     
-    register: function() {
-      	if(app.viewswitchLock)
-				return;
-		app.viewswitchLock = true;
-		$('#login .blink').fadeOut('fast');
-		$('#login-message').slideUp();
-		$('#login-padding').slideDown('fast', function(){
-		$('#register').show();
-		$('#register .blink').fadeIn('fast');
-		$('#login').hide();
-		$('#register-inputName').val('');
-		$('#register-inputPassword').val('');
-		$('#register-confirmPassword').val('');
-		$('#register-message').hide();
-		$('#register-padding').fadeIn('fast', function(){
-			$('#register-inputName').focus();
-			app.viewswitchLock = false;
-			});
-		app.resize();
-		});
+    pages: {
+      login: new Page ({ el: '#login', depend: ['_head1', '_footer'], force: true,
+        show: function() { this.el.fadeIn('fast', function() { app.views.login.show(); }); },
+      }),
+      
+      register: new Page ({ el: '#register', depend: ['_head1', '_footer'], force: true,
+        show: function() { this.el.fadeIn('fast', function() { app.views.register.show(); }); },
+      }),
+      
+      index: new Page ({ el: '#filecontrol', depend: ['_head2', '_footer'], logined: true, force: true, // force refresh
+        show: function(arg1) {
+          if(arg1 != '/') {
+            var refresh = function() { app.views.files.go('/'+arg1); };
+            if(this.shown) { refresh(); }
+            else { this.el.fadeIn('fast', refresh); }
+          } else {
+            this.el.fadeIn('fast');
+          }
+        },
+      }),
+      
+      edit: new Page ({ el: '#editor', depend: ['_head2', '_footer'], logined: true, force: true,
+        show: function() { this.el.fadeIn('fast', function() { app.views.room.show(); }); },
+      }),
+      
+      // dependency:
+      _head1: new Page ({ el: '#big-one',
+        // hide: function() { this.animate({height:'40px', padding:'0', 'margin-bottom':'20px'}, 'fast');},
+      }),
+      _head2: new Page ({ el: '#nav-head' }),
+      _footer: new Page ({ el: '#footer' }),
     },
     
-    index: function(filepath){
-      if(app.loginVerify()) {
-    	alert(filepath);
-    	$('#login-message').hide();
-    	$('#big-one').animate({height:'40px', padding:'0', 'margin-bottom':'20px'}, 'fast');
-    	$('#nav-head').fadeIn('fast');
-    	$('#login').hide();
-    	$('#editor').hide();
-    	$('#filecontrol').fadeIn('fast');
-        app.views['files'].go('/'+filepath);
+    analy: function(name) {
+      if(this.routeLock) { return; } else { this.routeLock = true; }
+      
+      var page = this.pages[name];
+      if(page.shown && !(page.force)) { return; }
+      var show = function(page) {
+        if(page.logined && !(app.isLogined)) { return; }
+        if(!(page.shown) || page.force) { page.show(); }
+      };
+      var pages = this.pages, arr1 = [], recurse = function(p1) {
+        arr1.push(p1);
+        var a = pages[p1].depend;
+        if(a) {
+          for(var i = a.length; i--; ) {
+            if(arr1.indexOf(a[i]) == -1) {
+              recurse(a[i]);
+            }
+          }
+        }
+      };
+      recurse(name);
+      
+      var i, j, p;
+      for(i = arr1.length, j = 0; i--; ) {
+        p = pages[arr1[i]];
+        if(p.logined && !(app.isLogined)) { j = -1; break; }
       }
+      if(j === -1) {
+        window.setTimeout(function() { window.location.href = '#login'; }, 10);
+        return;
+      }
+      for(var h in pages) {
+        if(pages[h].shown && (arr1.indexOf(h) == -1)) {
+          pages[h].hide();
+          pages[h].shown = false;
+        }
+      }
+      for(i = arr1.length, j = 0; i--; ) {
+        p = pages[arr1[i]];
+        if(!(p.shown) || p.force) { p.show(arguments[1]); p.shown = true; j = 1; }
+      }
+      if((j === 1) && (typeof app.resize === 'function')) { app.resize(); }
+      this.routeLock = false;
     },
+    
+    initialize: function() {
+      var pages = this.pages, j;
+      for(var i in pages) {
+        j = pages[i];
+        if(j.el) {
+          j.el = $(j.el);
+          j.shown = !(j.el.is('hidden'));
+        }
+      }
+      this.routeLock = false;
+    }
     
   });
   
   app.init.router = function() {
-    if(app.router) { return; }
-    
-    app.router = new Router();
-    Backbone.history.start({
-      root: app.Package.PAGE_ROOT,
-    });
+    if(app.router) { return; } else { app.router = new PageRouter(); }
+    Backbone.history.start({ root: app.Package.ROUTE_ROOT });
   };
 })();

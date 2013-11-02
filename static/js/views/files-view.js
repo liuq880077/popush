@@ -68,7 +68,7 @@ var app = app || {};
     
     afterSync: function(m, d, opts) {
       opts && opts.mode && (this.mode = opts.mode);
-      this.shownUrl = app.File.encode(this.collection.path
+      this.shownPath = app.File.encode(this.collection.path
         , this.mode == app.FilesView.Mode.Shared);
       this.render();
     },
@@ -108,7 +108,7 @@ var app = app || {};
       /* this.render(opts); */
       var els = [], mode = (opts.mode || this.mode),
         isMine = (mode == app.FilesView.Mode.BelongSelf);
-      _.each(this.collection.models, function(model){
+      _.each(this.collection.models, function(model) {
         if(isMine == model.json.belongSelf) {
           if(model.view) {
             model.view.$el.show();
@@ -143,7 +143,7 @@ var app = app || {};
       if(this.collection.length <= 0) { this.$noFile.show(); }
       else { this.$noFile.hide(); }
       
-      var s0 = this.shownUrl, s1 = '', s2 = '', arr = s0.split('/');
+      var s0 = this.shownPath, s1 = '', s2 = '', arr = s0.split('/');
       for(var i = 0, l = arr.length, v; i < l; i++) {
         if(v = arr.shift()) {
           s2 += '/' + v;
@@ -167,11 +167,21 @@ var app = app || {};
   	app.socket.emit('upload', {path:'/asdfasd/hjw.c', type:'doc', text:'#include <stdio.h>\nint main()\n{\nreturn 0;\n}'});
   }
   
+  var downzip = function(event) {
+	var paths = app.collections['files'].path;
+	var modes = (paths.split('/').length != 2);
+  	app.socket.emit('downzip', {path: paths, mode: modes});
+  }
+  
   var newFile = function(event) {
     var that = event.data.context, type = $(event.target).attr('new-type');
     if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
     if (type == 'up') {
     	upload(event);
+    	return;
+    }
+    if (type == 'down') {
+    	downzip(event);
     	return;
     }
     var modal = Backbone.$('#newfile');

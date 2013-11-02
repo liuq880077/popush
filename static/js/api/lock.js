@@ -32,7 +32,7 @@ var app = app || {};
 (function() {
 var _lock = {
   lock: false, el: null, t1: 500, t2: 2000,
-  msg: {}, handle: 0, success: null, fail: null,
+  msg: {}, handle: 0, success: null, error: null, fail: null,
     
   begin: function() {
     var l = _lock;
@@ -46,11 +46,7 @@ var _lock = {
     if(l.lock) {
       app.loading(l.el);
       if(app.Package.ALLOW_MISS) {
-        l.handle = window.setTimeout(function() {
-          var f = l.fail;
-          l.remove();
-          (typeof f === 'function') && f();
-        }, l.t2);
+        l.handle = window.setTimeout(app.Lock.fail, l.t2);
       }
     }
   },
@@ -61,7 +57,7 @@ var _lock = {
     l.lock = false;
     l.handle = 0;
     app.removeLoading(l.el);
-    l.success = l.fail = l.el = null;
+    l.success = l.fail = l.error = l.el = null;
     l.msg = {};
   },
   
@@ -87,39 +83,39 @@ app.Lock = {
       }
     }
     if(timeBegin == undefined) {
-      if(options.tbegin >= 0) { timeBegin = options.tbegin + 0; }
+      if(options.tbegin != null) { timeBegin = options.tbegin + 0; }
       else { timeBegin = 500; }
     }
     if(timeEnd == undefined) {
-      if(options.tend >= 0) { timeEnd = options.tend + 0; }
+      if(options.tbegin != null) { timeEnd = options.tend + 0; }
       else { timeEnd = timeBegin + 2000; }
     }
     if(timeEnd < 0) {
       timeEnd = 2147483647;
     }
-    if(timeBegin < 0 || (timeEnd <= timeBegin)) {
-      return false;
+    if(timeBegin >= 0 && timeEnd > timeBegin) {
+      var l = _lock;
+      if(l.lock)
+        return false; /* necessary */
+      l.lock = true;
+      options || (options = {});
+      l.el = selector;
+      l.t1 = timeBegin;
+      l.t2 = timeEnd - timeBegin;
+      l.success = options.success;
+      l.fail = options.fail;
+      l.error = options.error;
+      l.msg = options.data;
+      return l.begin();
     }
-    
-    var l = _lock;
-    if(l.lock)
-      return false; /* necessary */
-    l.lock = true;
-    options || (options = {});
-    l.el = selector;
-    l.t1 = timeBegin;
-    l.t2 = timeEnd - timeBegin;
-    l.success = options.success;
-    l.fail = options.fail;
-    l.error = options.error;
-    l.msg = options.data;
-    return l.begin();
+    return false;
   },
   
   detach: function(data) {
     var l = _lock, msg = {msg: l.msg};
     app.removeLoading(l.el);
-    if(data && data.err) {
+    (data === undefined) && (data = {});
+    if(data.err) {
       (typeof l.error === 'function') && l.error.call(msg, data);
     } else {
       (typeof l.success === 'function') && l.success.call(msg, data);
@@ -127,10 +123,28 @@ app.Lock = {
     (data.notRemove !== false) && l.stop();
   },
   
+  removeLoading: function() {
+    app.removeLoading(_lock.el);
+  },
+  
   fail: function(data) {
     var l = _lock, msg = {msg: l.msg}, f = l.fail;
     l.stop();
     (typeof f === 'function') && f.call(msg, data);
+  },
+  
+  error: function(data) {
+    var l = _lock, msg = {msg: l.msg}, f = l.error;
+    app.removeLoading(l.el);
+    (typeof f === 'function') && f.call(msg, data);
+    l.stop();
+  },
+  
+  success: function(data) {
+    var l = _lock, msg = {msg: l.msg}, f = l.success;
+    app.removeLoading(l.el);
+    (typeof f === 'function') && f.call(msg, data);
+    l.stop();
   }
 };
 

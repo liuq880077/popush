@@ -1,28 +1,16 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function ($) {
+(function () {
 	'use strict';
-
-	// The Application
-	// ---------------
-
-	// Our overall **AppView** is the top-level piece of UI.
+  
 	app.MemberlistView = Backbone.View.extend({
-
-		// Instead of generating a new element, bind to the existing skeleton of
-		// the App already present in the HTML.
 		el: '#member-list',
 		
 		isdoc: 0,
-
-		// Delegated events for creating new items, and clearing completed ones.
+    
 		events: {
 		},
 
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
 		poptemplate: _.template($('#member-popover-template').html()),
 		
 		initialize: function () {
@@ -30,8 +18,6 @@ var app = app || {};
 			this.listenTo(this.collection, 'reset', this.addAll);
 		},
 
-		// Add a single todo item to the list by creating a view for it, and
-		// appending its element to the `<ul>`.
 		addOne: function (user) {
 			var view = new app.MemberView({ model: user });
 			if (this.isdoc == 1)
@@ -46,7 +32,6 @@ var app = app || {};
 			});
 		},
 
-		// Remove the item, destroy the model from *localStorage* and delete its view.
 		remove: function (name) {
 				this.collection.each(function(model){
 					if (model.get('name') == name) {
@@ -61,7 +46,10 @@ var app = app || {};
 					if (model.get('name')==name)
 					{
 						model.set({online: isonline});
-						$('#avatar-' + name).addClass('online');
+						if (isonline)
+							$('#avatar-' + name).addClass('online');
+						else
+							$('#avatar-' + name).removeClass('online');
 					}
 				});
 		},
@@ -80,9 +68,10 @@ var app = app || {};
         although it's a little slower.
         */
 			/* this.$el.html(''); */
-      _.each(opts.previousModels, function(m) { m.trigger('remove'); });
-      
-			app.collections['members'].each(this.addOne, this);
+		    _.each(opts.previousModels, function(m) { 
+		    	m.trigger('remove'); 
+		    });      
+			this.collection.each(this.addOne, this);
 		},
 
 	});
@@ -94,12 +83,14 @@ var app = app || {};
     app.views['members'] = new app.MemberlistView({
       collection: app.collections['members'],
     });
+  };
+  app.init.cooperatorsView = function() {
     if(app.views['cooperators']) { return; }
-    app.collections['cooperators'] || app.init.members();
+    app.collections['cooperators'] || app.init.cooperators();
     app.views['cooperators'] = new app.MemberlistView({
       collection: app.collections['cooperators'],
       el: '#member-list-doc'
     });
     app.views['cooperators'].isdoc = 1;
   };
-})(jQuery);
+})();
