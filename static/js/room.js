@@ -644,7 +644,7 @@ function run() {
 /* 设置运行时的界面 */
 function setrun() {
 	runLock = true;
-	$('#editor-run').html('<i class="icon-stop"></i>');
+	$('#editor-run').html('<span class="glyphicon glyphicon-stop"></span>');
 	$('#editor-run').attr('title', strings['kill-title']);
 	$('#console-inner').html('');
 	$('#console-input').val('');
@@ -673,7 +673,7 @@ function debug() {
 /* 设置调试的界面 */
 function setdebug() {
 	debugLock = true;
-	$('#editor-debug').html('<i class="icon-eye-close"></i>');
+	$('#editor-debug').html('<span class="glyphicon glyphicon-eye-close"></span>');
 	$('#editor-debug').attr('title', strings['stop-debug-title']);
 	$('#console-inner').html('');
 	$('#console-input').val('');
@@ -863,7 +863,7 @@ socket.on('exit', function(data){
 		appendtochatbox(strings['systemmessage'], 'system', strings['programkilledby'] + '&nbsp;' + data.err.signal, new Date(data.time));
 
 	if(runLock) {
-		$('#editor-run').html('<i class="icon-play"></i>');
+		$('#editor-run').html('<span class="glyphicon glyphicon-play"></span>');
 		$('#editor-run').attr('title', strings['run-title']);
 		runLock = false;
 	}
@@ -881,7 +881,7 @@ socket.on('exit', function(data){
 		if(q.length > 0){
 			socket.emit('change', q[0]);
 		}
-		$('#editor-debug').html('<i class="icon-eye-open"></i>');
+		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></i>');
 		$('#editor-debug').attr('title', strings['debug-title']);
 		runtoline(-1);
 		for(var k in expressionlist.elements) {
@@ -931,7 +931,7 @@ socket.on('set', function(data){
 	bq.length = 0;
 	lock = false;
 
-	$('#editor-run').html('<i class="icon-play"></i>');
+	$('#editor-run').html('<span class="glyphicon glyphicon-play"></span>');
 	$('#editor-run').attr('title', strings['run-title']);
 	runLock = false;
 	debugLock = false;

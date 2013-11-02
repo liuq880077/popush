@@ -25,6 +25,8 @@ app.showMessageBar = function(id, stringid, type){
   o.removeClass('alert-error alert-success alert-info');
   if(type && type != 'warning')
     o.addClass('alert-' + type);
+  else
+    o.addClass('alert-warning');
   (stringid == null) && (stringid = 'inner error');
   $(id + ' span').html(strings[stringid] || stringid);
   o.slideDown();
@@ -72,12 +74,13 @@ app.resize = function() {
 	var h = $(window).height();
 	if(h < 100)
 		h = 100;
+	var cbh = h-$('#member-list-doc').height()-158;
 /*	var cbh = h-$('#member-list-doc').height()-138;
 	var cbhexp = cbh > 100 ? 0 : 100 - cbh;
 	if(cbh < 100)
 		cbh = 100;
 	$('#chat-show').css('height', cbh + 'px');
-	$('#chatbox').css('height', (h-83+cbhexp) + 'px');
+	$('#chatbox').css('height', (h-103+cbhexp) + 'px');
 	w = $('#editormain').parent().width();
 	$('#editormain').css('width', w);
 	var underh = h > 636 ? 212 : h/3;
@@ -104,8 +107,16 @@ app.resize = function() {
 	$('#login-box').css('left', ((w-420)/2-30) + 'px');
 	w = $('#register-box').parent('*').width();
 	$('#register-box').css('left', ((w-420)/2-30) + 'px');
-/*	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
+  var bottomHeight = document.getElementById("footer").clientHeight;
+  $("#login").css("margin-bottom", bottomHeight + 20);
+  $("#register").css("margin-bottom", bottomHeight + 20);
+  $("#filecontrol").css("margin-bottom", bottomHeight + 10);
+ // $('#register').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#register').height()) / 2 - 40) + 'px');
+ // $('#popush-info').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#popush-info').height()) / 2 - 40) + 'px');
+	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
 
+/*	
+  $('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
 	$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
 
 	app.editor.refresh();
@@ -113,18 +124,18 @@ app.resize = function() {
 };
 
 
-app.Lock.attach({
-  loading: '#login-control',
-  tbegin: 2000,
-  tend: -1,
-  data: 'pageIsLoading',
-  fail: function() {
-    app.failed = true;
-    app.showMessageBar('login-message', 'loadfailed');
-  },
-});
-
 $(document).ready(function() {
+  app.Lock.attach({
+    loading: '#login-control',
+    tbegin: 2000,
+    tend: -1,
+    data: 'pageIsLoading',
+    fail: function() {
+      app.failed = true;
+      app.showMessageBar('login-message', 'loadfailed');
+    },
+  });
+
   var funcs = app.init;
   for(var i in funcs) {
     if(funcs.hasOwnProperty(i) && typeof funcs[i] === 'function') {

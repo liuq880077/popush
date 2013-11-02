@@ -16,6 +16,8 @@ app.Room && _.extend(app.Room.prototype, {
       }
     }
     if(!voice.joinedARoom){ return; }
+    voice.joinedARoom = false;
+    $('#voice-on').removeClass('active');
     voice.voiceConnection.myLocalStream.stop();
     voice.voiceConnection.leave();
     delete voice.voiceConnection;
@@ -24,10 +26,10 @@ app.Room && _.extend(app.Room.prototype, {
   openVoice: function() {
     var voice = this.voice;
     if(app.noVoice || voice.voiceLock) { return; }
-    voice.voiceLock = true;
     voice.voiceOn = !voice.voiceOn;
     if(voice.voiceOn) {
       if(voice.joinedARoom) { return; }
+      voice.joinedARoom = true;
       this.view.$('#voice-on').addClass('active');
       try {
   var uName = app.currentUser.name, room = this,

@@ -33,7 +33,6 @@ var app = app || {};
 			this.$('#share-message').hide();
 			app.isShare = false;
 			app.operationLock = false;
-			app.sharemodel = null;
 		},
 
 		addOnEnter: function(e) {

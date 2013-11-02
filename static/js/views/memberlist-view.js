@@ -50,6 +50,13 @@ var app = app || {};
 							$('#avatar-' + name).addClass('online');
 						else
 							$('#avatar-' + name).removeClass('online');
+						var i = $('#avatar-' + name), j = {
+							html: true,
+							content: that.poptemplate(model.toJSON()),
+							placement: 'bottom',
+							trigger: 'hover',
+						};
+						i.popover(j);
 					}
 				});
 		},

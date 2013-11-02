@@ -58,12 +58,17 @@ app.RoomView = Backbone.View.extend({
     'click #debugfinish': 'debugfinish',
     'click #debugcontinue': 'debugcontinue',
     'click #editor-back': 'closeeditor',
+    'click #voice-on': 'voice',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
     },
     'keydown #chat-input': function(e) {
       ((e.keyCode || e.which) == 13) && this.chat();
     },
+  },
+  
+  voice: function() {
+  	this.room.openVoice();
   },
   
   closeeditor: function() {
@@ -75,11 +80,8 @@ app.RoomView = Backbone.View.extend({
 	});
 	this.room.stopListen();
     $("body").animate({scrollTop: this.oldscrolltop}); 
-//	refreshfilelist(function(){;}, function(){
-//		$("body").animate({scrollTop: oldscrolltop});
-//	});
 
-//	leaveVoiceRoom();
+	this.room.leaveVoiceRoom();
   },
   
   debugstep: function() {
@@ -117,13 +119,13 @@ app.RoomView = Backbone.View.extend({
 		$('#editormain').parent().removeClass('span12');
 		$('#editormain').parent().addClass('span9');
 		$('#chatbox').show();
-		$('#toggle-chat').html('<i class="icon-forward"></i>');
+		$('#toggle-chat').html('<span class="glyphicon glyphicon-forward"></span>');
 		$('#toggle-chat').attr('title', strings['hide-title']);
 	} else {
 		$('#chatbox').hide();
 		$('#editormain').parent().removeClass('span9');
 		$('#editormain').parent().addClass('span12');
-		$('#toggle-chat').html('<i class="icon-backward"></i>');
+		$('#toggle-chat').html('<span class="glyphicon glyphicon-backward"></span>');
 		$('#toggle-chat').attr('title', strings['show-title']);
 	}
 	var o = $('#chat-show').get(0);
@@ -164,37 +166,11 @@ app.RoomView = Backbone.View.extend({
   },
   
   run: function() {
-  	if(!this.room.runEnabled())
-		return;
-	if(this.room.operationLock)
-		return;
-	this.room.operationLock = true;
-	if(this.room.runLock) {
-		this.room.socket('kill');
-	} else {
-		var that = this;
-		this.room.socket('run', {
-			version: that.room.docData.version,
-			type: that.room.ext
-		});
-	}
+  	 this.room.run();
   },
   
   debug: function() {
-	if(!this.room.debugEnabled())
-		return;
-	if(this.room.operationLock)
-		return;
-	this.room.operationLock = true;
-	if(this.room.debugLock) {
-		this.room.socket('kill');
-	} else {
-		var that = this;
-		this.room.socket('debug', {
-			version: that.room.docData.version,
-			type: that.room.ext
-		});
-	}  
+  	 this.room.debug();
   },
   
   setShownName: function() {
@@ -213,7 +189,7 @@ app.RoomView = Backbone.View.extend({
   },
     
   exit: function() {
-//    this.leaveVoiceRoom();
+    this.room.leaveVoiceRoom();
     $("body").animate({scrollTop: this.oldscrolltop});
     this.stopListening();
   },
@@ -266,7 +242,7 @@ app.RoomView = Backbone.View.extend({
     this.$conBox.html('');
     this.$conIn.val('');
     this.$btnRun.attr('title', strings['kill-title'] || 'kill'
-      )[0].childNodes[0].className = 'icon-stop';
+      )[0].childNodes[0].className = 'glyphicon glyphicon-stop';
     this.$btnDebug.addClass('disabled');
     this.$conTitle.text(strings['console'] || 'console');
     this.setConsole(true);
@@ -278,7 +254,7 @@ app.RoomView = Backbone.View.extend({
     this.$conBox.html('');
     this.$conIn.val('');
     this.$btnDebug.attr('title', strings['stop-debug-title'] || 'stop debug'
-      )[0].childNodes[0].className = 'icon-eye-close';
+      )[0].childNodes[0].className = 'glyphicon glyphicon-eye-close';
     this.$btnRun.addClass('disabled');
     this.$conTitle.text(strings['console']);
     this.setConsole(true);
@@ -410,14 +386,7 @@ app.RoomView = Backbone.View.extend({
     });
     return cur[0];
   },
-  
-  
-  
-  stopVoice: function() {
-    /* TODO: add other commands */
-    this.$('#voice-on').removeClass('active');
-  },
-  
+    
   isFullScreen: function(cm) {
 	return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);    
   },
@@ -462,6 +431,19 @@ app.RoomView = Backbone.View.extend({
     o.$mainBox.css('left', ( -$(window).scrollLeft() ) + 'px');
 
     this.editor.refresh();
+  },
+  
+  changelanguage : function(language) {
+	if(app.languageMap[language]) {
+		if(app.modeMap[language])
+			this.editor.setOption('mode', app.modeMap[language]);
+		else
+			this.editor.setOption('mode', this.languageMap[language]);
+		CodeMirror.autoLoadMode(this.editor, app.languageMap[language]);
+	} else {
+		this.editor.setOption('mode', 'text/plain');
+		CodeMirror.autoLoadMode(this.editor, '');
+	}
   },
   
   

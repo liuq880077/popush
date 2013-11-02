@@ -11,7 +11,7 @@
   <script type="text/javascript" src="js/lib/jquery.cookie.js"></script>
   <script type="text/javascript" src="js/lib/socket.io.js"></script>
   <script type="text/javascript" src="js/lib/firebase.js"></script>
-  <!-- <script type="text/javascript" src="js/lib/newMultiConnection.js"></script> -->
+  <script type="text/javascript" src="js/lib/newMultiConnection.js"></script>
   <script type="text/javascript" src="js/lib/bootstrap.js"></script>
   <script type="text/javascript" src="js/lib/underscore.js"></script>
   <script type="text/javascript" src="js/lib/backbone.js"></script>
@@ -27,120 +27,136 @@
     <div class="container">
       <div class="row">
         <h1>Popush</h1>
-        <p class="lead" localization>only-platform</p>
+			<!--	<p class="lead" localization>only-platform</p> -->
       </div>
     </div>
   </div>
 
-  <div class="navbar navbar-fixed-top hide" id="nav-head">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto; padding: 0 20px;">
-        <a class="brand" href="#">Popush</a>
-        <ul class="nav pull-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <span id="nav-user-name">Your Name</span>
-            <img height="32" width="32" src="#" id="nav-avatar" />
-            </a>
-            <ul class="dropdown-menu">
-							<li><a id="btn_changepassword" data-toggle="modal" localization>changepassword</a></li>
-							<li><a id="btn_changeavatar" data-toggle="modal"  localization>changeavatar</a></li>
-              <li class="divider"></li>
-              <li><a href="#" onclick="logout()" localization>logout</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <div class="navbar navbar-default navbar-fixed-top hide" id="nav-head">
+		<div class="container" style="max-width:inherit; width:auto; padding: 0 20px;">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#" style="font-size:22px">Popush</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<span id="nav-user-name">Your Name</span>
+					<img height="32" width="32" src="#" id="nav-avatar" />
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#changepassword" data-toggle="modal" localization>changepassword</a></li>
+						<li><a href="#changeavatar" data-toggle="modal" localization>changeavatar</a></li>
+						<li class="divider"></li>
+						<li><a href="javascript:;" localization>logout</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
   
   <div class="container-fluid">
-    <div class="container">
-      <div class="row-fluid" id="login">
+    <div class="container row">
+			<div class="col-md-6">
+				<div id="login">
         <div class="span4 offset4">
           <h2 style="text-align:center" class="blink" localization>login</h2>
           <div class="alert hide" id="login-message">
-            <button type="button" class="close" onclick="$('#login-message').slideUp('fast')">&times;</button>
+							<button type="button" class="close">&times;</button>
             <span>Nothing here</span>
           </div>
           <hr />
-          <div id="login-box" class="form-horizontal" style="min-width:420px;position:relative;">
-            <div class="control-group">
-              <label class="control-label" for="login-inputName" localization>username</label>
-              <div class="controls">
-                <input type="text" id="login-inputName"/>
+						<div id="login-box" class="form-horizontal">
+							<div class="form-group">
+								<label class="control-label col-sm-3" for="login-inputName" localization>username</label>
+								<div class="controls col-sm-7">
+									<input type="text" class="form-control" id="login-inputName"/>
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="login-inputPassword" localization>password</label>
-              <div class="controls">
-                <input type="password" id="login-inputPassword"/>
+							<div class="form-group">
+								<label class="control-label col-sm-3" for="login-inputPassword" localization>password</label>
+								<div class="controls col-sm-7">
+									<input type="password" class="form-control" id="login-inputPassword"/>
               </div>
             </div>
             <div class="control-group hide" id="login-padding">
               <label class="control-label">&nbsp;</label>
             </div>
-            <div class="control-group">
-              <div class="controls" id="login-control">
-                <button id="login-submit" type="submit" class="btn" localization>login</button>
-                <a id="register-go" class="switch-rel" href="#register" localization>register</a>
+							<div class="form-group">
+								<p align="center" id="loading-init" style="margin:1px 0 2px 0"><img src="images/init.gif"/></p>
+								<div class="controls col-sm-offset-3 col-sm-7" id="login-control">
+									<button id="login-submit" type="submit" class="btn btn-primary" localization>login</button>
+                <a class="switch-rel" href="#register" localization>register</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     
-      <div class="row-fluid hide" id="register">
+				<div class="hide" id="register" class="col-md-4">
         <div class="span4 offset4">
           <h2 style="text-align:center" class="blink" localization>register</h2>
           <div class="alert hide" id="register-message">
-            <button type="button" class="close" onclick="$('#register-message').slideUp('fast')">&times;</button>
+            <button type="button" class="close">&times;</button>
             <span>Nothing here</span>
           </div>
           <hr />
-          <div id="register-box" class="form-horizontal" style="min-width:420px;position:relative;">
-            <div class="control-group">
-              <label class="control-label" for="register-inputName" localization>username</label>
-              <div class="controls">
+						<div id="register-box" class="form-horizontal">
+							<div class="form-group">
+								<label class="control-label col-sm-3" for="register-inputName" localization>username</label>
+								<div class="controls col-sm-7">
                 <a id="tooltip" href="#" data-toggle="tooltip" title="only-contain" localization>
-                <input type="text" id="register-inputName"/>
+									<input type="text" class="form-control" id="register-inputName"/>
                 </a>
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="register-inputPassword" localization>password</label>
-              <div class="controls">
-                <input type="password" id="register-inputPassword"/>
+							<div class="form-group">
+								<label class="control-label col-sm-3" for="register-inputPassword" localization>password</label>
+								<div class="controls col-sm-7">
+									<input type="password" class="form-control" id="register-inputPassword"/>
               </div>
             </div>
-            <div class="control-group" id="register-padding">
-              <label class="control-label" for="register-inputPassword" localization>confirm</label>
-              <div class="controls">
-                <input type="password" id="register-confirmPassword"/>
+							<div class="form-group hide" id="register-padding">
+								<label class="control-label  col-sm-3" for="register-inputPassword" localization>confirm</label>
+								<div class="controls col-sm-7">
+									<input type="password" class="form-control" id="register-confirmPassword"/>
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls" id="register-control">
-                <button id="register-submit" type="submit" class="btn" localization>register</button>
-                <a id="login-go" class="switch-rel" href="#login" localization>login</a>
+							<div class="form-group">
+								<div class="controls col-sm-offset-3 col-sm-7" id="register-control">
+									<button id="register-submit" type="submit" class="btn btn-primary" localization>register</button>
+                <a class="switch-rel" href="#login" localization>login</a>
               </div>
             </div>
           </div>
         </div>
+				</div>
+			</div>
+			
+			<div class="col-md-6">
+				<div class="flowinfo" id="popush-info">
+        <ul>
+          <li class="flowtext">PARALLEL</li>
+          <li class="flowtext">ORGANIZED</li>
+          <li class="flowtext">PLEASURE</li>
+          <li style="color:#4f96e5">POPUSH CoCoding Platform</li>
+          <li class="flowtext">UNIFORM</li>
+          <li class="flowtext">SATISFIED</li>
+          <li class="flowtext">HAPPY CODING</li>
+        </ul>
       </div>
     </div>
     <div class="main-body">
       <div id="filecontrol" class="hide">
-        <div class="row-fluid">
-          <div class="span12">
+				<div class="row">
+					<div class="col-md-12">
             <ul class="nav nav-tabs">
               <li class="dropdown" id="ownedfile">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span localization>owningfiles</span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#" data-toggle="modal" new-type="doc" localization>newfile</a></li>
                   <li><a href="#" data-toggle="modal" new-type="dir" localization>newfolder</a></li>
-                  <li><a href="#" id='upload' new-type="up" localization>upload</a></li>
-                  <li><a href="#" id='downzip' new-type='down' localization>downzip</a></li>
+									<li><a href="#" new-type="down" localization>downzip</a></li>
+									<li><a href="#" new-type="up" localization>upload</a></li>
                   <!--<li class="divider"></li>
                   <li><a href="#" localization>import</a></li>-->
                 </ul>
@@ -151,9 +167,13 @@
           </div>
         </div>
         
-        <div class="row-fluid" id="file-list">
-          <div class="span10">
-            <p><span localization>currentdir:</span>&nbsp;<span id="current-dir"></span></p>
+				<div class="row" id="file-list">
+					<div class="col-md-10">
+						<p>
+							<span localization>currentdir:</span>&nbsp;<span id="current-dir"></span>
+							<img src="images/newfile.png" width="28"/>
+							<img src="images/newfolder.png" width="35">
+						</p>
             <table class="table table-hover" id="file-list-table">
               <tr class="head">
                 <th class="col1">&nbsp;</th>
@@ -194,8 +214,8 @@
         </div>
       </div>
     
-      <div id="editor" class="row-fluid hide">
-        <div class="span9">
+      <div id="editor" class="row hide">
+        <div class="col-md-9">
           <div class="tooltip top in" id="fullscreentip">
             <div class="tooltip-inner" localization>esctoexit</div>
           </div>
@@ -203,16 +223,16 @@
             <div id="editormain-inner">
               <div id="over-editor" class="btn-toolbar" style="margin:0 0 5px 0;">
                 <div class="btn-group pull-right">
-                  <button class="btn" type="button" id="editor-full" title="maximum-title"><i class="icon-fullscreen"></i></button>
-                  <button class="btn" type="button" id="toggle-chat" title="hide-title"><i class="icon-forward"></i></button>
+                  <button class="btn btn-white" type="button" title="maximum-title" id="editor-full"><span class="glyphicon glyphicon-fullscreen"></span></button>
+                  <button class="btn btn-white" type="button" title="hide-title" id="toggle-chat"><span class="glyphicon glyphicon-forward"></span></button>
                 </div>
                 <div class="btn-group pull-right" style="margin:0 15px 5px 0;">
-                  <button class="btn" type="button" id="editor-run" title="run-title"><i class="icon-play"></i></button>
-                  <button class="btn" type="button" id="editor-debug" title="debug-title"><i class="icon-eye-open"></i></button>
-                  <button class="btn" type="button" id="editor-console" title="console"><i class="icon-share"></i></button>
+                  <button class="btn btn-white disabled" type="button" id="editor-run" title="run-title"><span class="glyphicon glyphicon-play"></span></button>
+                  <button class="btn btn-white disabled" type="button" id="editor-debug" title="debug-title"><span class="glyphicon glyphicon-eye-open"></span></button>
+                  <button class="btn btn-white" type="button" id="editor-console" title="console"><span class="glyphicon glyphicon-share"></span></button>
                 </div>
                 <div class="btn-group pull-left" style="margin-left:0">
-                  <button class="btn" type="button" id="editor-back"><i class="icon-home"></i></button>
+                  <button class="btn btn-white" type="button" id="editor-back"><span class="glyphicon glyphicon-home"></span></button>
                 </div>
                 <div class="btn-group" id="current-doc-outer">
                   <p id="current-doc-p">
@@ -235,16 +255,16 @@
                   <div class="well well-top">
                     <div class="btn-group">
                       <button class="btn disabled debugandwait" type="button" title="step-title" id="debug-step">
-                        <i class="icon-arrow-down"></i>
+                        <span class="glyphicon glyphicon-arrow-down"></span>
                       </button>
                       <button class="btn disabled debugandwait" type="button" title="next-title" id="debug-next">
-                        <i class="icon-arrow-right"></i>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
                       </button>
                       <button class="btn disabled debugandwait" type="button" title="finish-title" id="debug-finish">
-                        <i class="icon-share-alt"></i>
+                        <span class="glyphicon glyphicon-share-alt"></span>
                       </button>
                       <button class="btn disabled debugandwait" type="button" title="continue-title" id="debug-continue">
-                        <i class="icon-play"></i>
+                        <span class="glyphicon glyphicon-play"></span>
                       </button>
                     </div>
                   </div>
@@ -257,7 +277,7 @@
             </div>
           </div>
         </div>
-        <div class="span3" id="chatbox">
+        <div class="col-md-3" id="chatbox">
           <div id="member-list-doc">
 <!--            <img src="images/character.png" width="40" height="40" class="pull-left shared-character" />-->
           </div>
@@ -269,36 +289,31 @@
 </span><br /><%=_.escape(d.c)%></p></script>
             </div>
           </div>
-          <div class="input-append" style="margin-bottom:0">
-            <input type="text" id="chat-input">
-            <button class="btn" type="button" id="chat-send" title="send"><i class="icon-comment"></i></button>
-            <button class="btn active" type="button" id="voice-on" onclick="voice()" title="voice"><i class="icon-volume-up"></i></button>
-          </div>
+          <div class="input-group" style="margin-bottom:0">
+            <input type="text" id="chat-input" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-white" type="button" title="send" id="chat-send"><span class="glyphicon glyphicon-comment"></span></button>
+              <button class="btn btn-white active" type="button" id="voice-on" title="voice"><span class="glyphicon glyphicon-volume-up"></span></button>
+            </span>
         </div>
       </div>
     </div>
-    <div id="footer" class="row-fluid">
-      <div class="span11" id="language-panel"><script type="text/template" id="lang-btn-template">
-<button lang="<%=o.key%>" class="change-language btn btn-link" type="button"><%=o.name%></button></script>
       </div>
 
-      <div class="span11">
-        <p style="text-align:right" localization>popushteam</p>
-        <p> &nbsp; </p>
-      </div>
-    </div>
     
     <!-- popover -->
     <div id="newfile" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newfile-label" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="newfile-label" localization>newfile</h3>
       </div>
       <div class="modal-body form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="newfile-input" localization>name</label>
-          <div class="controls">
-            <input class="modal-input" type="text" id="newfile-input" />
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="newfile-input" localization>name</label>
+              <div class="col-sm-7">
+                <input class="modal-input form-control" type="text" id="newfile-input" />
             <span class="help-inline"></span>
           </div>
         </div>
@@ -310,10 +325,14 @@
         </div>
       </div>
     </div>
+      </div> 
+    </div>
 
     
     <!-- popover -->
     <div id="changeavatar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="changeavatarLabel" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="changeavatarLabel" localization>changeavatar</h3>
@@ -328,53 +347,61 @@
           <img id="changeavatar-img" src="#" width="192" height="192" onclick="$('#changeavatar-input').click()" style="cursor:pointer;"/>
         </p>
         <div style="overflow:hidden;height:0;max-height:0;">
-          <input type="file" name="upload" id="changeavatar-input" onchange="changeavatar(this)" accept="image/png,image/jpeg"/>
+              <input type="file" name="upload" id="changeavatar-input" accept="image/png,image/jpeg"/>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true" localization>back</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- popover -->
     <div id="changepassword" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="changepasswordLabel" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="changepasswordLabel" localization>changepassword</h3>
       </div>
       <div class="modal-body form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="changepassword-old" localization>oldpassword</label>
-          <div class="controls">
-						<input class="modal-input" type="password" id="changepassword-old"  />
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="changepassword-old" localization>oldpassword</label>
+              <div class="col-sm-7">
+                <input type="password" class="form-control" id="changepassword-old"/>
+              </div>
             <span class="help-inline"></span>
           </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="changepassword-old" localization>newpassword</label>
-          <div class="controls">
-						<input type="password" id="changepassword-new"  />
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="changepassword-old" localization>newpassword</label>
+              <div class="col-sm-7">
+                <input type="password" class="form-control" id="changepassword-new"/>
+              </div>
             <span class="help-inline"></span>
           </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="changepassword-old" localization>confirm</label>
-          <div class="controls">
-						<input type="password" id="changepassword-confirm"  />
-            <span class="help-inline"></span>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="changepassword-old" localization>confirm</label>
+              <div class="col-sm-7">
+                <input type="password" class="form-control" id="changepassword-confirm"/>
           </div>
+              <span class="help-inline"></span>
         </div>
       </div>
       <div class="modal-footer">
         <div id="changepassword-buttons">
-					<button class="btn modal-confirm"  localization>ok</button>
+              <button class="btn btn-primary modal-confirm" localization>ok</button>
           <button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- popover -->
     <div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="delete-label" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="delete-label" localization>deleteconfirm</h3>
@@ -389,18 +416,22 @@
         </div>
       </div>
     </div>
+      </div>
+    </div>
 
     <!-- popover -->
     <div id="rename" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="rename-label" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="rename-label" localization>rename</h3>
       </div>
       <div class="modal-body form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="rename-input" localization>newname</label>
-          <div class="controls">
-            <input class="modal-input" type="text" id="rename-input" />
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="rename-input" localization>newname</label>
+              <div class="col-sm-7">
+                <input class="form-control modal-input" type="text" id="rename-input" />
             <span class="help-inline"></span>
           </div>
         </div>
@@ -412,9 +443,13 @@
         </div>
       </div>
     </div>
+      </div>
+    </div>
 
     <!-- popover -->
     <div id="share" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="shareLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="shareLabel" localization>sharemanage</h3>
@@ -438,13 +473,17 @@
       </div>
       <div class="modal-footer">
         <div id="share-buttons">
-          <button class="btn" data-dismiss="modal" aria-hidden="true" localization>back</button>
+              <button type="button" class="close btn" data-dismiss="modal" aria-hidden="true" localization>back</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- popover -->
     <div id="messagedialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="messagedialogLabel" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="messagedialogLabel">title</h3>
@@ -456,11 +495,24 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true" localization>ok</button>
       </div>
     </div>
-
+      </div>
+    </div>
+  </div>
+  <a href="" download="" id="downloada" onclick=""></a>
+  <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container" style="max-width:inherit; width:auto; padding: 0 20px;">
+      <div class="navbar-header" id="language-panel"><script type="text/template" id="lang-btn-template">
+<a lang="<%=o.key%>" class="change-language btn btn-link" type="button"><%=o.name%></a></script>
+      </div>
+      <div class="nav navbar-nav navbar-right" style="padding:10px">
+        <p style="text-align:right" localization>popushteam</p>
+        <p> &nbsp; </p>
+      </div>
+    </div>  
   </div>
   <!--templates-->
   <script type="text/template" id="member-popover-template">
-    <img class="pull-left popover-character user-<%= name %>" src="<%= avatar %>" witdh="48" height=48"/>
+    <img class="pull-left popover-character user-<%= name %>" src="<%= avatar %>" witdh="48" height="48"/>
     <b><%= name %></b><br/>
     <span><div style="clear:both;"></div>
   </script>
@@ -511,6 +563,12 @@
   <script type="text/javascript" src="js/views/room-view.js"></script>
   <script type="text/javascript" src="js/views/expression-view.js"></script>
   <script type="text/javascript" src="js/views/expressionlist-view.js"></script>
+  <script type="text/javascript" src="js/room/data.js"></script>
+  <script type="text/javascript" src="js/room/break.js"></script>
+  <script type="text/javascript" src="js/room/chat.js"></script>
+  <script type="text/javascript" src="js/room/editor.js"></script>
+  <script type="text/javascript" src="js/room/run.js"></script>
+  <script type="text/javascript" src="js/room/voice.js"></script>
   <script type="text/javascript" src="js/room/room.js"></script>
   <script type="text/javascript" src="js/router.js"></script>
 </body>

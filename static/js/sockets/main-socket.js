@@ -89,7 +89,13 @@ var onDownzip = function(data) {
 		}
 	}
 	var content = paths[root].generate();
-	location.href = "data:application/zip;base64," + content;
+	$('#downloada').attr('href', "data:application/zip;base64," + content);
+	var names = root.split('/');
+	$('#downloada').attr('download', names[names.length - 1] + '.zip');
+	
+	var evt = document.createEvent("MouseEvents");
+	evt.initEvent("click", true, true);
+	document.getElementById('downloada').dispatchEvent(evt);
 };
 
 app.init || (app.init = {});

@@ -1,15 +1,14 @@
-/* need Backbone, _, app */
 var app = app || {};
 
 (function () {
-
 	app.AccountView = Backbone.View.extend({
-	
 		el:'#nav-head',
+
 		events:{
 			'click #btn_changepassword':'changepasswordopen',
 			'click #btn_changeavatar':'changeavatar'
 		},
+
 		initialize:function(){
 			this.template =  _.template($('#nav-head').html()),
 			this.listenTo(this.model, 'change', this.render);
@@ -19,6 +18,7 @@ var app = app || {};
 			$('#changepassword-new').bind('keydown',function(){app.pressenter(arguments[0],that.changepassword)});
 			$('#changepassword-confirm').bind('keydown',function(){app.pressenter(arguments[0],that.changepassword)});
 		},
+
 		changepassword:function(){
 			if(app.operationLock)
           				return;

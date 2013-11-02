@@ -66,6 +66,7 @@ app.File.prototype.sync = function(method, model, options) {
       
       if(typeof success == 'function') { success(data.doc.docs || data.doc); }
       app.collections['members'][method](a);
+      app.collections['cooperators'][method](a);
     }
   };
   

@@ -120,7 +120,7 @@ var app = app || {};
     },
     
     download: function() {
-    	if (this.model.get('path') == 'doc')
+    	if (this.model.get('type') == 'doc')
 	    	app.socket.emit('download', {path: this.model.get('path')});
 	    else
 	    	app.socket.emit('downzip', {path: this.model.get('path'), mode: 1});
