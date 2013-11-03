@@ -7,7 +7,7 @@ var app = app || {};
     _.extend(this, opts);
     return this;
   };
-  Page.prototype.hide = function() { this.el.fadeOut('fast'); };
+  Page.prototype.hide = function() { this.el.hide(); };
   Page.prototype.show = function() { this.el.fadeIn('fast'); };
   
   var PageRouter = Backbone.Router.extend({
@@ -33,7 +33,7 @@ var app = app || {};
         },
         hide: function() {
           this.el.find('#login-padding').slideDown();
-          this.el.fadeOut('fast');
+          this.el.hide();
         },
       }),
 
@@ -49,7 +49,7 @@ var app = app || {};
         },
         hide: function() {
           this.el.find('#register-padding').slideUp();
-          this.el.fadeOut('fast');
+          this.el.hide();
         },
       }),
 
@@ -65,8 +65,7 @@ var app = app || {};
             };
             if (this.shown) {
               refresh();
-            }
-             else {
+            } else {
               this.el.fadeIn('fast', refresh);
             }
           } else {
@@ -74,7 +73,7 @@ var app = app || {};
           }
         },
       }),
-
+      
       edit: new Page({
         el: '#editor',
         depend: ['_head2'],
@@ -84,8 +83,8 @@ var app = app || {};
         },
         hide: function() {
           app.views.room.closeeditor();
-          this.el.fadeOut('fast');
-        }
+          this.el.hide();
+        },
       }),
       
       // dependency

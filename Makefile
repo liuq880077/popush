@@ -30,8 +30,7 @@ npm:
 	@npm install
 
 static:
-	@echo ">  make static"
-	# @cd $(STATIC_DIR) && make static 1>/dev/null 
+	@echo ">  do not make static"
 
 conf:
 	@echo ">  configure"

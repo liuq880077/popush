@@ -1,38 +1,39 @@
 var app = app || {};
 
+/* 房间控制器数据 */
 (function() {
 var Room = function() {
-  _.extend(this, {
-    runLock: false,
-    debugLock: false,
-    operationLock: false,
-    waiting: false,
-	chatstate: false,
-    runable: true,
-    debugable: false,
-    cursors: {},
-    docModel: null,
-    lock: false,
-    docData: null,
-    q: [],
-    timer: null,
-    ext: '',
-    bq: [],
-    bps: '',
-    consoleOpened: false,
-    old_text: '',
-    old_bps: null,
+	_.extend(this, {
+    	runLock: false,
+    	debugLock: false,
+	    operationLock: false,
+	    waiting: false,
+		chatstate: false,
+    	runable: true,
+    	debugable: false,
+    	cursors: {},
+    	docModel: null,
+    	lock: false,
+    	docData: null,
+    	q: [],
+    	timer: null,
+    	ext: '',
+    	bq: [],
+    	bps: '',
+    	consoleOpened: false,
+    	old_text: '',
+    	old_bps: null,
     
-    timestamp: 0,
-    isSaving: false,
-    saveTimeout: 500,
-    buffertimeout: app.Package.SAVE_TIME_OUT,
-    buffertext: "",
-	bufferfrom: -1,
-	bufferto: -1,
+    	timestamp: 0,
+    	isSaving: false,
+    	saveTimeout: 500,
+    	buffertimeout: app.Package.SAVE_TIME_OUT,
+    	buffertext: "",
+		bufferfrom: -1,
+		bufferto: -1,
 
-  }, Room.prototype);
-  return this;
+	}, Room.prototype);
+	return this;
 };
 
 /**
@@ -43,18 +44,18 @@ var Room = function() {
   return a new string with 'length' 'ch's, such as 100 '0's.
   */
 app.stringFill = function (ch, length) {
-  for(var a = length, r = [], s = ch; a; s += s) {
-    if (a % 2) { 
-    	r.push(s);
-    	a = (a-1) / 2; 
-    }
-    else {
-    	r.push(s); 
-    	a = a / 2;
-    }
-  }
-  delete s;
-  return r.join('');
+	for(var a = length, r = [], s = ch; a; s += s) {
+		if (a % 2) { 
+			r.push(s);
+			a = (a-1) / 2; 
+		}
+		else {
+			r.push(s); 
+			a = a / 2;
+		}
+	}
+	delete s;
+	return r.join('');
 };
 
 

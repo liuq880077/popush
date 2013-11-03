@@ -1,85 +1,92 @@
 var app = app || {};
 
+/* 房间编辑器控制器 */
 app.Room && _.extend(app.Room.prototype, {
 
-  /* TODO: cursors */
-  setCursor: function(name, el) {
-    var c = this.cursors;
-    if(!name || !c) { return; }
-    if(c[name] && c[name].element) {
-      $(c[name].element).remove();
-    }
-    if(el) { c[name] = el; }
-    else { delete c[name]; }
-  },
+	//设置光标
+	setCursor: function(name, el) {
+    	var c = this.cursors;
+    	if(!name || !c) { return; }
+    	if(c[name] && c[name].element) {
+    	    $(c[name].element).remove();
+    	}
+    	if(el) { 
+    		c[name] = el; 
+    	}
+    	else { 
+    		delete c[name]; 
+    	}
+  	},	
   
-  sendBuffer: function() {
-  	if (this.bufferfrom != -1) {
-		if (this.bufferto == -1){
-			var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferfrom, text:this.buffertext};
-			if(this.q.length == 0){
-				this.socket('change', req);
+  	//发送更改文本
+	sendBuffer: function() {
+		if (this.bufferfrom != -1) {
+			if (this.bufferto == -1){
+				var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferfrom, text:this.buffertext};
+				if(this.q.length == 0){
+					this.socket('change', req);
+				}
+				this.push(req);
+				this.buffertext = "";
+				this.bufferfrom = -1;
 			}
-			this.push(req);
-			this.buffertext = "";
-			this.bufferfrom = -1;
-		}
-		else {
-			var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferto, text:this.buffertext};
-			if(this.q.length == 0){
-				this.socket('change', req);
+			else {
+				var req = {version:this.docData.version, from:this.bufferfrom, to:this.bufferto, text:this.buffertext};
+				if(this.q.length == 0){
+					this.socket('change', req);
+				}
+				this.push(req);
+				this.bufferfrom = -1;
+				this.bufferto = -1;
 			}
-			this.push(req);
-			this.bufferfrom = -1;
-			this.bufferto = -1;
-		}
-		this.buffertimeout = app.Package.SAVE_TIME_OUT;
-	}
-  },
+			this.buffertimeout = app.Package.SAVE_TIME_OUT;
+		}	
+ 	},	
   
-  newCursor: function(content) {
-	var cursor = $(
-		'<div class="cursor">' +
-			'<div class="cursor-not-so-inner">' +
-				'<div class="cursor-inner">' +
-					'<div class="cursor-inner-inner">' +
+  	//新建光标
+	newCursor: function(content) {
+		var cursor = $(
+			'<div class="cursor">' +
+				'<div class="cursor-not-so-inner">' +
+					'<div class="cursor-inner">' +
+						'<div class="cursor-inner-inner">' +
+						'</div>' +
 					'</div>' +
 				'</div>' +
-			'</div>' +
-		'</div>'
+			'</div>'
 		).get(0);
-	$(cursor).find('.cursor-inner').popover({
-		html: true,
-		content: '<b>' + content + '</b>',
-		placement: 'bottom',
-		trigger: 'hover'
-	});
-	return cursor;
-  },
+		$(cursor).find('.cursor-inner').popover({
+			html: true,
+			content: '<b>' + content + '</b>',
+			placement: 'bottom',
+			trigger: 'hover'
+		});
+		return cursor;
+  	},
   
-  /* TODO: */
-  saveEvent: function(cm) {
-    if(this.timestamp != 0) { this.view.setSaved2(this.timestamp); }
-    this.timestamp = 0;
-  },
-  
-  save: function(){
-	this.view.setSaving();
-	if (this.timer != null){
-		clearTimeout(this.timer);
-	}
-	var that = this;
-	this.timer = setTimeout(function() {
-		that.sendBuffer();
-	}, this.buffertimeout);
-  },
+	//保存事件处理
+	saveEvent: function(cm) {
+    	if(this.timestamp != 0) { this.view.setSaved2(this.timestamp); }
+    	this.timestamp = 0;
+  	},	
+  	
+  	//保存事件
+	save: function(){
+		this.view.setSaving();
+		if (this.timer != null){
+			clearTimeout(this.timer);
+		}
+		var that = this;
+		this.timer = setTimeout(function() {
+			that.sendBuffer();
+		}, this.buffertimeout);
+	},
 
-  registereditorevent: function() {
-	var editor = this.view.editor;
-	var room = this;
-	CodeMirror.on(editor.getDoc(), 'change', function(editorDoc, chg){
-
-		//console.log(chg);
+	//初始化编辑器事件
+	registereditorevent: function() {
+		var editor = this.view.editor;
+		var room = this;
+		CodeMirror.on(editor.getDoc(), 'change', function(editorDoc, chg){
 
 		if(room.debugLock){
 			return true;
@@ -131,14 +138,6 @@ app.Room && _.extend(app.Room.prototype, {
 			for (var i = 0; i < chg.text.length; i++){
 				btext += room.havebreakat(editor, bfrom + i);
 			}
-			/*
-			if (chg.text[0] == "")
-				btext = havebreakat(editor, bfrom);
-			//var btext = "";
-			for (var i = 0; i < chg.text.length - 2; i++){
-				btext += "0";
-			}
-			btext[btext.length-1] = bps[bto];*/
 			room.sendBreak(bfrom, bto+1, btext);
 			return;
 		}
