@@ -107,9 +107,9 @@ app.Room && _.extend(app.Room.prototype, {
 
     this.view.editor.refresh();
     
-    if(this.docModel.get('path').split('/').length == 3) {
+ //   if(this.docModel.get('path').split('/').length == 3) {
       app.collections['cooperators'].updatedoc(docobj);
-    }
+//    }
     app.views['cooperators'].setalloffline();
     app.views['cooperators'].setonline(app.currentUser.name, true);
     for(var k in this.cursors) {

@@ -38,7 +38,7 @@ var app = app || {};
 			var view = null;
 			var elem = null;
 			if(m === undefined) {
-				m = new app.expression({expression: '', notnew: false});
+				m = new app.Expression({expression: '', notnew: false});
 				this.editingelem = view = new app.ExpressionView({ model: m });
 				elem = view.render().$el;
 				elem.find('span').hide();

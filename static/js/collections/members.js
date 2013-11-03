@@ -40,7 +40,7 @@ var app = app || {};
 			var col = this;
 			col['reset']({
         name: doc.owner.name,
-        avatar: doc.owner.avatar,
+        avatar: doc.owner.name == app.currentUser.name ? app.currentUser.avatar : doc.owner.avatar,
         online: doc.owner.online || false,
         owner: true,
       });

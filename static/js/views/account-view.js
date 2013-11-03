@@ -6,13 +6,11 @@ var app = app || {};
 
     events:{
       'click #btn_changepassword':'changepasswordopen',
-      'click #btn_changeavatar':'changeavatar',
+      'click #btn_changeavatar':'changeavataropen',
       'click .go-logout': 'logout',
     },
 
     initialize:function(){
-      this.template =  _.template($('#nav-head').html()),
-      this.listenTo(this.model, 'change', this.render);
       
       var that = this;
       var keyd = function(e) {
@@ -22,7 +20,9 @@ var app = app || {};
       $('#changepassword-new').on('keydown', keyd);
       $('#changepassword-confirm').on('keydown', keyd);
     },
-    
+    logout:function(){
+    app.logout();
+    },
     changepassword:function(){
       var old = $('#changepassword-old').val();
       var pass = $('#changepassword-new').val();
@@ -35,10 +35,10 @@ var app = app || {};
       }
       if(app.Lock.attach({
         loading: '#changepassword-buttons',
-        error: function() { app.showMessageInDialog('#changepassword', data.err, 0); },
+        error: function(data) { app.showMessageInDialog('#changepassword', data.err, 0); },
         success: function() {
           $('#changepassword').modal('hide');
-          app.showMessageBox('changepassword', 'changepassworddone', 1);
+          app.showMessageBox('changepassword', 'changepassworddone');
         },
       })) {
         app.socket.emit('password', {
@@ -57,7 +57,18 @@ var app = app || {};
       confirm.on('click', this.changepassword);
     },
     
+    changeavataropen:function(){
+      var modal = $('#changeavatar');
+      app.showInputModal(modal);
+      
+      $('#changeavatar-img').attr('src',app.currentUser.avatar);
+      var confirm = modal.find('#changeavatar-input');
+      confirm.off();
+      confirm.on('change', this.changeavatar);
+    },
     changeavatar: function() {
+      var inputfile = $('#changeavatar-input')[0];
+      var file = inputfile.files[0];
       var reader = new FileReader(); 
       reader.onloadend = function() {
         if (reader.error) {
@@ -69,22 +80,34 @@ var app = app || {};
             app.showMessageBar('#changeavatar-message', 'too large', 'error');
           }
           if(app.Lock.attach({
-            
+            success:function(data){
+               app.currentUser.avatar  = data.url;
+               $('#changeavatar-img').attr('src',data.url);
+               $('#nav-avatar').attr('src', data.url);
+               app.collections['members'].at(0).set({avatar: data.url});
+               app.collections['cooperators'].at(0).set({avatar: data.url});
+           },
+            error:function(data){
+               app.showMessageBar('#changeavatar-message', data.err, 'error');
+            }
           })) {
-            socket.emit('avatar', {
+            app.socket.emit('avatar', {
               type: file.type,
               avatar: t,
             });
           }
         }
       };
-      reader.readAsDataURL(app.currentUser.avatar);
+      reader.readAsDataURL(file);
     },
     
-    render:function(){
-      this.el.html(this.template(this.model.toJSON()));
-      return this;
-    },
   });
 
+ app.init || (app.init = {});
+
+  app.init.accountView = function() {
+    if(app.views['account']) { return; };
+    app.views['account'] = new app.AccountView();
+  };
+  
 })();
