@@ -106,20 +106,26 @@ app.resize = function() {
 	$('#login-box').css('left', ((w-420)/2-30) + 'px');
 	w = $('#register-box').parent('*').width();
 	$('#register-box').css('left', ((w-420)/2-30) + 'px');
+	
   var bottomHeight = document.getElementById("footer").clientHeight;
+  var bigoneHeight = document.getElementById("big-one").clientHeight;
   $("#login").css("margin-bottom", bottomHeight + 20);
   $("#register").css("margin-bottom", bottomHeight + 20);
+  $("#popush-info").css("margin-bottom", bottomHeight + 20);
   $("#filecontrol").css("margin-bottom", bottomHeight + 10);
+  $("#login").css("margin-top", bigoneHeight + 20);
+  $("#register").css("margin-top", bigoneHeight + 20);
+  $("#popush-info").css("margin-top", bigoneHeight + 20);
   var topHeight = document.getElementById("nav-head").clientHeight;
   $('#filecontrol').css("margin-top", topHeight + 5);
-  $('#editor').css("margin-top", topHeight + 5)
+  $('#editor').css("margin-top", topHeight + 5);
  // $('#register').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#register').height()) / 2 - 40) + 'px');
  // $('#popush-info').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#popush-info').height()) / 2 - 40) + 'px');
 	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
 
 /*	
   $('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
-	$('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
+  $('#editormain-inner').css('left', (-$(window).scrollLeft()) + 'px');
 
 	app.editor.refresh();
 */

@@ -3,6 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Popush</title>
+  <link rel="shortcut icon" href="images/logo.png"/>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
   <link href="css/codemirror.css" rel="stylesheet" media="screen" />
   <link href="css/popush.css" rel="stylesheet" media="screen" />
@@ -22,10 +23,10 @@
   <script type="text/javascript" src="js/lib/jszip-deflate.js"></script>
 </head>
 <body style="display:none;">
-  <div class="hero-unit" id="big-one">
-    <div class="container">
-      <div class="row">
-        <h1>Popush</h1>
+	<div class="hero-unit navbar navbar-fixed-top" id="big-one">
+		<div class="container">
+			<div class="row">
+				<h1>Popush</h1>
 			<!--	<p class="lead" localization>only-platform</p> -->
       </div>
     </div>
@@ -53,11 +54,11 @@
 		</div>
 	</div>
   
-  <div class="container-fluid">
-    <div class="row">
-			<div class="col-md-6">
+	<div class="container-fluid" id = "first-page">
+		<div class="container row" style="margin:auto;">
+			<div class="col-xs-6">
 				<div id="login">
-        <div class="span4 offset4">
+					
           <h2 style="text-align:center" class="blink" localization>login</h2>
           <div class="alert hide" id="login-message">
 							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -66,14 +67,14 @@
           <hr />
 						<div id="login-box" class="form-horizontal">
 							<div class="form-group">
-								<label class="control-label col-sm-3" for="login-inputName" localization>username</label>
-								<div class="controls col-sm-7">
+								<label class="control-label col-xs-3" for="login-inputName" localization>username</label>
+								<div class="controls col-xs-7">
 									<input type="text" class="form-control" id="login-inputName"/>
               </div>
             </div>
 							<div class="form-group">
-								<label class="control-label col-sm-3" for="login-inputPassword" localization>password</label>
-								<div class="controls col-sm-7">
+								<label class="control-label col-xs-3" for="login-inputPassword" localization>password</label>
+								<div class="controls col-xs-7">
 									<input type="password" class="form-control" id="login-inputPassword"/>
               </div>
             </div>
@@ -81,17 +82,17 @@
               <label class="control-label">&nbsp;</label>
             </div>
 							<div class="form-group">
-								<div class="controls col-sm-offset-3 col-sm-7" id="login-control">
+								<div class="controls col-xs-7" id="login-control">
 									<button id="login-submit" type="submit" class="btn btn-primary" localization>login</button>
                 <a class="switch-rel" href="#register" localization>register</a>
               </div>
             </div>
           </div>
-        </div>
+					
       </div>
     
-			<div class="hide" id="register" class="col-md-4">
-        <div class="span4 offset4">
+				<div class="hide" id="register" >
+					
           <h2 style="text-align:center" class="blink" localization>register</h2>
           <div class="alert hide" id="register-message">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -100,43 +101,43 @@
           <hr />
 						<div id="register-box" class="form-horizontal">
 							<div class="form-group">
-								<label class="control-label col-sm-3" for="register-inputName" localization>username</label>
-								<div class="controls col-sm-7">
+								<label class="control-label col-xs-3" for="register-inputName" localization>username</label>
+								<div class="controls col-xs-7">
                 <a id="tooltip" href="#" data-toggle="tooltip" title="only-contain" localization>
 									<input type="text" class="form-control" id="register-inputName"/>
                 </a>
               </div>
             </div>
 							<div class="form-group">
-								<label class="control-label col-sm-3" for="register-inputPassword" localization>password</label>
-								<div class="controls col-sm-7">
+								<label class="control-label col-xs-3" for="register-inputPassword" localization>password</label>
+								<div class="controls col-xs-7">
 									<input type="password" class="form-control" id="register-inputPassword"/>
               </div>
             </div>
 							<div class="form-group hide" id="register-padding">
-								<label class="control-label  col-sm-3" for="register-inputPassword" localization>confirm</label>
-								<div class="controls col-sm-7">
+								<label class="control-label  col-xs-3" for="register-inputPassword" localization>confirm</label>
+								<div class="controls col-xs-7">
 									<input type="password" class="form-control" id="register-confirmPassword"/>
               </div>
             </div>
 							<div class="form-group">
-								<div class="controls col-sm-offset-3 col-sm-7" id="register-control">
+								<div class="controls col-xs-7" id="register-control">
 									<button id="register-submit" type="submit" class="btn btn-primary" localization>register</button>
                 <a class="switch-rel" href="#login" localization>login</a>
               </div>
             </div>
           </div>
-        </div>
+					
 				</div>
 			</div>
 			
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="flowinfo" id="popush-info">
         <ul>
           <li class="flowtext">PARALLEL</li>
           <li class="flowtext">ORGANIZED</li>
           <li class="flowtext">PLEASURE</li>
-          <li style="color:#4f96e5">POPUSH CoCoding Platform</li>
+                                      <li style="color:rgb(79,159,229)">POPUSH CoCoding Platform</li>
           <li class="flowtext">UNIFORM</li>
           <li class="flowtext">SATISFIED</li>
           <li class="flowtext">HAPPY CODING</li>
@@ -147,7 +148,7 @@
     <div class="main-body">
       <div id="filecontrol" class="hide">
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-xs-12">
             <ul class="nav nav-tabs">
               <li class="dropdown" id="ownedfile">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span localization>owningfiles</span><b class="caret"></b></a>
@@ -170,7 +171,7 @@
         </div>
         
 				<div class="row" id="file-list">
-					<div class="col-md-10">
+					<div class="col-xs-10">
 						<p><span localization>currentdir:</span>&nbsp;<span id="current-dir"></span><!--<img src="images/newfile.png" width="28"/><img src="images/newfolder.png" width="35">--></p>
             <table class="table table-hover" id="file-list-table">
               <tr class="head">
@@ -203,7 +204,7 @@
 </td></script>
             </table>
           </div>
-          <div class="col-md-2">
+          <div class="col-xs-2">
             <span localization>shareduser</span>：
             <div id="member-list">
 <!--              <img src="images/character.png" width="40" height="40" class="pull-left shared-character"/>-->
@@ -512,7 +513,6 @@
       </div>
       <div class="nav navbar-nav navbar-right" style="padding:10px">
         <p style="text-align:right" localization>popushteam</p>
-        <p> &nbsp; </p>
       </div>
     </div>  
   </div>
