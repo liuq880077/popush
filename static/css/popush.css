@@ -39,7 +39,10 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
   src: url('youregon.ttf'); 
 } 
 
-.hero-unit {color:#fff;overflow:hidden; background: linear-gradient(20deg, rgb(8, 15, 31) 30%, rgb(43, 75, 90) 87%, rgb(67, 94, 103) 100%) repeat fixed 0% 0% rgb(28, 37, 51); padding: 15px;}
+.hero-unit {color:#fff;overflow:hidden; background: linear-gradient(20deg, rgb(8, 15, 31) 30%, rgb(43, 75, 90) 87%, rgb(67, 94, 103) 100%) repeat fixed 0% 0% rgb(28, 37, 51);
+ background: -webkit-linear-gradient(20deg, rgb(8, 15, 31) 30%, rgb(43, 75, 90) 87%, rgb(67, 94, 103) 100%) repeat fixed 0% 0%;
+ background: -moz-linear-gradient(20deg, rgb(8, 15, 31) 30%, rgb(43, 75, 90) 87%, rgb(67, 94, 103) 100%) repeat fixed 0% 0%;
+ background: -o-linear-gradient(20deg, rgb(8, 15, 31) 30%, rgb(43, 75, 90) 87%, rgb(67, 94, 103) 100%) repeat fixed 0% 0%;padding: 15px;}
 .hero-unit {-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;}
 .hero-unit{filter:alpha(opacity=100);-moz-opacity:1.0; opacity:1.0;}
 .hero-unit a {text-decoration:none;}
@@ -56,13 +59,13 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 .flowinfo ul li {list-style-type: none; word-break:normal; word-wrap:normal;cursor: pointer;}
 .flowtext {
 	color:#8ba39e;
-	opacity:0.5;
-    transition:color 1.5s;
-    -moz-transition:color 1.5s; /* Firefox 4 */
-    -webkit-transition:color 1.5s; /* Safari and Chrome */
-    -o-transition:color 1.5s; /* Opera */
+	opacity:0.9;
+    transition:color 0.7s;
+    -moz-transition:color 0.7s; /* Firefox */
+    -webkit-transition:color 0.7s; /* Safari and Chrome */
+    -o-transition:color 0.7s; /* Opera */
 }
-.flowtext:hover{opacity:1;color:rgb(79,159,229);}
+.flowtext:hover{color:rgb(79,159,229);}
 
 .main-body{background:rgba(0,0,0,0);}
 .mian-body {-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}

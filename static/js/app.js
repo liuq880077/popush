@@ -21,7 +21,8 @@ _.defaults(app, {
 
 app.showMessageBar = function(id, stringid, type){
   var o = $(id);
-  o.removeClass('alert-error alert-success alert-info');
+  o.removeClass('alert-danger alert-success alert-info');
+  (type == 'error') && (type = 'danger background-opacity');
   if(type && type != 'warning')
     o.addClass('alert-' + type);
   else
@@ -32,7 +33,7 @@ app.showMessageBar = function(id, stringid, type){
 };
 
 app.showInputModal = function(modal, val) {
-  modal.find('.form-group').removeClass('error').find('input').val('');
+  modal.find('.form-group').removeClass('danger').find('input').val('');
   modal.find('.help-inline').text('');
   var i = modal.find('.modal-input').val(val || '');
   modal.modal('show').on('shown', function() {
@@ -63,7 +64,7 @@ app.showInputModal = function(modal, val) {
 app.showMessageInDialog = function (selector, stringid, index) {
   var modal = $(selector),
     eq = (index == null) ? '' : (':eq(' + index + ')');
-  modal.find('.form-group' + eq).addClass('error');
+  modal.find('.form-group' + eq).addClass('danger');
   (stringid == null) && (stringid = 'inner error');
   modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
 }
@@ -117,7 +118,7 @@ app.resize = function() {
   $("#register").css("margin-top", bigoneHeight + 20);
   $("#popush-info").css("margin-top", bigoneHeight + 20);
   var topHeight = document.getElementById("nav-head").clientHeight;
-  $('#filecontrol').css("margin-top", topHeight + 5);
+  $('#filecontrol').css("margin-top", topHeight - 5);
   $('#editor').css("margin-top", topHeight + 5);
  // $('#register').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#register').height()) / 2 - 40) + 'px');
  // $('#popush-info').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#popush-info').height()) / 2 - 40) + 'px');

@@ -47,7 +47,7 @@
 						<li><a id="btn_changepassword" data-toggle="modal" localization>changepassword</a></li>
 						<li><a id="btn_changeavatar" data-toggle="modal"  localization>changeavatar</a></li>
 						<li class="divider"></li>
-						<li><a href="#login" onclick="app.logout()" class="go-logout" localization>logout</a></li>
+						<li><a href="#login" class="go-logout" localization>logout</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -61,7 +61,7 @@
 					
           <h2 style="text-align:center" class="blink" localization>login</h2>
           <div class="alert hide" id="login-message">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<button type="button" class="close"  onclick="$('#login-message').slideUp()">&times;</button>
             <span>Nothing here</span>
           </div>
           <hr />
@@ -95,7 +95,7 @@
 					
           <h2 style="text-align:center" class="blink" localization>register</h2>
           <div class="alert hide" id="register-message">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<button type="button" class="close" onclick="$('#register-message').slideUp()">&times;</button>
             <span>Nothing here</span>
           </div>
           <hr />
@@ -338,7 +338,7 @@
       </div>
       <div class="modal-body">
         <div class="alert hide" id="changeavatar-message">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true" >&times;</button>
+              <button type="button" class="close" onclick="$('#changeavatar-message').slideUp()">&times;</button>
           <span>Nothing here</span>
         </div>
         <p localization>clicktochange</p>
@@ -406,7 +406,7 @@
         <h3 id="delete-label" localization>deleteconfirm</h3>
       </div>
       <div class="modal-body">
-        <p><span localization>suretodelete</span>&nbsp;<span class="folder" localization>file</span> <span id="delete-name"></span>&nbsp;?</p>
+            <p><span localization>suretodelete</span>&nbsp;<span class="folder" localization>file</span> <span id="delete-name"></span></p>
       </div>
       <div class="modal-footer">
         <div class="modal-buttons">
@@ -460,7 +460,7 @@
           </ul>
         </div>
         <div class="alert hide" id="share-message">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              <button type="button" class="close" onclick="$('#share-message').slideUp()">&times;</button>
           <span>Nothing here</span>
         </div>
             <div class="row" id="share-buttons">
