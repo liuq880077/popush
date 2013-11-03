@@ -95,8 +95,9 @@ app.resize = function() {
 	$("#register").css("margin-bottom", bottomHeight + 20);
 	$("#popush-info").css("margin-bottom", bottomHeight + 20);
 	$("#filecontrol").css("margin-bottom", bottomHeight + 10);
-	$("#login").css("margin-top", bigoneHeight + 20);
-	$("#register").css("margin-top", bigoneHeight + 20);
+	var marT = (bigoneHeight + 20) > 192 ? (bigoneHeight + 20) : 192;
+	$("#login").css("margin-top", marT);
+	$("#register").css("margin-top", marT);
 	$("#popush-info").css("margin-top", bigoneHeight + 20);
 	var topHeight = document.getElementById("nav-head").clientHeight;
 	$('#filecontrol').css("margin-top", topHeight - 5);
