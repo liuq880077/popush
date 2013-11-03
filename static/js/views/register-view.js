@@ -37,7 +37,7 @@ var app = app || {};
         app.showMessageBar(id, str);
       } else if(app.Lock.attach({
         loading: '#register-control',
-        error: function() { app.showMessageBar(id, data.err, 'error');},
+        error: function(data) { app.showMessageBar(id, data.err, 'error');},
         success: function() { app.showMessageBar(id, 'registerok'); },
       })) {
         app.socket.emit('register', {

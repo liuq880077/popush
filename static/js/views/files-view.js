@@ -191,6 +191,7 @@ var app = app || {};
               data.path = path;
               data.type = type;
               that.collection.add(data);
+              app.showMessageBox('newfile', 'createfilesuccess');
             },
           })) {
             app.socket.emit('upload', {path: path, type: type, text: text});
