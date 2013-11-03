@@ -388,7 +388,7 @@ app.RoomView = Backbone.View.extend({
   },
     
   isFullScreen: function(cm) {
-	return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);    
+    return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);    
   },
   
   resize: function() {

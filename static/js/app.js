@@ -10,6 +10,7 @@ _.defaults(app, {
   collections: {},
   fileNameReg: /[\*\\\|:\"\'\/\<\>\?\@]/,
   fileExtReg: /(.*[\/\.])?\s*(\S+$)/,
+  uploadType: /text|javascript/,
   router: null,
   resize: null, // function pointer
   /* for Room */
@@ -121,6 +122,12 @@ app.resize = function() {
 */
 };
 
+app.logout = function() {
+  app.isLogined = false;
+  $.removeCookie('sid');
+  app.socket.emit('logout', { });
+  window.location.href = '#login';
+};
 
 $(document).ready(function() {
   app.Lock.attach({

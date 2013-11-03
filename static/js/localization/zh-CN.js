@@ -121,4 +121,5 @@ app.languages['zh-CN'] = { Name : '中文版',
   'wrong path'                    :'路径错误',
   'DIR!!'                         :'目标是文件夹',
   'illegal file name'             :'无效的名称',
+  'can not upload'                :'无法上传该类型文件',
 };

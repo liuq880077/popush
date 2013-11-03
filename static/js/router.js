@@ -19,7 +19,7 @@ var app = app || {};
     },
     
     pages: {
-      login: new Page ({ el: '#login', depend: ['_head1', '_footer', 'ads'], force: true,
+      login: new Page ({ el: '#login', depend: ['_head1', '_footer', 'ads'], logined: 0, force: true,
         show: function() {
           this.el.fadeIn('fast', function() { app.views.login.show(); });
         },
@@ -88,9 +88,12 @@ var app = app || {};
       for(i = arr1.length, j = 0; i--; ) {
         p = pages[arr1[i]];
         if(p.logined && !(app.isLogined)) { j = -1; break; }
+        else if(p.logined === 0 && app.isLogined) { j = 1; break; }
       }
       if(j === -1) {
         window.setTimeout(function() { window.location.href = '#login'; }, 10);
+      } else if(j === 1) {
+        window.setTimeout(function() { window.location.href = '#index//'; }, 10);
       } else {
         for(var h in pages) {
           if(pages[h].shown && (arr1.indexOf(h) == -1)) {

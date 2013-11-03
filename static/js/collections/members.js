@@ -9,11 +9,7 @@ var app = app || {};
 		model: app.User,
 
 		comparator: function (member) {
-			var value = (member.owner) ? '0' : '1';
-			if (member.online)
-				value += '0';
-			else
-				value += "1";
+			var value = member.get('owner') ? '0' : (member.get('online') ? '1' : '2');
 			return value + member.get('name');
 		},
 		

@@ -22,6 +22,8 @@ var onVersion = function(data) {
 };
 
 var onLogin = function(data) {
+  if(data == null) { app.Lock.remove(); return; }
+  
   app.Lock.removeLoading();
   if(data.err){
     app.isLogined = false;
@@ -104,6 +106,7 @@ app.init || (app.init = {});
     socket.on('version', onVersion);
     socket.on('login', onLogin);
     socket.on('register', app.Lock.detach);
+    socket.on('password', app.Lock.detach);
     socket.on('download', onDownload);
     socket.on('downzip', onDownzip);
   };

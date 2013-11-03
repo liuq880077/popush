@@ -15,7 +15,6 @@
   <script type="text/javascript" src="js/lib/bootstrap.js"></script>
   <script type="text/javascript" src="js/lib/underscore.js"></script>
   <script type="text/javascript" src="js/lib/backbone.js"></script>
-  <!-- <script type="text/javascript" src="js/lib/backbone.localStorage.js"></script> -->
   <script type="text/javascript" src="js/lib/codemirror.js"></script>
   <script type="text/javascript" src="js/loadmode.js"></script>
   <script type="text/javascript" src="js/lib/FileSaver.js"></script>
@@ -44,10 +43,10 @@
 					<img height="32" width="32" src="#" id="nav-avatar" />
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="#changepassword" data-toggle="modal" localization>changepassword</a></li>
-						<li><a href="#changeavatar" data-toggle="modal" localization>changeavatar</a></li>
+						<li><a id="btn_changepassword" data-toggle="modal" localization>changepassword</a></li>
+						<li><a id="btn_changeavatar" data-toggle="modal"  localization>changeavatar</a></li>
 						<li class="divider"></li>
-						<li><a href="#" localization>logout</a></li>
+						<li><a href="#login" onclick="app.logout()" class="go-logout" localization>logout</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -155,7 +154,10 @@
                   <li><a href="#" data-toggle="modal" new-type="doc" localization>newfile</a></li>
                   <li><a href="#" data-toggle="modal" new-type="dir" localization>newfolder</a></li>
 									<li><a href="#" new-type="down" localization>downzip</a></li>
-									<li><a href="#" new-type="up" localization>upload</a></li>
+									<li>
+									<input type="file" id="uploadfile" style="display:none" />
+									<a href="#" new-type="up" id="upload" localization>upload</a>
+									</li>
                   <!--<li class="divider"></li>
                   <li><a href="#" localization>import</a></li>-->
                 </ul>
@@ -338,7 +340,7 @@
       </div>
       <div class="modal-body">
         <div class="alert hide" id="changeavatar-message">
-          <button type="button" class="close" onclick="$('#changeavatar-message').slideUp()">&times;</button>
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true" >&times;</button>
           <span>Nothing here</span>
         </div>
         <p localization>clicktochange</p>
@@ -553,6 +555,7 @@
   <script type="text/javascript" src="js/sockets/room-socket.js"></script>
   <script type="text/javascript" src="js/views/login-view.js"></script>
   <script type="text/javascript" src="js/views/register-view.js"></script>
+  <script type="text/javascript" src="js/views/account-view.js"></script>
   <script type="text/javascript" src="js/views/member-view.js"></script>
   <script type="text/javascript" src="js/views/memberlist-view.js"></script>
   <script type="text/javascript" src="js/views/sharer-view.js"></script>

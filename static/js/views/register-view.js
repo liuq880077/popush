@@ -53,7 +53,6 @@ var app = app || {};
 		},
     
     show: function() {
-      $('#register-inputName').val('');
       $('#register-inputPassword').val('');
       $('#register-confirmPassword').val('');
       $('#register-message').slideUp();

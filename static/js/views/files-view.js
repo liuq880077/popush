@@ -44,6 +44,7 @@ var app = app || {};
       this.$dir = el.find('#current-dir');
       this.$tabOwnedEx = el.find('#ownedfileex');
       this.$tabShared = el.find('#sharedfile');
+      this.$uploadfile = el.find('#uploadfile');
       
       (this.$tabOwned = el.find('#ownedfile')).find('.dropdown-menu a')
         .bind('click', { context: this }, newFile);
@@ -164,7 +165,43 @@ var app = app || {};
   });
   
   var upload = function(event) {
-  	app.socket.emit('upload', {path:'/asdfasd/hjw.c', type:'doc', text:'#include <stdio.h>\nint main()\n{\nreturn 0;\n}'});
+    var fileinput = this.$uploadfile[0];
+    var that = this;
+    this.$uploadfile.off().on('change', function() {
+      if(fileinput.files.length <= 0) { return; }
+      var file = fileinput.files[0], filepath = fileinput.value;
+      
+      /* for ie and ff */
+      var pos = filepath.lastIndexOf('/');
+      var pos2 = filepath.lastIndexOf('\\'); 
+      (pos < pos2) && (pos = pos2);
+      
+      var path = that.collection.path + '/' + filepath.substring(pos+1);
+     /*  if  that.collection.findWhere({path: path}); */
+      
+      /* fileinput.outerHTML += ''; */
+      fileinput.value = '';
+      
+      if (file.type.match(app.uploadType)) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var text = reader.result, type = 'doc';
+          if(app.Lock.attach({
+            success: function(data) {
+              data.path = path;
+              data.type = type;
+              that.collection.add(data);
+            },
+          })) {
+            app.socket.emit('upload', {path: path, type: type, text: text});
+          }   
+        }
+        reader.readAsText(file);
+      } else {
+        app.showMessageBox('error', 'can not upload');
+      }
+    });
+    this.$uploadfile.click();
   }
   
   var downzip = function(event) {
@@ -177,12 +214,12 @@ var app = app || {};
     var that = event.data.context, type = $(event.target).attr('new-type');
     if(that.mode != app.FilesView.Mode.BelongSelf) { return; }
     if (type == 'up') {
-    	upload(event);
-    	return;
+      upload.call(that, event);
+      return;
     }
     if (type == 'down') {
-    	downzip(event);
-    	return;
+      downzip.call(that, event);
+      return;
     }
     var modal = Backbone.$('#newfile');
     modal.find('#newfile-label').text(

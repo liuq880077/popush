@@ -33,7 +33,6 @@ var app = app || {};
     },
     
     show: function() {
-      $('#login-inputName').val('');
       $('#login-inputPassword').val('');
       $('#login-message').slideUp();
       $('#login-padding').slideUp('fast');
