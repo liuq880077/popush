@@ -1,3 +1,5 @@
+/* Expressions Collection */
+/* model: app.Expression */
 var app = app || {};
 
 (function () {
@@ -7,11 +9,11 @@ var app = app || {};
 		// Reference to this collection's model.
 		model: app.Expression,
 	});
+	
+	app.init || (app.init = {});
 
-  app.init || (app.init = {});
-
-  app.init.expressions = function() {
-    app.collections['expressions'] || (app.collections['expressions'] = new app.Expressions());
-  };
+	app.init.expressions = function() {
+		app.collections['expressions'] || (app.collections['expressions'] = new app.Expressions());
+	};
 
 })();
