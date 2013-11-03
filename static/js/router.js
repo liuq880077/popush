@@ -19,7 +19,7 @@ var app = app || {};
     },
     
     pages: {
-      login: new Page ({ el: '#login', depend: ['_head1', '_footer', 'ads'], logined: 0, force: true,
+      login: new Page ({ el: '#login', depend: ['_head1', '_footer', '_ads'], logined: 0, force: true,
         show: function() {
           this.el.fadeIn('fast', function() { app.views.login.show(); });
         },
@@ -29,7 +29,7 @@ var app = app || {};
         },
       }),
       
-      register: new Page ({ el: '#register', depend: ['_head1', '_footer', 'ads'], force: true,
+      register: new Page ({ el: '#register', depend: ['_head1', '_footer', '_ads'], force: true,
         show: function() {
           this.el.fadeIn('fast', function() { app.views.register.show(); });
         },
@@ -51,15 +51,16 @@ var app = app || {};
         },
       }),
       
-      edit: new Page ({ el: '#editor', depend: ['_head2', '_footer'], logined: true, force: true,
+      edit: new Page ({ el: '#editor', depend: ['_head2'], logined: true,
         show: function() { this.el.fadeIn('fast'); },
+        hide: function() { app.views.room.closeeditor(); this.el.fadeOut('fast'); }
       }),
       
       // dependency:
       _head1: new Page ({ el: '#big-one' }),
       _head2: new Page ({ el: '#nav-head' }),
       _footer: new Page ({ el: '#footer' }),
-      ads: new Page ({ el: '#popush-info' }),
+      _ads: new Page ({ el: '#popush-info' }),
     },
     
     analy: function(name) {
@@ -116,7 +117,7 @@ var app = app || {};
         j = pages[i];
         if(j.el) {
           j.el = $(j.el);
-          j.shown = !(j.el.is('hidden'));
+          j.shown = !(j.el.is(':hidden'));
         }
       }
       this.routeLock = false;
@@ -125,11 +126,6 @@ var app = app || {};
   });
   
   app.init.router = function() {
-    if(app.router) { return; } else { app.router = new PageRouter(); }
-    app.init.loginView();
-    app.init.registerView();
-    app.init.filesView();
-    app.init.roomView();
-    Backbone.history.start({ root: app.Package.ROUTE_ROOT });
+    (app.router) || (app.router = new PageRouter());
   };
 })();

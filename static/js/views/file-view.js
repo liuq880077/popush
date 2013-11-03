@@ -51,8 +51,6 @@ var app = app || {};
         });
       }
       else { app.room.tryEnter(this.model, this.$('.col1 > *')); }
-      /* e.preventDefault(); */
-      /* e.stopPropagation(); */
     },
     
     share: function() {

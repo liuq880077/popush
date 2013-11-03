@@ -27,7 +27,7 @@ app.showMessageBar = function(id, stringid, type){
   else
     o.addClass('alert-warning');
   (stringid == null) && (stringid = 'inner error');
-  $(id + ' span').html(strings[stringid] || stringid);
+  o.find('span').html(strings[stringid] || stringid);
   o.slideDown();
 };
 
@@ -62,7 +62,7 @@ app.showInputModal = function(modal, val) {
 
 app.showMessageInDialog = function (selector, stringid, index) {
   var modal = $(selector),
-    eq = (index === undefined) ? '' : (':eq(' + index + ')');
+    eq = (index == null) ? '' : (':eq(' + index + ')');
   modal.find('.form-group' + eq).addClass('error');
   (stringid == null) && (stringid = 'inner error');
   modal.find('.help-inline' + eq).text(strings[stringid] || stringid);
@@ -100,7 +100,7 @@ app.resize = function() {
 	if(w != 0)
 		$('#chat-input').css('width', (w-70) + 'px');
 */	
-	$('#file-list .span10').css('min-height', (h-235) + 'px');
+//	$('#file-list .col-md-10').css('min-height', (h-235) + 'px');
 	
 	w = $('#login-box').parent('*').width();
 	$('#login-box').css('left', ((w-420)/2-30) + 'px');
@@ -110,6 +110,9 @@ app.resize = function() {
   $("#login").css("margin-bottom", bottomHeight + 20);
   $("#register").css("margin-bottom", bottomHeight + 20);
   $("#filecontrol").css("margin-bottom", bottomHeight + 10);
+  var topHeight = document.getElementById("nav-head").clientHeight;
+  $('#filecontrol').css("margin-top", topHeight + 5);
+  $('#editor').css("margin-top", topHeight + 5)
  // $('#register').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#register').height()) / 2 - 40) + 'px');
  // $('#popush-info').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#popush-info').height()) / 2 - 40) + 'px');
 	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
@@ -152,15 +155,11 @@ $(document).ready(function() {
   delete funcs;
   delete app.init; /* now it's no use to run it again*/
 
-  // if(isOK) {
-    // app.socket.emit('connect', { });
-  // }
+  Backbone.history.start({ root: app.Package.ROUTE_ROOT });
   
-  // app.resize();
-  // $(window).resize(function() {
-    // /* app.resize is only a pointer */
-    // (typeof app.resize === 'function') && app.resize();
-  // });
-  
-  // app.Lock.detach();
+  /* app.resize(); */ /* will be auto-call */
+  $(window).resize(function() {
+    /* app.resize is only a pointer */
+    (typeof app.resize === 'function') && app.resize();
+  });
 });

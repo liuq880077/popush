@@ -54,7 +54,7 @@
 	</div>
   
   <div class="container-fluid">
-    <div class="container row">
+    <div class="row">
 			<div class="col-md-6">
 				<div id="login">
         <div class="span4 offset4">
@@ -170,11 +170,7 @@
         
 				<div class="row" id="file-list">
 					<div class="col-md-10">
-						<p>
-							<span localization>currentdir:</span>&nbsp;<span id="current-dir"></span>
-							<img src="images/newfile.png" width="28"/>
-							<img src="images/newfolder.png" width="35">
-						</p>
+						<p><span localization>currentdir:</span>&nbsp;<span id="current-dir"></span><!--<img src="images/newfile.png" width="28"/><img src="images/newfolder.png" width="35">--></p>
             <table class="table table-hover" id="file-list-table">
               <tr class="head">
                 <th class="col1">&nbsp;</th>
@@ -206,7 +202,7 @@
 </td></script>
             </table>
           </div>
-          <div class="span2">
+          <div class="col-md-2">
             <span localization>shareduser</span>：
             <div id="member-list">
 <!--              <img src="images/character.png" width="40" height="40" class="pull-left shared-character"/>-->
@@ -216,7 +212,7 @@
       </div>
     
       <div id="editor" class="row hide">
-        <div class="col-md-9">
+        <div class="col-xs-9">
           <div class="tooltip top in" id="fullscreentip">
             <div class="tooltip-inner" localization>esctoexit</div>
           </div>
@@ -233,7 +229,7 @@
                   <button class="btn btn-white" type="button" id="editor-console" title="console"><span class="glyphicon glyphicon-share"></span></button>
                 </div>
                 <div class="btn-group pull-left" style="margin-left:0">
-                  <button class="btn btn-white" type="button" id="editor-back"><span class="glyphicon glyphicon-home"></span></button>
+                  <a class="btn btn-white" id="editor-back"><span class="glyphicon glyphicon-home"></span></a>
                 </div>
                 <div class="btn-group" id="current-doc-outer">
                   <p id="current-doc-p">
@@ -250,7 +246,7 @@
                   <div id="console-title" class="well well-top" style="border-bottom:1px solid #ddd;padding:4px 0 5px 10px;" localization>console</div>
                   <div id="console-inner">
                   </div>
-                  <input id="console-input" type="text" style="border:none;border-radius:0;border-top:1px solid #ddd;" />
+                  <input id="console-input"  class="form-control" type="text"/>
                 </div>
                 <div id="varlist">
                   <div class="well well-top">
@@ -352,7 +348,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true" localization>back</button>
+            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" localization>back</button>
           </div>
         </div>
       </div>
@@ -392,7 +388,7 @@
       <div class="modal-footer">
         <div id="changepassword-buttons">
               <button class="btn btn-primary modal-confirm" localization>ok</button>
-          <button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
+              <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
             </div>
           </div>
         </div>
@@ -412,8 +408,8 @@
       </div>
       <div class="modal-footer">
         <div class="modal-buttons">
-          <button class="btn btn-danger modal-confirm" localization>ok</button>
-          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
+              <button class="btn btn-primary modal-confirm" localization>ok</button>
+              <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
         </div>
       </div>
     </div>
@@ -440,7 +436,7 @@
       <div class="modal-footer">
         <div class="modal-buttons">
           <button class="btn btn-primary modal-confirm" localization>ok</button>
-          <button class="btn" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
+              <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" localization>cancel</button>
         </div>
       </div>
     </div>
@@ -465,16 +461,24 @@
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
           <span>Nothing here</span>
         </div>
-        <div class="form-inline" id="share-buttons">
-          <span localization>newuser:</span>
-          <input type="text" id="share-inputName" />
-          <button class="btn modal-confirm" type="button" id="share-confirm" localization>add</button>
-          <button class="btn pull-right" type="button" id="share-remove" localization>delete</button>
+            <div class="row" id="share-buttons">
+                <div class="form-inline col-xs-9">
+                  <label localization>newuser:</label>
+                  <div class="input-group">
+                    <input type="text" id="share-inputName" class="form-control"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="share-confirm" localization>add</button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <button class="btn pull-right btn-primary" type="button" id="share-remove" localization>delete</button>
         </div>
       </div>
+          </div>
       <div class="modal-footer">
         <div id="share-buttons">
-              <button type="button" class="close btn" data-dismiss="modal" aria-hidden="true" localization>back</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" localization>back</button>
             </div>
           </div>
         </div>

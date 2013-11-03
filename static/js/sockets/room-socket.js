@@ -101,7 +101,7 @@ var room, listeners = {
 		if(room.q.length > 0){
 			room.socket('change', room.q[0]);
 		}
-		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></sapn>');
+		$('#editor-debug').html('<span class="glyphicon glyphicon-eye-open"></span>');
 		$('#editor-debug').attr('title', strings['debug-title']);
 		room.view.runTo(-1);
 		app.collections['expressions'].each(function(model){
@@ -513,9 +513,8 @@ app.init || (app.init = {});
 (function() {
   var _init = false;
   app.init.roomSocket = function() {
-    if(_init) { return; }
-    _init = true;
-    app.socket.on('set', onSet);
+    if(_init) { return; } else { _init = true; }
+    app.socket.on('set', app.Lock.detach);
     
     app.room || app.init.room();
     app.room.startListen = startListen;

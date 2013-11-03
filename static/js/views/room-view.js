@@ -57,7 +57,6 @@ app.RoomView = Backbone.View.extend({
     'click #debugnext': 'debugnext',
     'click #debugfinish': 'debugfinish',
     'click #debugcontinue': 'debugcontinue',
-    'click #editor-back': 'closeeditor',
     'click #voice-on': 'voice',
     'keydown #console-input':function(e) {
       ((e.keyCode || e.which) == 13) && this.stdin();
@@ -72,16 +71,12 @@ app.RoomView = Backbone.View.extend({
   },
   
   closeeditor: function() {
-  	$('#editor').hide();
-	$('#filecontrol').show();
-	$('#footer').show();
-
-	app.socket.emit('leave', {
-	});
-	this.room.stopListen();
+    app.socket.emit('leave', { });
+    this.room.stopListen();
     $("body").animate({scrollTop: this.oldscrolltop}); 
 
-	this.room.leaveVoiceRoom();
+    this.room.leaveVoiceRoom();
+    app.resize = this.resize_old;
   },
   
   debugstep: function() {
@@ -116,15 +111,15 @@ app.RoomView = Backbone.View.extend({
 	if(app.viewswitchLock)
 		return;
 	if(this.room.chatstate) {
-		$('#editormain').parent().removeClass('span12');
-		$('#editormain').parent().addClass('span9');
+		$('#editormain').parent().removeClass('col-xs-12');
+		$('#editormain').parent().addClass('col-xs-9');
 		$('#chatbox').show();
 		$('#toggle-chat').html('<span class="glyphicon glyphicon-forward"></span>');
 		$('#toggle-chat').attr('title', strings['hide-title']);
 	} else {
 		$('#chatbox').hide();
-		$('#editormain').parent().removeClass('span9');
-		$('#editormain').parent().addClass('span12');
+		$('#editormain').parent().removeClass('col-xs-9');
+		$('#editormain').parent().addClass('col-xs-12');
 		$('#toggle-chat').html('<span class="glyphicon glyphicon-backward"></span>');
 		$('#toggle-chat').attr('title', strings['show-title']);
 	}
@@ -296,7 +291,8 @@ app.RoomView = Backbone.View.extend({
     }
     if(n >= 0) {
       this.editor.addLineClass(n, '*', 'running');
-      this.editor.setGutterMarker(n, 'runat', $('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
+      this.editor.setGutterMarker(n, 'runat',
+$('<div><img src="images/arrow.png" width="16" height="16" style="min-width:16px;min-width:16px;" /></div>').get(0));
       this.editor.scrollIntoView({line: n, ch: 0});
     }
     this.runningLine = n;
@@ -397,8 +393,8 @@ app.RoomView = Backbone.View.extend({
     cbh = h - o.$members.height() - 138;
     cbhexp = cbh > 100 ? 0 : 100 - cbh;
     (cbh < 100) && (cbh = 100);
-    o.$chatShow.css('height', cbh + 'px');
-    o.$chatPanel.css('height', (h - 83 + cbhexp) + 'px');
+    o.$chatShow.css('height', cbh - 27 + 'px');
+    o.$chatPanel.css('height', (h - 110 + cbhexp) + 'px');
     w = o.$main.parent().width();
     o.$main.css('width', w + 'px');
     underh = h > 636 ? 212 : h / 3;
@@ -417,11 +413,11 @@ app.RoomView = Backbone.View.extend({
       height: (underh - 81) + 'px',
     });
     o.$conIn.css({
-      width: (w-w/3-14) + 'px',
+      width: (w-w/3-5) + 'px',
     });
     if(!this.isFullScreen(this.editor))
       this.$('.CodeMirror').css('height',
-        (h - underh - this.$('#over-editor').height() - 90) + 'px');
+        (h - underh - this.$('#over-editor').height() - 110) + 'px');
 
     w = o.$chatShow.width();
     if(w != 0) { o.$chatIn.css('width', (w - 70) + 'px'); }
@@ -481,13 +477,13 @@ app.RoomView = Backbone.View.extend({
 			container: 'body'
 		});
 	}
-	
+/* 	
 	CodeMirror.on(window, "resize", function() {
 		var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
 		view.resize();
 		if (!showing) return;
 		showing.CodeMirror.getWrapperElement().style.height =  $(window).height() + "px";
-	});
+	}); */
 
 	view.editor = CodeMirror.fromTextArea($('#editor-textarea').get(0), {
 		lineNumbers: true,

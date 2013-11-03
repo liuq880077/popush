@@ -63,20 +63,24 @@ app.Room && _.extend(app.Room.prototype, {
   },
   
   tryEnter: function(model, loading) {
-    var re = app.Lock.attach({
+    var that = this;
+    if(app.Lock.attach({
       loading: loading,
+      tend: 5000,
       fail: function(data) { app.showMessageBox('error', data && data.err); },
       error: function(data) { app.showMessageBox('error', data.err); },
-      success: function() { app.router.navigate('#edit/'); },
-    });
-    this.docModel = model;
-    re && this.socket('join', model.get('path'));
+      success: function(data) { window.location.href = '#edit/'; that.onSet(data); },
+    })) {
+      this.docModel = model;
+      this.socket('join', model.get('path'));
+    }
   },
   
   onSet: function(data) {
-    /* app.room.init(data); */
     app.Lock.remove();
+    data.notRemove = true;
 
+    $('#editor-back').attr('href', '#index' + app.views.files.shownPath);
     this.view.enter(data);
     this.timestamp = 1;
     this.view.setSaved2(this.timestamp);
@@ -84,8 +88,8 @@ app.Room && _.extend(app.Room.prototype, {
     this.q.length = 0;
     this.bq.length = 0;
     this.lock = false;
-	var docobj = this.docModel.json;
-	docobj.members = this.docModel.get('members');
+    var docobj = this.docModel.json;
+    docobj.members = this.docModel.get('members');
     $('#editor-run').html('<span class="glyphicon glyphicon-play"></span>').attr('title',
       strings['run-title'] || 'run');
     this.runLock = false;
@@ -95,8 +99,6 @@ app.Room && _.extend(app.Room.prototype, {
     $('#current-doc').html(_.escape(docobj.shownName));
     $('#chat-input').val('');
     $('#chat-show-inner').text('');
-    $('#editor').show();
-    $('#filecontrol').hide();
     $('#footer').hide();
     var filepart = docobj.name.split('.');
     this.ext = filepart[filepart.length - 1];
@@ -159,9 +161,18 @@ app.Room && _.extend(app.Room.prototype, {
     
     $('#console-title').text(strings['console']);
     
+    this.view.resize_old = app.resize;
+    var that = this;
+    app.resize = function() {
+      var showing = document.getElementsByClassName("CodeMirror-fullscreen")[0];
+      that.view.resize();
+      if (!showing) return;
+      showing.CodeMirror.getWrapperElement().style.height =  $(window).height() + "px";
+    }
+    /* this.view.resize(); */
     
-    this.view.resize();
-    $('body').scrollTop(99999);
+    
+    $('body').scrollTop(32767);
     
     if(data.running) {
       this.view.setRun();
@@ -182,7 +193,9 @@ app.Room && _.extend(app.Room.prototype, {
       }
     }
     this.setrunanddebugstate();
+    
     this.startListen();
+    
     delete data.running;
     delete data.debugging;
     delete data.state;
