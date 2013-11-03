@@ -1,5 +1,6 @@
 * {font-family:"ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;word-break:break-all;word-wrap:break-word;}
 h1, h2, h3, h4, h5, h6 {font-weight:normal;font-family:"ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;word-break:break-all;word-wrap:break-word;}
+h2{margin-top: 17px; margin-bottom: 7px; font-size: 28px}
 
 /*input, button {font-family:"ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;}*/
 
@@ -22,9 +23,11 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 
 #login{position:relative; padding:5px;background-color: white;border-radius:4px;-webkit-box-shadow:0 0 .625em .07em rgba(0,0,0,0.2);box-shadow: 0 0 .625em .07em rgba(0,0,0,0.2);
 		max-width:500px;margin-left:-10px;margin-top: 10%;z-index:1;}
+#login-control{margin-left: 25%; padding-right: 10px}
 #register{position:relative; padding:5px;background-color: white;border-radius:4px;-webkit-box-shadow:0 0 .625em .07em rgba(0,0,0,0.2);box-shadow: 0 0 .625em .07em rgba(0,0,0,0.2);
 		max-width:500px;margin-left:-10px;margin-top: 8%;z-index:2;}
-#footer{color:white;font-size:16px; margin-top:20px;height:30px;}
+#register-control{margin-left: 25%; padding-right: 10px}
+#footer{color:white;font-size:16px; height:30px;}
 
 #footer .btn-link{color:white;text-shadow:none}
 #footer .btn-link:hover{color:rgb(24, 188, 156)}
@@ -49,22 +52,22 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 
 .container-fluid {padding:20px;padding-bottom: 10px}
 
-.flowinfo{font-weight: bold; font-size: 35px;overflow: visible;word-break:normal;word-wrap:normal;}
-.flowinfo ul li {list-style-type: none; word-break:normal; word-wrap:normal;}
+.flowinfo{font-weight: bold; font-size: 35px;overflow: visible;word-break:normal;word-wrap:normal;font-family: Verdana}
+.flowinfo ul li {list-style-type: none; word-break:normal; word-wrap:normal;cursor: pointer;}
 .flowtext {
 	color:#8ba39e;
 	opacity:0.5;
-    transition:color 2s;
-    -moz-transition:color 2s; /* Firefox 4 */
-    -webkit-transition:color 2s; /* Safari and Chrome */
-    -o-transition:color 2s; /* Opera */
+    transition:color 1.5s;
+    -moz-transition:color 1.5s; /* Firefox 4 */
+    -webkit-transition:color 1.5s; /* Safari and Chrome */
+    -o-transition:color 1.5s; /* Opera */
 }
-.flowtext:hover{opacity:0.7;color:#4f96e5;}
+.flowtext:hover{opacity:1;color:rgb(79,159,229);}
 
 .main-body{background:rgba(0,0,0,0);}
 .mian-body {-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}
-#filecontrol{padding: 25px;background-color: #fff}
-#editor{background:rgba(0,0,0,0);}
+#filecontrol{padding: 25px;background-color: #fff; font-size: 16px;-webkit-box-shadow:0 0 .625em .07em rgba(0,0,0,0.2);box-shadow: 0 0 .625em .07em rgba(0,0,0,0.2);min-width: 800px;z-index:3;}
+#editor{background:rgba(0,0,0,0);min-width: 900px;z-index: 4}
 .btn-white{background: white;-webkit-box-shadow:0 0 .625em .07em rgba(0,0,0,0.1);box-shadow: 0 0 .625em .07em rgba(0,0,0,0.1);}
 .btn-white:hover, .btn-white:focus, .btn-white:active {background: rgba(56, 121, 217, 0.5)}
 
@@ -77,7 +80,6 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 .navbar .nav li.dropdown.open > .dropdown-toggle {background-color:#484848}
 */
 
-#filecontrol{font-size: 16px;-webkit-box-shadow:0 0 .625em .07em rgba(0,0,0,0.2);box-shadow: 0 0 .625em .07em rgba(0,0,0,0.2);min-width: 680px;}
 
 #nav-avatar {min-height:32px;min-width:32px;max-height:32px;max-width:32px;margin:-10px 5px;}
 .shared-character {min-height:40px;min-width:40px;max-height:40px;max-width:40px;filter:alpha(opacity=40);-moz-opacity:0.4;-khtml-opacity:0.4;opacity:0.4;}
@@ -102,7 +104,7 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 #file-list .span10 {min-height:500px !important;}
 
 #chatbox .shared-character {margin:1px;}
-#chatbox {overflow:hidden;}
+#chatbox {overflow:hidden; z-index:4;}
 #chat-show{background-color: #fff}
 
 .popover-character {margin:3px 10px 0 0;min-height:48px;min-width:48px;max-height:48px;max-width:48px;}
@@ -122,7 +124,7 @@ body{	font-family: 'Microsoft YaHei', 'Microsoft Sans Serif';
 #member-list-doc {margin-top:5px;overflow:auto;}
 
 #chatbox {overflow: visible;position: relative;min-width: 200px}
-#editormain {position:fixed;}
+#editormain {min-width: 600px;position: relative;}
 #editormain-inner {position:relative;}
 
 #chat-show {overflow:auto;margin:4px 0;padding:5px 10px;border:1px solid #ccc;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
@@ -175,6 +177,7 @@ textarea {resize:none;}
 #fullscreentip {display:none;position:absolute;z-index:10000;left:0px;top:10px;}
 
 .userlistimg {min-width:32px;min-height:32px;}
-#editormain{min-width: 600px;position: relative;}
-#editor{min-width: 900px}
+
 .dropdown-toggle{cursor: pointer !important;}
+.alert{padding: 10px; margin-bottom: 0px}
+hr{margin-top: 14px; margin-bottom: 14px}
