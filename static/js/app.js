@@ -101,8 +101,6 @@ app.resize = function() {
 	var topHeight = document.getElementById("nav-head").clientHeight;
 	$('#filecontrol').css("margin-top", topHeight - 5);
 	$('#editor').css("margin-top", topHeight + 5);
-	$('#register').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#register').height()) / 2 - 40) + 'px');
-	$('#popush-info').css('margin-top', ((h-$('#big-one').height()-$('#footer').height()-$('#popush-info').height()) / 2 - 40) + 'px');
 	$('#fullscreentip').css('left', (($(window).width()-$('#fullscreentip').width())/2) + 'px');
 };
 
