@@ -126,6 +126,10 @@ app.init || (app.init = {});
 
 /* 初始化socket逻辑事件监听 */
 (function() {
+	app.init.socket = function() {
+		app.socket || (app.socket = io.connect(app.Package.SOCKET_IO));
+	};
+	
 	var _init = false;
 	app.init.mainSocket = function() {
 	    if (_init) { 
@@ -133,8 +137,10 @@ app.init || (app.init = {});
 		} else { 
     		_init = true; 
     	}
-    
+		
+		app.socket || app.init.socket();
     	var socket = app.socket;
+		
     	socket.on('connect', function() { app.socket.emit('version', {}); } );
     	socket.on('disconnect', function() { app.isLogined = false; } );
     	socket.on('version', onVersion);

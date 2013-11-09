@@ -3,7 +3,7 @@ var strings = strings || {};	//中英语言映射
 
 /* 全局变量 */
 _.defaults(app, {
-	socket: io.connect(app.Package.SOCKET_IO),	//socket
+	socket: null,								//socket
 	currentUser: null,							//用户信息
 	isLogined: false,							//是否登录
 	views: {},									//视图

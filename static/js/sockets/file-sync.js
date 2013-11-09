@@ -135,6 +135,7 @@ app.init || (app.init = {});
 			return; 
 		}
 		_init = true;
+		app.socket || app.init.socket();
 		/* 初始化文件相关事件同步收发 */
 		var detach = app.Lock.detach;
 		app.socket.on('new', detach);

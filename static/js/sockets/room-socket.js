@@ -538,6 +538,7 @@ app.init || (app.init = {});
 		} else { 
 			_init = true; 
 		}
+		app.socket || app.init.socket();
 		app.socket.on('set', app.Lock.detach);
     
 		app.room || app.init.room();

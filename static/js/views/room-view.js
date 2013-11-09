@@ -301,7 +301,7 @@ var app = app || {};
         },
         toConsole: function (content, type) {
             type = (type) ? ('<span class="' + type + '">') : '<span>';
-            this.$conBox.append(type + _.escape(content || '') + '</span>');
+            this.$conBox.append(type + _.escape(content || '').replace(/ /g, '&nbsp;').replace(/\n/gm, '<br />') + '</span>');
             var o = this.$conBox[0];
             o.scrollTop = o.scrollHeight;
         },
