@@ -1,5 +1,5 @@
 var app = app || {};	//全局区域，管理MVC
-var strings = strings || {};	//中英语言映射
+var strings = strings || {};	//当前显示语言的映射
 
 /* 全局变量 */
 _.defaults(app, {
@@ -13,7 +13,6 @@ _.defaults(app, {
 	uploadType: /text|javascript/,				//上传类型
 	router: null,								//路由
 	resize: null, 								//调整大小函数
-	/* 房间 */
 	noVoice: false,								//支持语音
 	inRoom: false,								//房间状态
 });
@@ -26,7 +25,7 @@ app.showMessageBar = function(id, stringid, type) {
 	if(type && type != 'warning')
 		o.addClass('alert-' + type);
 	else
-	o.addClass('alert-warning');
+		o.addClass('alert-warning');
 	(stringid == null) && (stringid = 'inner error');
 	o.find('span').html(strings[stringid] || stringid);
 	o.slideDown();
@@ -119,25 +118,39 @@ $(document).ready(function() {
 	app.Lock.attach({
 		loading: '#login-control',
 		tbegin: 0,
-		tend: -1,
+		tend: 2500,
 		data: 'pageIsLoading',
 		fail: function() {
-			app.failed = true;
+			app.isLogined = false;
 			app.showMessageBar('login-message', 'loadfailed');
+			if(app.socket) {
+				app.socket.socket.disconnect();
+				app.socket.connect();
+			}
 		},
 	});
 
 	$('body').show();
   
-	//初始化视图、路由和集合
-	var funcs = app.init;
-	for(var i in funcs) {
-		if(funcs.hasOwnProperty(i) && typeof funcs[i] === 'function') {
-			funcs[i].call(app);
+	//初始化视图、路由和集合等
+	var init = function(funcs) {
+		for(var i in funcs) {
+			if(funcs.hasOwnProperty(i) && typeof funcs[i] === 'function') {
+				funcs[i].call(app);
+			}
 		}
-	}
-	delete funcs;
-	delete app.init; /* now it's no use to run it again*/
+	};
+	/*
+	  说明：还可以使用类似z-index的整数排序方式，但那样次序会很乱，
+		而且与init中可调用其它init的策略相违，故弃之
+	*/
+	init(app.init_pre); // 必须最早初始化的东西
+	init(app.init);	// 一般的初始化使用app.init
+	init(app.init_suf); // 必须等待“大部分对象都构建完成”才能初始化的函数的集合
+	/* now they're no use, and we should not run them again*/
+	delete app.init_suf;
+	delete app.init;
+	delete app.init_pre;
 
 	//初始化URL历史
 	Backbone.history.start({ root: app.Package.ROUTE_ROOT });

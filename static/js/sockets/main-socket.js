@@ -9,10 +9,9 @@ var onVersion = function(data) {
 		window.location.reload(true);
 	}
 	if (app.Lock.getMessage() === 'pageIsLoading') { 
-		app.Lock.detach(); 
-	}
-	else { 
-		app.Lock.fail(); 
+		app.Lock.detach(); // first connection
+	} else { 
+		app.Lock.fail(); // connection has been rebuilt
 	}
 	app.cleanLoading();
 
@@ -37,25 +36,21 @@ var onLogin = function(data) {
 	}
   
 	app.Lock.removeLoading();
-	if(data.err){
+	if (data.err) {
 		app.isLogined = false;
-		if(data.err == 'expired') {
+		if (data.err == 'expired') {
 			$.removeCookie('sid');
     	}
     	app.Lock.detach(data);
 	} else {
 		$.cookie('sid', data.sid, {expires: 7});
     	
-    	/*更新页面*/
-		$('#nav-user-name').text(data.user.name);
-		$('#nav-avatar').attr('src', data.user.avatar);
 		data.user.owner = data.user.online = true;
 		app.currentUser = data.user;
-    
-		$('#ownedfileex>a').attr('href', '#index/' + name);
-		$('#sharedfile>a').attr('href', '#index/shared@' + name);
-		app.views.files.$tabOwnedEx.find('a.file-go').attr('href', '#index/' + data.user.name);
-		app.views.files.$tabShared.find('a.file-go').attr('href', '#index/shared@' + data.user.name);
+
+    	/*更新页面*/
+		app.views['account'].show();
+		app.views.files.afterLogin();
 
 		/*更新URL*/
 		app.isLogined = true;
@@ -122,29 +117,32 @@ var onDownzip = function(data) {
 	document.getElementById('downloada').dispatchEvent(evt);
 };
 
-app.init || (app.init = {});
+app.init_suf || (app.init_suf = {});
 
 /* 初始化socket逻辑事件监听 */
 (function() {
-	app.init.socket = function() {
-		app.socket || (app.socket = io.connect(app.Package.SOCKET_IO));
+	app.init_suf.socket = function() {
+		if (app.socket) {
+			return;
+		}
+		var socket = app.socket = io.connect(app.Package.SOCKET_IO);
+    	socket.on('connect', function() { app.socket.emit('version', {}); } );
+    	socket.on('disconnect', function() { app.isLogined = false; } );
+    	socket.on('version', onVersion);
+    	socket.on('login', onLogin);
 	};
 	
 	var _init = false;
-	app.init.mainSocket = function() {
+	app.init_suf.mainSocket = function() {
 	    if (_init) { 
 	    	return; 
 		} else { 
     		_init = true; 
     	}
 		
-		app.socket || app.init.socket();
+		app.init_suf.socket();
     	var socket = app.socket;
 		
-    	socket.on('connect', function() { app.socket.emit('version', {}); } );
-    	socket.on('disconnect', function() { app.isLogined = false; } );
-    	socket.on('version', onVersion);
-    	socket.on('login', onLogin);
     	socket.on('register', app.Lock.detach);
     	socket.on('avatar', app.Lock.detach);
     	socket.on('password', app.Lock.detach);

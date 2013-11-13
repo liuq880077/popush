@@ -106,6 +106,10 @@ var app = app || {};
             };
             reader.readAsDataURL(file);
         },
+        show: function() {
+			$('#nav-user-name').text(app.currentUser.name);
+			$('#nav-avatar').attr('src', app.currentUser.avatar);
+        },
     });
     app.init || (app.init = {});
     app.init.accountView = function () {

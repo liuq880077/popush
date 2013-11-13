@@ -7,8 +7,10 @@ var app = app || {};
     _.extend(this, opts);
     return this;
   };
+  Page.prototype.show = function() { this.el.show(); };
   Page.prototype.hide = function() { this.el.hide(); };
-  Page.prototype.show = function() { this.el.fadeIn('fast'); };
+  Page.prototype.fadeIn = function() { this.el.fadeIn('fast'); };
+  Page.prototype.fadeOut = function() { this.el.fadeOut('fast'); };
   
   var PageRouter = Backbone.Router.extend({
     routes: {
@@ -26,10 +28,8 @@ var app = app || {};
         logined: 0,
         force: true,
         show: function() {
-          this.el.fadeIn('fast',
-          function() {
-            app.views.login.show();
-          });
+          this.el.show();
+          app.views.login.show();
         },
         hide: function() {
           this.el.find('#login-padding').slideDown();
@@ -42,10 +42,8 @@ var app = app || {};
         depend: ['_head1', '_footer', '_ads'],
         force: true,
         show: function() {
-          this.el.fadeIn('fast',
-          function() {
-            app.views.register.show();
-          });
+          this.el.show();
+          app.views.register.show();
         },
         hide: function() {
           this.el.find('#register-padding').slideUp();
@@ -78,9 +76,7 @@ var app = app || {};
         el: '#editor',
         depend: ['_head2'],
         logined: true,
-        show: function() {
-          this.el.fadeIn('fast');
-        },
+        show: Page.prototype.fadeIn,
         hide: function() {
           app.views.room.closeeditor();
           this.el.hide();

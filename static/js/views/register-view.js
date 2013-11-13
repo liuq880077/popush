@@ -24,7 +24,7 @@ var app = app || {};
                 str = 'name invalid';
             } else if (name.length < 6 || name.length > 20) {
                 str = 'namelength';
-            } else if (pass.length > 32) {
+            } else if (pass.length > 31) {
                 str = 'passlength';
             } else if (pass != confirm) {
                 str = 'doesntmatch';
@@ -56,7 +56,7 @@ var app = app || {};
         show: function () {
             $('#register-inputPassword').val('');
             $('#register-confirmPassword').val('');
-            $('#register-message').slideUp();
+            $('#register-message').hide();
             $('#register-padding').slideDown('fast');
             $('#register-inputName').focus();
         },

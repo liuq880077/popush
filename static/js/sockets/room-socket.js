@@ -527,18 +527,18 @@ var emit = function(m, d) {
   		app.socket.emit(m);
 };
 
-app.init || (app.init = {});
+app.init_suf || (app.init_suf = {});
 
 /* 初始化room socket监听 */
 (function() {
 	var _init = false;
-	app.init.roomSocket = function() {
+	app.init_suf.roomSocket = function() {
 		if(_init) { 
 			return; 
 		} else { 
 			_init = true; 
 		}
-		app.socket || app.init.socket();
+		app.init_suf.mainSocket();
 		app.socket.on('set', app.Lock.detach);
     
 		app.room || app.init.room();

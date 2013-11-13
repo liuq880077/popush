@@ -16,12 +16,8 @@ var app = app || {};
                 path: dir,
                 loading: this.$noFile,
                 mode: mode,
-                success: function () {
-                    if (mode != that.mode) {
-                        that.renewList(null, {
-                            mode: mode
-                        });
-                    }
+                success: (mode == this.mode) ? null : function () {
+                    that.renewList(null, { mode: mode });
                 },
             });
         },
@@ -81,30 +77,25 @@ var app = app || {};
         renewList: function (c, opts) {
             opts || (opts = {});
             if (opts.previousModels) {
-                _.each(opts.previousModels,
-				function (m) {
+                _.each(opts.previousModels, function (m) {
 				    m.trigger('remove');
 				});
             }
             var els = [],
 			mode = (opts.mode || this.mode),
 			isMine = (mode == app.FilesView.Mode.BelongSelf);
-            _.each(this.collection.models,
-			function (model) {
+            _.each(this.collection.models, function (model) {
 			    if (isMine == model.json.belongSelf) {
 			        if (model.view) {
 			            model.view.$el.show();
 			        } else {
-			            model.view = new this.ItemView({
-			                model: model
-			            });
+			            model.view = new this.ItemView({ model: model });
 			            els.push(model.view.render().el);
 			        }
 			    } else {
 			        model.view && (model.view.$el.hide());
 			    }
-			},
-			this);
+			}, this);
             this.$table.append(els);
             return this;
         },
@@ -142,6 +133,10 @@ var app = app || {};
             this.$dir.html(s1);
             return this;
         },
+		afterLogin: function() {
+			this.$tabOwnedEx.find('a.file-go').attr('href', '#index/' + app.currentUser.name);
+			this.$tabShared.find('a.file-go').attr('href', '#index/shared@' + app.currentUser.name);
+		}
     },
 	{
 	    Mode: {
