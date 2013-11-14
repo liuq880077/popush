@@ -127,7 +127,7 @@ $(document).ready(function() {
 		data: 'pageIsLoading',
 		fail: function(data) {
 			app.isLogined = false;
-			app.showMessageBar('login-message', 'loadfailed');
+			app.showMessageBar('#login-message', 'loadfailed');
 			if(app.socket && app.socket.socket.disconnect && app.socket.connect) {
 				app.socket.socket.disconnect();
 				app.socket.connect();

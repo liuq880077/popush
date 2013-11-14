@@ -84,7 +84,7 @@ app.Room && _.extend(app.Room.prototype, {
     	app.Lock.remove();
     	data.notRemove = true;
 		
-		//初始化试图
+		//初始化视图
     	$('#editor-back').attr('href', '#index' + app.views.files.shownPath);
     	this.view.enter(data);
     	this.timestamp = 1;

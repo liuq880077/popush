@@ -64,8 +64,13 @@ var _lock = {
   callback: function(method, data) {
     var l = _lock, msg = {msg: l.msg}, f = l[method];
     app.removeLoading(l.el);
+    (typeof data == 'object') || (data = {data: data});
     (typeof f === 'function') && f.call(msg, data);
-    (data && data.notRemove === true) || l.stop();
+    if(data.notRemove === true) {
+      app.loading(l.el);
+    } else {
+      l.stop();
+    }
   },
 };
 
@@ -127,6 +132,10 @@ app.Lock = {
   
   removeLoading: function() {
     app.removeLoading(_lock.el);
+  },
+  
+  addLoading: function() {
+    app.loading(_lock.el);
   },
   
   fail: function() {
