@@ -131,10 +131,7 @@ io.sockets.on('connection', function(socket){
 		if(!check(data, 'name', 'password')){
 			return;
 		}
-		userDAO.register(data.name, data.password, 'static/images/character.png', 'user', function(err){
-			if(err){
-			//	fs.unlink(path);
-			}
+		userDAO.register(data.name, data.password, data.avatar || 'images/character.png', 'user', function(err){
 			socket.emit('register', {err:err});
 		});
 	});
