@@ -1,8 +1,7 @@
 var app = app || {};
-app.init || (app.init = {});
-app.languages || (app.languages = {});
 var strings = strings || {};
 
+app.languages || (app.languages = {});
 app.languages._set = function(langId) {
   var oldl = strings, newl = app.languages[langId];
   if(!langId || !newl) { return false; }
@@ -24,9 +23,10 @@ app.languages._set = function(langId) {
   return true;
 };
 
+app.init_pre || (app.init_pre = {});
 (function() {
   var _init = false;
-  app.init.lang = function() {
+  app.init_pre.lang = function() {
     if(_init) { return; } else { _init = true; }
     
     app.languages._set($.cookie('language') || 'zh-CN');

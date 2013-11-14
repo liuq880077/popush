@@ -28,7 +28,7 @@ app.showMessageBar = function(id, stringid, type) {
 		o.addClass('alert-warning');
 	(stringid == null) && (stringid = 'inner error');
 	o.find('span').html(strings[stringid] || stringid);
-	o.slideDown();
+	o.slideDown('fast');
 };
 
 /* 显示输入模态对话框 */
@@ -36,7 +36,7 @@ app.showInputModal = function(modal, val) {
 	modal.find('.form-group').removeClass('danger').find('input').val('');
 	modal.find('.help-inline').text('');
 	var i = modal.find('.modal-input').val(val || '');
-	modal.modal('show').on('shown', function() {
+	modal.on('shown', function() {
 		var ok = modal.find('.modal-confirm');
 		i.focus().on('keydown', function(e) {
 			var k = e.keyCode || e.which;
@@ -47,7 +47,12 @@ app.showInputModal = function(modal, val) {
 				modal.modal('hide');
 			}
     	});
-  	});
+  	}).on('hide', function() {
+		i.off('keydown');
+		modal.off('shown');
+		modal.off('hide');
+	});
+	modal.modal('show');
 };
 
 /* 显示定时提示信息对话框 */
@@ -93,7 +98,7 @@ app.resize = function() {
 	$("#login").css("margin-bottom", bottomHeight + 20);
 	$("#register").css("margin-bottom", bottomHeight + 20);
 	$("#popush-info").css("margin-bottom", bottomHeight + 20);
-	$("#filecontrol").css("margin-bottom", bottomHeight + 10);
+	$("#filecontrol").css("margin-bottom", bottomHeight + 45);
 	var marT = (bigoneHeight + 20) > 192 ? (bigoneHeight + 20) : 192;
 	$("#login").css("margin-top", marT);
 	$("#register").css("margin-top", marT);
@@ -120,18 +125,17 @@ $(document).ready(function() {
 		tbegin: 0,
 		tend: 2500,
 		data: 'pageIsLoading',
-		fail: function() {
+		fail: function(data) {
 			app.isLogined = false;
 			app.showMessageBar('login-message', 'loadfailed');
-			if(app.socket) {
+			if(app.socket && app.socket.socket.disconnect && app.socket.connect) {
 				app.socket.socket.disconnect();
 				app.socket.connect();
 			}
+			data.notRemove = true;
 		},
 	});
 
-	$('body').show();
-  
 	//初始化视图、路由和集合等
 	var init = function(funcs) {
 		for(var i in funcs) {
@@ -144,7 +148,9 @@ $(document).ready(function() {
 	  说明：还可以使用类似z-index的整数排序方式，但那样次序会很乱，
 		而且与init中可调用其它init的策略相违，故弃之
 	*/
-	init(app.init_pre); // 必须最早初始化的东西
+	init(app.init_pre); // 必须最早初始化的东西，在页面显示前初始化
+	$('body').show();
+  
 	init(app.init);	// 一般的初始化使用app.init
 	init(app.init_suf); // 必须等待“大部分对象都构建完成”才能初始化的函数的集合
 	/* now they're no use, and we should not run them again*/

@@ -61,6 +61,12 @@ var _lock = {
     l.msg = {};
   },
   
+  callback: function(method, data) {
+    var l = _lock, msg = {msg: l.msg}, f = l[method];
+    app.removeLoading(l.el);
+    (typeof f === 'function') && f.call(msg, data);
+    (data && data.notRemove === true) || l.stop();
+  },
 };
 
 app.Lock = {
@@ -112,15 +118,7 @@ app.Lock = {
   },
   
   detach: function(data) {
-    var l = _lock, msg = {msg: l.msg};
-    app.removeLoading(l.el);
-    (data === undefined) && (data = {});
-    if(data.err) {
-      (typeof l.error === 'function') && l.error.call(msg, data);
-    } else {
-      (typeof l.success === 'function') && l.success.call(msg, data);
-    }
-    (data.notRemove !== true) && l.stop();
+	_lock.callback((data && data.err) ? 'error' : 'success', data);
   },
   
   remove: function() {
@@ -131,25 +129,18 @@ app.Lock = {
     app.removeLoading(_lock.el);
   },
   
-  fail: function(data) {
-    var l = _lock, msg = {msg: l.msg}, f = l.fail;
-    l.stop();
-    (typeof f === 'function') && f.call(msg, data);
+  fail: function() {
+	_lock.callback('fail');
   },
   
   error: function(data) {
-    var l = _lock, msg = {msg: l.msg}, f = l.error;
-    app.removeLoading(l.el);
-    (typeof f === 'function') && f.call(msg, data);
-    l.stop();
+	_lock.callback('error', data);
   },
   
   success: function(data) {
-    var l = _lock, msg = {msg: l.msg}, f = l.success;
-    app.removeLoading(l.el);
-    (typeof f === 'function') && f.call(msg, data);
-    l.stop();
-  }
+	_lock.callback('success', data);
+  },
+  
 };
 
 })();

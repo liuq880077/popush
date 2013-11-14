@@ -131,19 +131,11 @@ io.sockets.on('connection', function(socket){
 		if(!check(data, 'name', 'password')){
 			return;
 		}
-		var name = new Date().getTime() + '.png';
-		var path = 'static/faces/' + name;
-		var url = 'faces/' + name;
-		fs.link('static/images/character.png', path, function(err){
+		userDAO.register(data.name, data.password, 'static/images/character.png', 'user', function(err){
 			if(err){
-				socket.emit('register', {err:'inner error'});
+			//	fs.unlink(path);
 			}
-			userDAO.register(data.name, data.password, url, 'user', function(err){
-				if(err){
-				//	fs.unlink(path);
-				}
-				socket.emit('register', {err:err});
-			});
+			socket.emit('register', {err:err});
 		});
 	});
 
@@ -244,10 +236,8 @@ io.sockets.on('connection', function(socket){
 			}
 			userDAO.updateAvatar(user._id, url, function(err){
 				if(err){
-					fs.unlink(path);
 					return socket.emit('avatar', {err:err});
 				}
-				fs.unlink('static/faces/' + user.avatar.split('/').pop(), function(){});
 				user.avatar = url;
 				return socket.emit('avatar', {url:url});
 			});

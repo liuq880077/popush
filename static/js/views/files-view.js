@@ -213,65 +213,57 @@ var app = app || {};
         var modal = Backbone.$('#newfile');
         modal.find('#newfile-label').text(strings[type == 'dir' ? 'newfolder' : 'newfile']);
         app.showInputModal(modal);
-        modal.on('shown',
-		function () {
-		    modal.off('shown');
-		    var input = modal.find('.modal-input'),
-			cnfm = modal.find('.modal-confirm');
-		    modal.on('hide',
-			function () {
-			    input.off();
-			    cnfm.off();
-			    modal.off('hide');
-			});
-		    input.on('input',
-			function () {
-			    var name = Backbone.$.trim(input.val()),
-				err = false;
-			    if (!name) {
-			        err = 'inputfilename';
-			    }
-			    if (app.fileNameReg.test(name)) {
-			        err = 'filenameinvalid';
-			    }
-			    if (name.length > 32) {
-			        err = 'filenamelength';
-			    }
-			    if (err) {
-			        if (name) {
-			            app.showMessageInDialog(modal, err);
-			        }
-			        cnfm.attr('disabled', 'disabled');
-			    } else {
-			        modal.find('.help-inline').text('');
-			        modal.find('.form-group').removeClass('error');
-			        cnfm.removeAttr('disabled');
-			    }
-			});
-		    cnfm.attr('disabled', 'disabled').on('click',
-			function () {
-			    if (cnfm.attr('disabled') !== undefined) {
-			        return;
-			    }
-			    var name = Backbone.$.trim(modal.find('#newfile-input').val());
-			    that.collection.create({
-			        type: type,
-			        path: that.collection.path + '/' + name
-			    },
-				{
-				    loading: modal.find('.modal-buttons'),
-				    error: function (m, data) {
-				        app.showMessageInDialog(modal, data.err);
-				    },
-				    success: function () {
-				        modal.modal('hide');
-				        if (type == 'dir') {
-				            app.showMessageBox('newfolder', 'createfoldersuccess');
-				        } else {
-				            app.showMessageBox('newfile', 'createfilesuccess');
-				        }
-				    },
-				});
+		var input = modal.find('.modal-input'),
+		cnfm = modal.find('.modal-confirm');
+		modal.on('hide', function () {
+			input.off('input');
+			cnfm.off('click');
+			modal.off('hide');
+		});
+		input.on('input', function () {
+			var name = Backbone.$.trim(input.val()),
+			err = false;
+			if (!name) {
+				err = 'inputfilename';
+			}
+			if (app.fileNameReg.test(name)) {
+				err = 'filenameinvalid';
+			}
+			if (name.length > 32) {
+				err = 'filenamelength';
+			}
+			if (err) {
+				if (name) {
+					app.showMessageInDialog(modal, err);
+				}
+				cnfm.attr('disabled', 'disabled');
+			} else {
+				modal.find('.help-inline').text('');
+				modal.find('.form-group').removeClass('error');
+				cnfm.removeAttr('disabled');
+			}
+		});
+		cnfm.attr('disabled', 'disabled').on('click', function () {
+			if (cnfm.attr('disabled') !== undefined) {
+				return;
+			}
+			var name = Backbone.$.trim(modal.find('#newfile-input').val());
+			that.collection.create({
+				type: type,
+				path: that.collection.path + '/' + name
+			}, {
+				loading: modal.find('.modal-buttons'),
+				error: function (m, data) {
+					app.showMessageInDialog(modal, data.err);
+				},
+				success: function () {
+					modal.modal('hide');
+					if (type == 'dir') {
+						app.showMessageBox('newfolder', 'createfoldersuccess');
+					} else {
+						app.showMessageBox('newfile', 'createfilesuccess');
+					}
+				},
 			});
 		});
     };

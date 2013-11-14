@@ -32,18 +32,17 @@ var app = app || {};
             if (str) {
                 app.showMessageBar(id, str);
             } else if (app.Lock.attach({
-                    loading: '#register-control',
-                    error: function (data) {
+				loading: '#register-control',
+				error: function (data) {
 					app.showMessageBar(id, data.err, 'error');
-            },
+				},
                 success: function () {
 					app.showMessageBar(id, 'registerok');
-            },
+				},
             })) {
                 app.socket.emit('register', {
                     name: name,
                     password: pass,
-                    avatar: app.User.prototype.defaults.avatar,
                 });
             }
         },

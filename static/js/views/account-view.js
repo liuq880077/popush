@@ -55,8 +55,7 @@ var app = app || {};
             var modal = $('#changepassword');
             app.showInputModal(modal);
             var confirm = modal.find('.modal-confirm');
-            confirm.off();
-            confirm.on('click', this.changepassword);
+            confirm.off('click').on('click', this.changepassword);
         },
         /*打开修改头像对话框*/
         changeavataropen: function () {
@@ -64,8 +63,7 @@ var app = app || {};
             app.showInputModal(modal);
             $('#changeavatar-img').attr('src', app.currentUser.avatar);
             var confirm = modal.find('#changeavatar-input');
-            confirm.off();
-            confirm.on('change', this.changeavatar);
+            confirm.off('change').on('change', this.changeavatar);
         },
         /*修改头像*/
         changeavatar: function () {

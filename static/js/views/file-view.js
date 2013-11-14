@@ -55,28 +55,24 @@ var app = app || {};
 			model = this.model;
             modal.find('.folder').text(strings[(model.get('type') == 'dir') ? 'folder' : 'file']);
             modal.find('#delete-name').text(model.json.name);
-            modal.modal('show').on('shown',
-			function () {
-			    modal.off('shown');
-			    var cnfm = modal.find('.modal-confirm');
-			    modal.on('hide',
-				function () {
-				    cnfm.off();
-				    modal.off('hide');
-				});
-			    cnfm.on('click',
-				function () {
-				    model.destroy({
-				        loading: modal.find('.modal-buttons'),
-				        success: function () {
-				            modal.modal('hide');
-				        },
-				        error: function (m, data) {
-				            app.showMessageBox('delete', data.err);
-				        },
-				    });
+			var cnfm = modal.find('.modal-confirm');
+			modal.on('hide', function () {
+				cnfm.off('click');
+				modal.off('shown');
+				modal.off('hide');
+			});
+			cnfm.on('click', function () {
+				model.destroy({
+					loading: modal.find('.modal-buttons'),
+					success: function () {
+						modal.modal('hide');
+					},
+					error: function (m, data) {
+						app.showMessageBox('delete', data.err);
+					},
 				});
 			});
+			modal.modal('show');
         },
 		/*重命名文件或文件夹*/
         rename: function () {
@@ -86,65 +82,57 @@ var app = app || {};
             var modal = $('#rename'),
 			model = this.model;
             app.showInputModal(modal, model.json.name);
-            modal.on('shown',
-			function () {
-			    modal.off('shown');
-			    var input = modal.find('.modal-input'),
-				cnfm = modal.find('.modal-confirm');
-			    modal.on('hide',
-				function () {
-				    input.off();
-				    cnfm.off();
-				    modal.off('hide');
-				});
-			    input.on('input',
-				function () {
-				    var name = Backbone.$.trim(input.val()),
-					err = false;
-				    if (!name) {
-				        err = 'inputfilename';
-				    }
-				    if (app.fileNameReg.test(name)) {
-				        err = 'filenameinvalid';
-				    }
-				    if (name.length > 32) {
-				        err = 'filenamelength';
-				    }
-				    if (err) {
-				        if (name) {
-				            app.showMessageInDialog(modal, err);
-				        }
-				        cnfm.attr('disabled', 'disabled');
-				    } else {
-				        modal.find('.help-inline').text('');
-				        modal.find('.form-group').removeClass('error');
-				        cnfm.removeAttr('disabled');
-				    }
-				});
-			    cnfm.on('click',
-				function () {
-				    if (cnfm.attr('disabled') !== undefined) {
-				        return;
-				    }
-				    var name = Backbone.$.trim(input.val()),
-					err = false;
-				    if (name == model.json.name) {
-				        modal.modal('hide');
-				        return;
-				    }
-				    model.save({
-				        path: model.get('path').replace(/(.*\/)?(.*)/, '$1' + name),
-				    },
-					{
-					    oldPath: model.get('path'),
-					    error: function (m, data) {
-					        app.showMessageInDialog(modal, data.err);
-					    },
-					    success: function () {
-					        modal.modal('hide');
-					    },
-					    loading: modal.find('.modal-buttons'),
-					});
+			var input = modal.find('.modal-input'),
+			cnfm = modal.find('.modal-confirm');
+			modal.on('hide', function () {
+				input.off('input');
+				cnfm.off('click');
+				modal.off('hide');
+			});
+			input.on('input', function () {
+				var name = Backbone.$.trim(input.val()),
+				err = false;
+				if (!name) {
+					err = 'inputfilename';
+				}
+				if (app.fileNameReg.test(name)) {
+					err = 'filenameinvalid';
+				}
+				if (name.length > 32) {
+					err = 'filenamelength';
+				}
+				if (err) {
+					if (name) {
+						app.showMessageInDialog(modal, err);
+					}
+					cnfm.attr('disabled', 'disabled');
+				} else {
+					modal.find('.help-inline').text('');
+					modal.find('.form-group').removeClass('error');
+					cnfm.removeAttr('disabled');
+				}
+			});
+			cnfm.on('click', function () {
+				if (cnfm.attr('disabled') !== undefined) {
+					return;
+				}
+				var name = Backbone.$.trim(input.val()),
+				err = false;
+				if (name == model.json.name) {
+					modal.modal('hide');
+					return;
+				}
+				model.save({
+					path: model.get('path').replace(/(.*\/)?(.*)/, '$1' + name),
+				}, {
+					oldPath: model.get('path'),
+					error: function (m, data) {
+						app.showMessageInDialog(modal, data.err);
+					},
+					success: function () {
+						modal.modal('hide');
+					},
+					loading: modal.find('.modal-buttons'),
 				});
 			});
         },
