@@ -38,7 +38,7 @@ function log(){
 	for(var i in sig){
 		process.on(sig[i], function(){
 			log('server stop');
-			process.kill(0, 'SIGKILL');
+			process.kill(process.pid, 'SIGKILL');
 		});
 	}
 	process.on('uncaughtException', function(err){
@@ -131,19 +131,8 @@ io.sockets.on('connection', function(socket){
 		if(!check(data, 'name', 'password')){
 			return;
 		}
-		var name = new Date().getTime() + '.png';
-		var path = 'static/faces/' + name;
-		var url = 'faces/' + name;
-		fs.link('static/images/character.png', path, function(err){
-			if(err){
-				socket.emit('register', {err:'inner error'});
-			}
-			userDAO.register(data.name, data.password, url, 'user', function(err){
-				if(err){
-					fs.unlink(path);
-				}
-				socket.emit('register', {err:err});
-			});
+		userDAO.register(data.name, data.password, data.avatar || 'images/character.png', 'user', function(err){
+			socket.emit('register', {err:err});
 		});
 	});
 
@@ -244,14 +233,49 @@ io.sockets.on('connection', function(socket){
 			}
 			userDAO.updateAvatar(user._id, url, function(err){
 				if(err){
-					fs.unlink(path);
 					return socket.emit('avatar', {err:err});
 				}
-				fs.unlink('static/faces/' + user.avatar.split('/').pop(), function(){});
 				user.avatar = url;
 				return socket.emit('avatar', {url:url});
 			});
 		});
+	});
+	
+	socket.on('upload', function(data){
+		if (!check(data, 'path', 'type', 'text')) {
+			return;
+		}
+		if (!socket.session) {
+			return socket.emit('unauthorized');
+		}
+		
+		var user = socket.session.user;
+		docDAO.createDoc(user._id, data.path, data.type, function(err, ctime){
+			if (err)
+				return socket.emit('new', {err:err});
+			socket.emit('new', {createTime: ctime});
+			
+			_leave();
+			
+			docDAO.getRevision(user._id, data.path, 0, null, function(err, revision, obj){
+			if(err){
+				return socket.emit('upload', {err:err});
+			}
+			var room = rooms[data.path] = {id:revision.doc, path:data.path, count:0, users:{}, version:0, buffer:new DocBuffer(revision.content), bps:'', exprs:{}};
+			room.users[user.name] = true;
+			room.count++;
+			room.buffer.update(0, 0, data.text, function(err){
+				if(err){
+					return socket.emit('upload', {err:err});
+				}
+				
+			});
+			
+			_leave();
+			
+			});	
+			
+		});	
 	});
 
 	socket.on('new', function(data){ // path, type
@@ -262,8 +286,12 @@ io.sockets.on('connection', function(socket){
 			return socket.emit('unauthorized');
 		}
 		var user = socket.session.user;
-		docDAO.createDoc(user._id, data.path, data.type, function(err){
-			socket.emit('new', {err:err});
+		docDAO.createDoc(user._id, data.path, data.type, function(err, ctime){
+      if(!err && ctime) {
+        socket.emit('new', {createTime: ctime, modifyTime: ctime});
+      } else {
+        socket.emit('new', {err:err});
+      }
 		});
 	});
 
@@ -410,6 +438,99 @@ io.sockets.on('connection', function(socket){
 			}
 		}
 	}
+	
+	socket.on('downzip', function(data) {
+		if (!check(data, 'path', 'mode'))
+			return;
+		if (!socket.session) {
+			return socket.emit('unauthorized');
+		}
+		var user = socket.session.user;
+		var files = [];
+		var count = 1;
+		var getDocs = function(files, path, mode) {
+			docDAO.getDocByPath(user._id, path, function(err, doc){
+			if(err){
+				return;
+			}
+			if (mode == 1)
+				doc = doc.docs;
+			for (var i = 0; i < doc.length; ++i) {
+				files.push({path: doc[i].path, type: doc[i].type, text: null})
+			}
+			for (var i = 0; i < doc.length; ++i) {
+				if (doc[i].type == 'dir') {
+					count = count + 1;
+					getDocs(files, doc[i].path, 1);
+				}
+			}
+			--count;
+			if (count == 0) {
+				var counts = 1;
+				var setText = function(ind, text) {
+					ind.text = text;
+				}
+				var sendmsg = function() {
+					--counts;
+					console.log(counts);
+					if (counts == 0) {
+						counts = 1;
+						console.log(files);
+						socket.emit('downzip', {file: files, path: data.path});
+					}
+				};
+				var getContents = function(files) {
+					for (var i = 0; i < files.length; ++i) {
+						if (files[i].type == 'doc') {
+							++counts;
+							docDAO.getRevision(user._id, files[i].path, 0, files[i], function(err, revision, obj){
+								var room = rooms[obj.path];
+								if (!room || room === undefined)
+								{
+									setText(obj, revision.content.toString());
+								}
+								else
+								{
+									setText(obj, room.buffer.toString());
+								}
+								sendmsg();
+							});
+						}
+					}
+					sendmsg();
+				};
+				getContents(files);
+			}
+			});
+		};
+		getDocs(files, data.path, data.mode);
+	});
+	
+	socket.on('download', function(data){
+		if(!check(data, 'path')){
+			return;
+		}
+		if (!socket.session){
+			return socket.emit('unauthorized');
+		}
+		var user = socket.session.user;
+		_leave();
+		docDAO.getRevision(user._id, data.path, 0, null, function(err, revision, obj){
+			var room = rooms[data.path];
+			var n = data.path.split('/');
+			n = n[n.length - 1];
+			if (!room)
+				socket.emit('download', { 
+					text: revision.content.toString(),
+					name: n,
+				});
+			else
+				socket.emit('download', {
+					text: room.buffer.toString(),
+					name: n,
+				});
+		});
+	});
 
 	socket.on('join', function(data){ // path
 		if(!check(data, 'path')){
@@ -420,7 +541,7 @@ io.sockets.on('connection', function(socket){
 		}
 		var user = socket.session.user;
 		_leave();
-		docDAO.getRevision(user._id, data.path, 0, function(err, revision){
+		docDAO.getRevision(user._id, data.path, 0, null, function(err, revision, obj){
 			if(err){
 				return socket.emit('join', {err:err});
 			}
@@ -743,7 +864,7 @@ io.sockets.on('connection', function(socket){
 		}
 		var user = socket.session.user;
 		var room = socket.session.room;
-		if(room && !room.exprs.hasOwnProperty(data.expr) && data.expr != ''){
+//		if(room && !room.exprs.hasOwnProperty(data.expr) && data.expr != ''){
 			room.exprs[data.expr] = null;
 			if(room.dbger && room.dbger.state == 'waiting'){
 				room.dbger.print(data.expr, function(val){
@@ -756,7 +877,7 @@ io.sockets.on('connection', function(socket){
 			}else{
 				return _broadcast(room.id, 'add-expr', {expr:data.expr, val:room.exprs[data.expr]});
 			}
-		}
+//		}
 	});
 
 	socket.on('rm-expr', function(data){ // expr

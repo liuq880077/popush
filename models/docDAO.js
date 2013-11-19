@@ -81,7 +81,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 										}
 										else{
 											lock.release(rootPath);
-											return callback(null);
+											return callback(null, newDir[0].createTime);
 										}
 									});
 								}
@@ -122,7 +122,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 														}
 														else{
 															lock.release(rootPath);
-															return callback(null);
+                              return callback(null, newDoc[0].createTime);
 														}
 													});
 												}
@@ -162,7 +162,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 												}
 												else{
 													lock.release(rootPath);
-													return callback(null);
+													return callback(null, newDir[0].createTime);
 												}
 											});
 										}
@@ -203,7 +203,7 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 																}
 																else{
 																	lock.release(rootPath);
-																	return callback(null);
+																	return callback(null, newDoc[0].createTime);
 																}
 															});
 														}
@@ -1217,7 +1217,7 @@ DocDAO.prototype.setPermission = function(userId, path, permission, callback){
 	});
 };
 
-DocDAO.prototype.getRevision = function(userId, path, revision, callback){
+DocDAO.prototype.getRevision = function(userId, path, revision, obj, callback){
 	var that = this;
 	var paths = path.split('/');
 	var rootPath = "/" + paths[1] + "/" + paths[2];
@@ -1267,7 +1267,7 @@ DocDAO.prototype.getRevision = function(userId, path, revision, callback){
 				else if (!result){
 					return callback("unauthorized");
 				}
-				return callback(null,result);
+				return callback(null,result,obj);
 			});
 		});
 	});

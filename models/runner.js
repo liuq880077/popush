@@ -116,9 +116,9 @@ function Runner(name, type, src){
 				break;
 			case 'lua':
 				that.script = [
-					{cmd:'lua', args:[that.name], start:true, filter:function(data){
-						return data.replace(new RegExp(LUA, 'gm'), 'lua');
-					}}
+					{cmd:'lua', args:[that.name], start:true
+					/* , filter:function(data){return data.replace(new RegExp(LUA, 'gm'), 'lua');} */
+					}
 				];
 				break;
 			case 'java':
