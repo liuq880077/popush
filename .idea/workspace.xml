@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="684f8f26-0544-4d9b-9a76-c79bcbdf6701" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/popush.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/popush_node_modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/js/lib/bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/js/lib/jquery.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/js/lib/socket.io.min.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/arrow.png" afterPath="$PROJECT_DIR$/static/images/arrow.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/back.png" afterPath="$PROJECT_DIR$/static/images/back.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/background.gif" afterPath="$PROJECT_DIR$/static/images/background.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/breakpoint.png" afterPath="$PROJECT_DIR$/static/images/breakpoint.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/c.png" afterPath="$PROJECT_DIR$/static/images/ext/c.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/c.png" afterPath="$PROJECT_DIR$/static/images/ext/full/c.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/character.png" afterPath="$PROJECT_DIR$/static/images/character.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/clj.png" afterPath="$PROJECT_DIR$/static/images/ext/clj.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/clj.png" afterPath="$PROJECT_DIR$/static/images/ext/full/clj.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/coffee.png" afterPath="$PROJECT_DIR$/static/images/ext/coffee.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/coffee.png" afterPath="$PROJECT_DIR$/static/images/ext/full/coffee.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/cpp.png" afterPath="$PROJECT_DIR$/static/images/ext/cpp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/cpp.png" afterPath="$PROJECT_DIR$/static/images/ext/full/cpp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/cs.png" afterPath="$PROJECT_DIR$/static/images/ext/cs.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/cs.png" afterPath="$PROJECT_DIR$/static/images/ext/full/cs.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/css.png" afterPath="$PROJECT_DIR$/static/images/ext/css.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/css.png" afterPath="$PROJECT_DIR$/static/images/ext/full/css.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/dict.png" afterPath="$PROJECT_DIR$/static/images/dict.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/dict.png" afterPath="$PROJECT_DIR$/static/images/ext/dict.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/dict.png" afterPath="$PROJECT_DIR$/static/images/ext/full/dict.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/file.png" afterPath="$PROJECT_DIR$/static/images/file.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/file.png" afterPath="$PROJECT_DIR$/static/images/ext/file.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/file.png" afterPath="$PROJECT_DIR$/static/images/ext/full/file.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.eot" afterPath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.eot" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.ttf" afterPath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.ttf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.woff" afterPath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.woff" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/glyphicons-halflings-white.png" afterPath="$PROJECT_DIR$/static/images/glyphicons-halflings-white.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/glyphicons-halflings.png" afterPath="$PROJECT_DIR$/static/images/glyphicons-halflings.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/go.png" afterPath="$PROJECT_DIR$/static/images/ext/go.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/go.png" afterPath="$PROJECT_DIR$/static/images/ext/full/go.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/h.png" afterPath="$PROJECT_DIR$/static/images/ext/h.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/h.png" afterPath="$PROJECT_DIR$/static/images/ext/full/h.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/hpp.png" afterPath="$PROJECT_DIR$/static/images/ext/hpp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/hpp.png" afterPath="$PROJECT_DIR$/static/images/ext/full/hpp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/htm.png" afterPath="$PROJECT_DIR$/static/images/ext/htm.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/htm.png" afterPath="$PROJECT_DIR$/static/images/ext/full/htm.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/html.png" afterPath="$PROJECT_DIR$/static/images/ext/html.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/html.png" afterPath="$PROJECT_DIR$/static/images/ext/full/html.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/java.png" afterPath="$PROJECT_DIR$/static/images/ext/java.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/java.png" afterPath="$PROJECT_DIR$/static/images/ext/full/java.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/js.png" afterPath="$PROJECT_DIR$/static/images/ext/js.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/js.png" afterPath="$PROJECT_DIR$/static/images/ext/full/js.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/json.png" afterPath="$PROJECT_DIR$/static/images/ext/json.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/json.png" afterPath="$PROJECT_DIR$/static/images/ext/full/json.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/lisp.png" afterPath="$PROJECT_DIR$/static/images/ext/lisp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/lisp.png" afterPath="$PROJECT_DIR$/static/images/ext/full/lisp.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/loading.gif" afterPath="$PROJECT_DIR$/static/images/loading.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/logo.png" afterPath="$PROJECT_DIR$/static/images/logo.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/lua.png" afterPath="$PROJECT_DIR$/static/images/ext/lua.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/lua.png" afterPath="$PROJECT_DIR$/static/images/ext/full/lua.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/md.png" afterPath="$PROJECT_DIR$/static/images/ext/md.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/md.png" afterPath="$PROJECT_DIR$/static/images/ext/full/md.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/pas.png" afterPath="$PROJECT_DIR$/static/images/ext/pas.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/pas.png" afterPath="$PROJECT_DIR$/static/images/ext/full/pas.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/php.png" afterPath="$PROJECT_DIR$/static/images/ext/php.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/php.png" afterPath="$PROJECT_DIR$/static/images/ext/full/php.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/pl.png" afterPath="$PROJECT_DIR$/static/images/ext/pl.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/pl.png" afterPath="$PROJECT_DIR$/static/images/ext/full/pl.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/py.png" afterPath="$PROJECT_DIR$/static/images/ext/py.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/py.png" afterPath="$PROJECT_DIR$/static/images/ext/full/py.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/rb.png" afterPath="$PROJECT_DIR$/static/images/ext/rb.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/rb.png" afterPath="$PROJECT_DIR$/static/images/ext/full/rb.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/set-hover.png" afterPath="$PROJECT_DIR$/static/images/set-hover.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/set.png" afterPath="$PROJECT_DIR$/static/images/set.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/sql.png" afterPath="$PROJECT_DIR$/static/images/ext/sql.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/sql.png" afterPath="$PROJECT_DIR$/static/images/ext/full/sql.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/tex.png" afterPath="$PROJECT_DIR$/static/images/ext/tex.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/tex.png" afterPath="$PROJECT_DIR$/static/images/ext/full/tex.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/vbs.png" afterPath="$PROJECT_DIR$/static/images/ext/vbs.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/vbs.png" afterPath="$PROJECT_DIR$/static/images/ext/full/vbs.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/xml.png" afterPath="$PROJECT_DIR$/static/images/ext/xml.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/images/ext/full/xml.png" afterPath="$PROJECT_DIR$/static/images/ext/full/xml.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/youregon.ttf" afterPath="$PROJECT_DIR$/static/css/youregon.ttf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/FileSaver.js" afterPath="$PROJECT_DIR$/static/js/lib/FileSaver.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LICENSE" afterPath="$PROJECT_DIR$/LICENSE" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/Readme.txt" afterPath="$PROJECT_DIR$/static/Readme.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/a.c" afterPath="$PROJECT_DIR$/lib/a.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/account-view.js" afterPath="$PROJECT_DIR$/static/js/views/account-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/apl.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/apl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/app.js" afterPath="$PROJECT_DIR$/static/js/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/asterisk.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/asterisk.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/backbone.js" afterPath="$PROJECT_DIR$/static/js/lib/backbone.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/backbone.localStorage.js" afterPath="$PROJECT_DIR$/static/js/lib/backbone.localStorage.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/bootstrap.js" afterPath="$PROJECT_DIR$/static/js/lib/bootstrap.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/static/css/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/break.js" afterPath="$PROJECT_DIR$/static/js/room/break.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/chat.js" afterPath="$PROJECT_DIR$/static/js/room/chat.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/clike.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/clike.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/clojure.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/clojure.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/codemirror.css" afterPath="$PROJECT_DIR$/static/css/codemirror.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/coffeescript.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/coffeescript.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/commonlisp.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/commonlisp.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/conf.js" afterPath="$PROJECT_DIR$/static/js/conf.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/css.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/css.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/d.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/d.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/data.js" afterPath="$PROJECT_DIR$/static/js/room/data.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/db.js" afterPath="$PROJECT_DIR$/models/db.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/debugger.js" afterPath="$PROJECT_DIR$/models/debugger.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/diff.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/diff.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/docBuffer.js" afterPath="$PROJECT_DIR$/models/docBuffer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/docDAO.js" afterPath="$PROJECT_DIR$/models/docDAO.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/ecl.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/ecl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/editor.js" afterPath="$PROJECT_DIR$/static/js/room/editor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/localization/en-US.js" afterPath="$PROJECT_DIR$/static/js/localization/en-US.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/erlang.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/erlang.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/expression-view.js" afterPath="$PROJECT_DIR$/static/js/views/expression-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/models/expression.js" afterPath="$PROJECT_DIR$/static/js/models/expression.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/expressionlist-view.js" afterPath="$PROJECT_DIR$/static/js/views/expressionlist-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/collections/expressions.js" afterPath="$PROJECT_DIR$/static/js/collections/expressions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/sockets/file-sync.js" afterPath="$PROJECT_DIR$/static/js/sockets/file-sync.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/file-view.js" afterPath="$PROJECT_DIR$/static/js/views/file-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/models/file.js" afterPath="$PROJECT_DIR$/static/js/models/file.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/files-view.js" afterPath="$PROJECT_DIR$/static/js/views/files-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/collections/files.js" afterPath="$PROJECT_DIR$/static/js/collections/files.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/firebase.js" afterPath="$PROJECT_DIR$/static/js/lib/firebase.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/gas.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/gas.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/gfm.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/gfm.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.svg" afterPath="$PROJECT_DIR$/static/fonts/glyphicons-halflings-regular.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/go.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/go.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/groovy.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/groovy.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/haskell.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/haskell.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/haxe.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/haxe.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/htmlembedded.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/htmlembedded.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/htmlmixed.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/htmlmixed.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/http.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/http.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/api/ie.js" afterPath="$PROJECT_DIR$/static/js/api/ie.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/index.html" afterPath="$PROJECT_DIR$/static/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/javascript.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/javascript.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/jinja2.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/jinja2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/jquery.cookie.js" afterPath="$PROJECT_DIR$/static/js/lib/jquery.cookie.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/jquery.js" afterPath="$PROJECT_DIR$/static/js/lib/jquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/jszip-deflate.js" afterPath="$PROJECT_DIR$/static/js/lib/jszip-deflate.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/jszip.js" afterPath="$PROJECT_DIR$/static/js/lib/jszip.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/localization/lang.js" afterPath="$PROJECT_DIR$/static/js/localization/lang.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/less.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/less.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/livescript.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/livescript.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/loadmode.js" afterPath="$PROJECT_DIR$/static/js/loadmode.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/lock.js" afterPath="$PROJECT_DIR$/models/lock.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/api/lock.js" afterPath="$PROJECT_DIR$/static/js/api/lock.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/login-view.js" afterPath="$PROJECT_DIR$/static/js/views/login-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/lua.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/lua.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/sockets/main-socket.js" afterPath="$PROJECT_DIR$/static/js/sockets/main-socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/markdown.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/markdown.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/member-view.js" afterPath="$PROJECT_DIR$/static/js/views/member-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/memberlist-view.js" afterPath="$PROJECT_DIR$/static/js/views/memberlist-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/collections/members.js" afterPath="$PROJECT_DIR$/static/js/collections/members.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/meta.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/meta.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/mirc.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/mirc.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/newMultiConnection.js" afterPath="$PROJECT_DIR$/static/js/lib/newMultiConnection.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/nginx.conf" afterPath="$PROJECT_DIR$/lib/nginx.conf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/nginx" afterPath="$PROJECT_DIR$/lib/nginx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/ntriples.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/ntriples.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/ocaml.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/ocaml.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/pascal.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/pascal.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/perl.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/perl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/php.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/php.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/pig.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/pig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.jre.bin.java" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.jre.bin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.lua" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.lua" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.node" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.node" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.perl" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.perl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.python" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.python" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.ruby" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.bin.ruby" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/apparmor.d/popush.tmp" afterPath="$PROJECT_DIR$/lib/apparmor.d/popush.tmp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/popush" afterPath="$PROJECT_DIR$/lib/popush" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/properties.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/properties.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/python.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/python.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/q.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/q.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/r.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/r.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/register-view.js" afterPath="$PROJECT_DIR$/static/js/views/register-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/sockets/room-socket.js" afterPath="$PROJECT_DIR$/static/js/sockets/room-socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/room-view.js" afterPath="$PROJECT_DIR$/static/js/views/room-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/room.js" afterPath="$PROJECT_DIR$/static/js/room/room.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/router.js" afterPath="$PROJECT_DIR$/static/js/router.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/rst.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/rst.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/ruby.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/ruby.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/run.js" afterPath="$PROJECT_DIR$/static/js/room/run.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/runner.js" afterPath="$PROJECT_DIR$/models/runner.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/rust.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/rust.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/sass.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/sass.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/scheme.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/scheme.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/sharer-view.js" afterPath="$PROJECT_DIR$/static/js/views/sharer-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/views/sharerlist-view.js" afterPath="$PROJECT_DIR$/static/js/views/sharerlist-view.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/shell.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/shell.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/sieve.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/sieve.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/smalltalk.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/smalltalk.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/smarty.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/smarty.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/socket.io.js" afterPath="$PROJECT_DIR$/static/js/lib/socket.io.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/sparql.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/sparql.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/sql.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/sql.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/stex.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/stex.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/tcl.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/tcl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/tiddlywiki.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/tiddlywiki.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/tiki.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/tiki.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/turtle.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/turtle.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/underscore.js" afterPath="$PROJECT_DIR$/static/js/lib/underscore.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/models/user.js" afterPath="$PROJECT_DIR$/static/js/models/user.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/userDAO.js" afterPath="$PROJECT_DIR$/models/userDAO.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/vb.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/vb.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/vbscript.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/vbscript.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/velocity.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/velocity.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/verilog.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/verilog.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/room/voice.js" afterPath="$PROJECT_DIR$/static/js/room/voice.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/xml.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/xml.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/xquery.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/xquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/yaml.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/yaml.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/lib/codemirror/z80.js" afterPath="$PROJECT_DIR$/static/js/lib/codemirror/z80.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/localization/zh-CN.js" afterPath="$PROJECT_DIR$/static/js/localization/zh-CN.js" />
+    </list>
+    <ignored path="popush.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="popush" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="app.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="4297" max-vertical-offset="13560">
+              <caret line="295" column="0" selection-start-line="295" selection-start-column="0" selection-end-line="295" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="docDAO.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/docDAO.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="21105">
+              <caret line="80" column="24" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="json3.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.33246753" vertical-offset="1987" max-vertical-offset="13005">
+              <caret line="141" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userDAO.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/userDAO.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.153847" vertical-offset="316" max-vertical-offset="3390">
+              <caret line="56" column="26" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lock.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/lock.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="93" max-vertical-offset="570">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="docBuffer.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/docBuffer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="true" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/models/docDAO.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="39" />
+    <option name="y" value="22" />
+    <option name="width" value="1241" />
+    <option name="height" value="778" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="popush" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="true" />
+  </component>
+  <component name="RunManager" selected="Node.js.Unnamed">
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="/usr/local/bin/node" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="XSLT" factoryName="XSLT">
+      <option name="myOutputFile" />
+      <option name="myOpenOutputFile" value="false" />
+      <option name="myOpenInBrowser" value="false" />
+      <option name="mySmartErrorHandling" value="true" />
+      <option name="myRunnerPort" value="34873" />
+      <option name="myVmArguments" />
+      <option name="myWorkingDirectory" />
+      <option name="myModule" />
+      <option name="myJdk" />
+      <parameters />
+      <OutputType value="CONSOLE" save-to-file="false" />
+      <FileType name="XML" />
+      <JdkChoice value="FROM_MODULE" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Unnamed" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="/usr/local/bin/node" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
+      <RunnerSettings RunnerId="NodeJS.debug" />
+      <RunnerSettings RunnerId="NodeJS.run" />
+      <ConfigurationWrapper RunnerId="NodeJS.debug" />
+      <ConfigurationWrapper RunnerId="NodeJS.run" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Node.js.Unnamed" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="684f8f26-0544-4d9b-9a76-c79bcbdf6701" name="Default" comment="" />
+      <created>1412441107314</created>
+      <updated>1412441107314</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="39" y="22" width="1241" height="778" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24979855" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39915374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32863188" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <default-breakpoints>
+        <breakpoint log-message="true" type="javascript-exception">
+          <properties />
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="37" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="13175" max-vertical-offset="13560">
+          <caret line="530" column="19" selection-start-line="530" selection-start-column="19" selection-end-line="530" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5175">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/docDAO.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="21105">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/lock.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="172" max-vertical-offset="570">
+          <caret line="15" column="2" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/docBuffer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/docBuffer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.8301886" vertical-offset="679" max-vertical-offset="1050">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="398">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.8643216" vertical-offset="742" max-vertical-offset="1140">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5175">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/lock.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="93" max-vertical-offset="570">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4132" max-vertical-offset="13560">
+          <caret line="295" column="0" selection-start-line="295" selection-start-column="0" selection-end-line="295" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-adapter/node_modules/socket.io-parser/node_modules/json3/lib/json3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4103896" vertical-offset="1957" max-vertical-offset="13005">
+          <caret line="141" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/userDAO.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.153847" vertical-offset="316" max-vertical-offset="3390">
+          <caret line="56" column="26" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/docDAO.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="21105">
+          <caret line="80" column="24" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33246753" vertical-offset="1987" max-vertical-offset="13005">
+          <caret line="141" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+
