@@ -48,7 +48,7 @@ function log(){
 
 log('server start');
 
-var io = require('socket.io').listen(require('./package.json').port, {log:false});
+var io = require('socket.io').listen(require('./package.json').port, {log:true});
 
 function _broadcast(id, msg, data){
 	if(DEBUG){
@@ -528,7 +528,7 @@ io.sockets.on('connection', function(socket){
 				socket.emit('download', {
 					text: room.buffer.toString(),
 					name: n,
-				});
+                });
 		});
 	});
 
