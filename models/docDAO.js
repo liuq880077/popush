@@ -74,14 +74,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 									return callback("inner error");
 								}
 								else{
-									db.user.update({_id:userId}, {$push:{docs:newDir[0]._id}}, function(err, reply){
+									db.user.update({_id:userId}, {$push:{docs:newDir._id}}, function(err, reply){
 										if(err){
 											lock.release(rootPath);
 											return callback("inner error");
 										}
 										else{
 											lock.release(rootPath);
-											return callback(null, newDir[0].createTime);
+											return callback(null, newDir.createTime);
 										}
 									});
 								}
@@ -95,14 +95,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 									return callback("inner error");
 								}
 								else{
-									db.user.update({_id:userId}, {$push:{docs:newDoc[0]._id}}, function(err, reply){
+									db.user.update({_id:userId}, {$push:{docs:newDoc._id}}, function(err, reply){
 										if(err){
 											lock.release(rootPath);
 											return callback("inner error");
 										}
 										else{
 											db.revision.insert({
-												doc:newDoc[0]._id,
+												doc:newDoc._id,
 												revision:1,
 												createTime:new Date().getTime(),
 												creater:userId,
@@ -115,14 +115,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 													return callback("inner error");
 												}
 												else{
-													db.doc.update({_id:newDoc[0]._id}, {$push:{revisions:revision[0]._id}}, function(err, reply){
+													db.doc.update({_id:newDoc._id}, {$push:{revisions:revision._id}}, function(err, reply){
 														if(err){
 															lock.release(rootPath);
 															return callback("inner error");
 														}
 														else{
 															lock.release(rootPath);
-                              return callback(null, newDoc[0].createTime);
+                              return callback(null, newDoc.createTime);
 														}
 													});
 												}
@@ -155,14 +155,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 											return callback("inner error");
 										}
 										else{
-											db.doc.update({_id:parentDir._id}, {$push:{docs:newDir[0]._id}}, function(err, reply){
+											db.doc.update({_id:parentDir._id}, {$push:{docs:newDir._id}}, function(err, reply){
 												if(err){
 													lock.release(rootPath);
 													return callback("inner error");
 												}
 												else{
 													lock.release(rootPath);
-													return callback(null, newDir[0].createTime);
+													return callback(null, newDir.createTime);
 												}
 											});
 										}
@@ -176,14 +176,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 											return callback("inner error");
 										}
 										else{
-											db.doc.update({_id:parentDir._id}, {$push:{docs:newDoc[0]._id}}, function(err, reply){
+											db.doc.update({_id:parentDir._id}, {$push:{docs:newDoc._id}}, function(err, reply){
 												if(err){
 													lock.release(rootPath);
 													return callback("inner error");
 												}
 												else{
 													db.revision.insert({
-														doc:newDoc[0]._id,
+														doc:newDoc._id,
 														revision:1,
 														createTime:new Date().getTime(),
 														creater:userId,
@@ -196,14 +196,14 @@ DocDAO.prototype.createDoc = function(userId, path, type, callback){
 															return callback("inner error");
 														}
 														else{
-															db.doc.update({_id:newDoc[0]._id}, {$push:{revisions:revision[0]._id}}, function(err, reply){
+															db.doc.update({_id:newDoc._id}, {$push:{revisions:revision._id}}, function(err, reply){
 																if(err){
 																	lock.release(rootPath);
 																	return callback("inner error");
 																}
 																else{
 																	lock.release(rootPath);
-																	return callback(null, newDoc[0].createTime);
+																	return callback(null, newDoc.createTime);
 																}
 															});
 														}
@@ -1323,7 +1323,7 @@ DocDAO.prototype.commit = function(userId, path, content, callback){
 						return callback("inner error");
 					}
 					db.doc.update({_id:result._id},{
-						$push:{revisions:revision[0]._id}
+						$push:{revisions:revision._id}
 						},
 						function(err,result){
 							if (err){

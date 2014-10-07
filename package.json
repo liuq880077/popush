@@ -6,11 +6,11 @@
     "start": "node app"
   },
   "dependencies": {
-    "socket.io": "*",
+    "socket.io": "1.1.0",
     "mongojs": "*",
     "buffers": "*"
   },
   "port": 4444,
   "db": "mongodb://localhost/popush",
-  "debug": false
+  "debug": true
 }
