@@ -23,7 +23,7 @@ app.Room && _.extend(app.Room.prototype, {
   
   	//控制台输入
 	stdin: function(text) { 
-		this.socket('sdtin', text); 
+		this.socket('stdin', text); 
 	},
   	
   	//控制台输出
