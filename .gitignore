@@ -2,14 +2,12 @@
 log
 /bin/
 node_modules/
-!/node_modules/mongojs
-/node_modules/mongojs/node_modules/
 /tmp/
 /db/
 /mongo*
 /static/faces/
 /static/index.js
 /static/index.css
-*.bat
+/*.bat
 /.*
 !.gitignore
