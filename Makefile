@@ -29,7 +29,6 @@ npm:
 	@echo ">  npm install"
 	@npm install
 	@cp -f `find node_modules/socket.io/node_modules/socket.io-client -name socket.io.js` `find static -name socket.io.js`
-	@cd node_modules/mongojs && npm install
 
 static:
 	@echo ">  do not make static"
