@@ -76,7 +76,9 @@ var syncFiles = (function() {
 		}
 		if (data.doc.type && data.doc.type != 'dir') {
 			//不是目录，则尝试进入文件
+			app.Lock.remove();
 			app.room.tryEnter(new app.File(data.doc), '#no-file');
+			data.notRemove = true;
 		} else {
 			//进入目录
 			var ms = data.doc.members;
