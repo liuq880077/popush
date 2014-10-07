@@ -69,6 +69,7 @@ app.Room && _.extend(app.Room.prototype, {
 	onRun: function() { 
 		this.runLock = true; 
 		this.view.setRun(); 
+		this.operationLock = false;
 	},
 
 	//处理调试事件

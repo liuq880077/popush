@@ -28,6 +28,8 @@ stop:
 npm:
 	@echo ">  npm install"
 	@npm install
+	@cp -f `find node_modules/socket.io/node_modules/socket.io-client -name socket.io.js` `find static -name socket.io.js`
+	@cd node_modules/mongojs && npm install
 
 static:
 	@echo ">  do not make static"
@@ -60,11 +62,11 @@ bin:
 	@gcc -o $(BIN_DIR)/a $(LIB_DIR)/a.c
 	@cp `which gdb` $(BIN_DIR)/gdb
 	@cp `which node` $(BIN_DIR)/node
-	@cp `which python2.7` $(BIN_DIR)/python
+	@cp `which python` $(BIN_DIR)/python
 	@cp `which perl` $(BIN_DIR)/perl
 	@cp `which ruby` $(BIN_DIR)/ruby
 	@cp `which lua` $(BIN_DIR)/lua
-	@cp -r `readlink -f \`which java\` | sed "s:bin/java:jre:"` $(BIN_DIR)/
+	@cp -r `readlink -f \`which javac\` | sed "s:bin/javac:jre:"` $(BIN_DIR)/
 
 clean:
 	@rm -rf $(TMP_DIR)/*
