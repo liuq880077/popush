@@ -2,7 +2,7 @@ var app = app || {};
 
 app.Package = {
   VERSION: '1.0.3',
-  SOCKET_IO: (window.location.href.substring(0,4) != 'file') ? '/' : 'http://127.0.0.2:4444/',
+  SOCKET_IO: (window.location.href.substring(0,4) != 'file') ? '/' : 'http://127.0.0.1:4444/',
   SAVE_TIME_OUT: 1000,
   ENABLE_RUN: true,
   ENABLE_DEBUG: true,

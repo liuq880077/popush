@@ -162,7 +162,7 @@ app.Room && _.extend(app.Room.prototype, {
 			if (room.buffertext.length == 0){
 				room.bufferfrom = -1;
 				if(room.q.length == 0){
-					room.view.setsaved();
+					room.view.setSaved();
 				}
 				return;
 			}

@@ -18,7 +18,8 @@ var onVersion = function(data) {
 	// 重新登录请求
 	var sid = $.cookie('sid'), go = function() {
 		var hash = window.location.hash.substring(1);
-		window.location.href = '#' + (hash || 'login');
+		app.router.navigate('#', {replace: true});
+		app.router.navigate('#' + (hash || 'login'), {trigger: true, replace: true});
 	};
   
 	if(sid && app.Lock.attach({ fail: go, error: go, })) {
